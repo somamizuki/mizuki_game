@@ -79,7 +79,16 @@ void m_camera::camera_stop()
 		CVector3 cross = CVector3::Zero();
 		cross.Cross(camera_forward, pMove);
 		cross.Normalize();
-		if (angle >= 45.0f&&angle<160.0f)
+		if (angle < 90.0f) {
+			rot.SetRotationDeg(cross, (angle / 180.0f)*2.0f);
+			rot.Multiply(target_to_pos);
+		}
+		else {
+			rot.SetRotationDeg(cross, ((180.0f-angle) / 180.0f)*2.0f);
+			rot.Multiply(target_to_pos);
+		}
+		
+		/*if (angle >= 45.0f&&angle<160.0f)
 		{
 			if (rot_f < 1.5f)
 			{
@@ -91,7 +100,7 @@ void m_camera::camera_stop()
 		else
 		{
 			rot_f = 0.0f;
-		}
+		}*/
 		
 		
 	}

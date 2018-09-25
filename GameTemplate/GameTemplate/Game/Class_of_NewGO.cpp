@@ -4,7 +4,7 @@
 
 Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_name)
 {
-	level->Init(L"Assets/level/stage_01.tkl", [&](LevelObjectData Lobjdata) {
+	level->Init(L"Assets/level/stage_02.tkl", [&](LevelObjectData Lobjdata) {
 
 		/*char* CPmodel_name = "unityChan";
 		size_t char_size = strlen(CPmodel_name) + 1;
