@@ -5,10 +5,22 @@
 #include "Player.h"
 #include "Class_of_NewGO.h"
 
+class Hoge
+{
+public:
+	Hoge()
+	{
+		hogeP = new int;
+	}
+	~Hoge()
+	{
+		delete hogeP;
+	}
+	int* hogeP;
+};
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
-
 GameObjectManajer* game_obj;
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
@@ -31,7 +43,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{
-
 		//描画開始。
 		g_graphicsEngine->BegineRender();
 		//ゲームパッドの更新。	

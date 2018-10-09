@@ -3,6 +3,7 @@
 #include"UnorderedAccessView.h"
 #include"Primitive.h"
 #include"ConstantBuffer.h"
+#include"StructuredBuffer.h"
 
 class sprite:Noncopyable
 {
@@ -11,9 +12,9 @@ public:
 	sprite();
 	~sprite();
 
-	void Init(ShaderResourceView& tex, float w, float h,int d);
+	void Init(ShaderResourceView& tex, float w, float h,int d);			//èâä˙âª
 
-	void SetTexture(ShaderResourceView& tex)
+	void SetTexture(ShaderResourceView& tex)							//
 	{
 		m_textureSRV = &tex;
 	}

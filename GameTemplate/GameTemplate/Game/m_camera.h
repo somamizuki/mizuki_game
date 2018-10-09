@@ -30,10 +30,10 @@ private:
 	float pad_Y = 0.0f;
 	float m_angle = 0.0f;									//角度
 	float rot_f = 0.0f;										//回転を徐々にさせるための変数
-	void Math_Vector();										//
-	void Various_Getter();
-	void PadInput();
-	void camera_move();
+	void Math_Vector();										//いくつかのベクトルの計算
+	void Various_Getter();									//様々なゲッター
+	void PadInput();										//パッドの入力
+	void camera_move();										//
 	void camera_stop();
 
 	enum m_state {

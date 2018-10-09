@@ -50,5 +50,3 @@ public:
 };
 
 extern PhysicsWorld g_physics;
-
-

@@ -23,24 +23,26 @@
 #include "DirectXTK/Inc/SpriteFont.h"
 #include "DirectXTK/Inc/DDSTextureLoader.h"
 
+#include "policy/Noncopyable.h"
 #include "physics/Physics.h"
 #include "HID/Pad.h"
 
 #include "math/Vector.h"
 #include "math/Matrix.h"
 #include "graphics/GraphicsEngine.h"
+#include "graphics/Shader.h"
+#include "graphics/sprite.h"
 
+#include"Light/DirectionLight.h"
 #include "graphics/SkinModel.h"
 #include "graphics/Skeleton.h"
 
 #include "graphics/animation/Animation.h"
 #include "graphics/animation/AnimationClip.h"
 #include "graphics/Camera.h"
-#include "policy/Noncopyable.h"
-#include "graphics/Shader.h"
 #include "GameObject/GameObject.h"
 #include "GameObject/GameObjectManajer.h"
-#include "graphics/sprite.h"
+
 
 extern GameObjectManajer *game_obj;
 static wchar_t* char_to_wchar_t(char* name)

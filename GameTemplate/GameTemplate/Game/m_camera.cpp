@@ -20,7 +20,7 @@ bool m_camera::Start()
 	camera_Target = player_pos;
 	target_to_pos = player->Getpos() - player->Getforward();
 	target_to_pos.Normalize();
-	camera_Pos = target_to_pos * 700.0f;
+	camera_Pos = target_to_pos * 500.0f;
 	camera_Pos.y += 100.0f;
 	g_camera3D.SetPosition(camera_Pos);
 	g_camera3D.SetTarget(camera_Target);

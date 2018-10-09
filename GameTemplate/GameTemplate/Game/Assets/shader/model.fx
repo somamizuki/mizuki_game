@@ -27,6 +27,11 @@ cbuffer VSPSCb : register(b0){
 	float4x4 mView;
 	float4x4 mProj;
 };
+cbuffer VSPSCB2:register(b1) {
+	float4 m_color;
+	float3 m_Direction;
+}
+
 
 
 /////////////////////////////////////////////////////////////
@@ -63,7 +68,9 @@ struct PSInput{
 	float3 Normal		: NORMAL;
 	float3 Tangent		: TANGENT;
 	float2 TexCoord 	: TEXCOORD0;
+	float4 lightColor	: TEXCOORD1;
 };
+
 /*!
  *@brief	スキン行列を計算。
  */
@@ -94,6 +101,9 @@ PSInput VSMain( VSInputNmTxVcTangent In )
 	psInput.TexCoord = In.TexCoord;
 	psInput.Normal = normalize(mul(mWorld, In.Normal));
 	psInput.Tangent = normalize(mul(mWorld, In.Tangent));
+	float3 m_d2 = normalize(m_Direction);
+	psInput.lightColor = max(0, dot(-m_d2, psInput.Normal))*m_color;
+
 	return psInput;
 }
 
@@ -135,6 +145,8 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 	pos = mul(mProj, pos);
 	psInput.Position = pos;
 	psInput.TexCoord = In.TexCoord;
+	float3 m_d2 = normalize(m_Direction);
+	psInput.lightColor = max(0, dot(-m_d2, psInput.Normal))*m_color;
     return psInput;
 }
 //--------------------------------------------------------------------------------------
@@ -142,5 +154,9 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 //--------------------------------------------------------------------------------------
 float4 PSMain( PSInput In ) : SV_Target0
 {
-	return albedoTexture.Sample(Sampler, In.TexCoord);
+	float4 texC2 = albedoTexture.Sample(Sampler ,In.TexCoord);
+	float4 texC3 = texC2 * 0.3f;
+	float4 texC = texC2 * In.lightColor + texC3;
+
+	return texC;
 }

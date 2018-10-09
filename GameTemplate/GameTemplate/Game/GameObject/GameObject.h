@@ -9,7 +9,7 @@ public:
 	//	game_obj.Set_push_list(this, No);
 	//	this_name = obj_name;
 	//}
-	~GameObject()
+	virtual ~GameObject()
 	{
 
 	}
