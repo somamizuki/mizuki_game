@@ -153,7 +153,12 @@
     <ClCompile Include="graphics\GPUBuffer.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Light\DirectionLight.cpp" />
+    <ClCompile Include="Light\LightBase.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\DirectionLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -278,7 +283,12 @@
     <ClInclude Include="graphics\GPUBuffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Light\DirectionLight.h" />
+    <ClInclude Include="Light\LightBase.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\DirectionLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">

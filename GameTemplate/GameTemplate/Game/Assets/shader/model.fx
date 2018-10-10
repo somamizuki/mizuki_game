@@ -30,6 +30,7 @@ cbuffer VSPSCb : register(b0){
 cbuffer VSPSCB2:register(b1) {
 	float4 m_color;
 	float3 m_Direction;
+	float3 light_pos;
 }
 
 
@@ -69,6 +70,8 @@ struct PSInput{
 	float3 Tangent		: TANGENT;
 	float2 TexCoord 	: TEXCOORD0;
 	float4 lightColor	: TEXCOORD1;
+	float4 pointlightC	: TEXCOORD2;
+	float3 worldPos		: TEXCOORD3;
 };
 
 /*!
@@ -95,14 +98,14 @@ PSInput VSMain( VSInputNmTxVcTangent In )
 {
 	PSInput psInput = (PSInput)0;
 	float4 pos = mul(mWorld, In.Position);
+	psInput.worldPos = pos.xyz;
 	pos = mul(mView, pos);
 	pos = mul(mProj, pos);
 	psInput.Position = pos;
 	psInput.TexCoord = In.TexCoord;
 	psInput.Normal = normalize(mul(mWorld, In.Normal));
 	psInput.Tangent = normalize(mul(mWorld, In.Tangent));
-	float3 m_d2 = normalize(m_Direction);
-	psInput.lightColor = max(0, dot(-m_d2, psInput.Normal))*m_color;
+	
 
 	return psInput;
 }
@@ -138,6 +141,7 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 		//mulÇÕèÊéZñΩóﬂÅB
 	    pos = mul(skinning, In.Position);
 	}
+	psInput.worldPos = pos.xyz;
 	psInput.Normal = normalize( mul(skinning, In.Normal) );
 	psInput.Tangent = normalize( mul(skinning, In.Tangent) );
 	
@@ -145,8 +149,7 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 	pos = mul(mProj, pos);
 	psInput.Position = pos;
 	psInput.TexCoord = In.TexCoord;
-	float3 m_d2 = normalize(m_Direction);
-	psInput.lightColor = max(0, dot(-m_d2, psInput.Normal))*m_color;
+	
     return psInput;
 }
 //--------------------------------------------------------------------------------------
@@ -154,9 +157,18 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 //--------------------------------------------------------------------------------------
 float4 PSMain( PSInput In ) : SV_Target0
 {
+	float3 m_d2 = normalize(m_Direction);
+	float4 DlightC = max(0, dot(-m_d2, In.Normal))*m_color;
+
+	float3 pointLightV = In.worldPos - light_pos;
+	pointLightV = normalize(pointLightV);
+	float4 pointlightC = max(0, dot(-pointLightV, In.Normal))*m_color;
+
+	float4 lig = /*DlightC + */pointlightC +float4(0.2f, 0.2f, 0.2f, 0.0f);
+
 	float4 texC2 = albedoTexture.Sample(Sampler ,In.TexCoord);
-	float4 texC3 = texC2 * 0.3f;
-	float4 texC = texC2 * In.lightColor + texC3;
+	
+	float4 texC = texC2 * lig;
 
 	return texC;
 }

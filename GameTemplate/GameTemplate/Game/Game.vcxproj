@@ -101,6 +101,7 @@
   <ItemGroup>
     <ClCompile Include="character\CharacterController.cpp" />
     <ClCompile Include="Class_of_NewGO.cpp" />
+    <ClCompile Include="Light\LightBase.cpp" />
     <ClCompile Include="Light\DirectionLight.cpp" />
     <ClCompile Include="graphics\GPUBuffer.cpp" />
     <ClCompile Include="graphics\ConstantBuffer.cpp" />
@@ -148,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="character\CharacterController.h" />
     <ClInclude Include="Class_of_NewGO.h" />
+    <ClInclude Include="Light\LightBase.h" />
     <ClInclude Include="Light\DirectionLight.h" />
     <ClInclude Include="graphics\GPUBuffer.h" />
     <ClInclude Include="graphics\ConstantBuffer.h" />

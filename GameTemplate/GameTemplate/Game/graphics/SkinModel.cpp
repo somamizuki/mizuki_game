@@ -55,7 +55,8 @@ void SkinModel::InitConstantBuffer()
 {
 	m_cb.Create(NULL, sizeof(SVSConstantBuffer));
 	m_sDrection.color = { 1.0f,1.0f,1.0f,1.0f };
-	m_sDrection.Direction = { 0.0f,-1.0f,0.0f };
+	m_sDrection.Direction = { 0.0f,0.0f,1.0f, 1.0f };
+	m_sDrection.position = { 0.0f,200.0f,0.0f, 0.0f };
 	m_Dlight.Setm_directionLight(&m_sDrection);
 	m_Dlight.InitDirectionLight();
 
