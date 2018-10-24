@@ -156,9 +156,6 @@
     <ClCompile Include="Light\LightBase.cpp">
       <Filter>Light</Filter>
     </ClCompile>
-    <ClCompile Include="Light\DirectionLight.cpp">
-      <Filter>Light</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -286,7 +283,7 @@
     <ClInclude Include="Light\LightBase.h">
       <Filter>Light</Filter>
     </ClInclude>
-    <ClInclude Include="Light\DirectionLight.h">
+    <ClInclude Include="Light\Light.h">
       <Filter>Light</Filter>
     </ClInclude>
   </ItemGroup>
@@ -303,6 +300,7 @@
     <MeshContentTask Include="Assets\modelData\yuka.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\StarSparrow.fbx" />
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\damage.png" />

@@ -2,7 +2,6 @@
  * @brief	モデルシェーダー。
  */
 
-
 /////////////////////////////////////////////////////////////
 // Shader Resource View
 /////////////////////////////////////////////////////////////
@@ -27,12 +26,50 @@ cbuffer VSPSCb : register(b0){
 	float4x4 mView;
 	float4x4 mProj;
 };
-cbuffer VSPSCB2:register(b1) {
-	float4 m_color;
-	float3 m_Direction;
-	float3 light_pos;
+
+cbuffer directionSum : register(b1) {
+	int dirsum;
+};
+
+cbuffer pointSum : register(b2) {
+	int pointsum;
+};
+
+cbuffer spotSum : register(b3) {
+	int spotsum;
+};
+
+cbuffer lightparam : register(b10)
+{
+	float4 eyepos;
+	float specPow;
 }
 
+
+struct SDirectionLight {
+	float4 Dir_color;
+	float4 Dir_direction;
+};
+
+struct SPointLight {
+	float4 Point_color;
+	float4 Point_position;
+	float Point_range;
+};
+
+struct SSpotLight {
+	float4 Spot_color;
+	float4 Spot_position;
+	float4 Spot_direction;
+	float  Spot_angle;
+	float Spot_range;
+};
+
+
+
+StructuredBuffer <SDirectionLight>DirectionLightSB:register(t101);
+StructuredBuffer <SPointLight>PointLightSB : register(t102);
+StructuredBuffer <SSpotLight>SpotLightSB : register(t103);
 
 
 /////////////////////////////////////////////////////////////
@@ -69,10 +106,106 @@ struct PSInput{
 	float3 Normal		: NORMAL;
 	float3 Tangent		: TANGENT;
 	float2 TexCoord 	: TEXCOORD0;
-	float4 lightColor	: TEXCOORD1;
-	float4 pointlightC	: TEXCOORD2;
 	float3 worldPos		: TEXCOORD3;
 };
+
+
+/*
+ライトの計算
+*/
+//ディレクション
+float4 DirectionLightColor(PSInput Input)
+{
+	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
+	
+	float3 toEyeV = normalize(eyepos - Input.worldPos);
+	float3 reflecteyedir = -toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
+	float t = 0.0f;
+	float4 specLig = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	for (int i = 0; i < dirsum; i++)
+	{
+		
+		float3 m_d2 = normalize(DirectionLightSB[i].Dir_direction);
+
+
+		float4 DlightC = max(0, dot(-m_d2, Input.Normal)) * DirectionLightSB[i].Dir_color;
+
+		t = max(0.0f, dot(m_d2*-1.0f, reflecteyedir));
+		specLig = max(0.0f,pow(t, specPow) * DirectionLightSB[i].Dir_color);
+		DlightC += specLig;
+		finalcolor += max(0.0f, DlightC);
+		
+		
+	}
+	return finalcolor;
+}
+//ポイント
+float4 PointLightColor(PSInput Input)
+{
+	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
+	float3 toEyeV = normalize(eyepos - Input.worldPos);
+	float3 reflecteyedir = -toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
+	float t = 0.0f;
+	float4 specLig = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	for (int i = 0; i < pointsum; i++)
+	{
+
+		float3 pointLightV = Input.worldPos - PointLightSB[i].Point_position;
+		pointLightV = normalize(pointLightV);
+		float4 pointlightC = max(0.0f, dot(-pointLightV, Input.Normal)) * PointLightSB[i].Point_color;
+		
+		t = max(0.0f, dot(pointLightV*-1.0f, reflecteyedir));
+		specLig = max(0.0f, pow(t, specPow) * PointLightSB[i].Point_color);
+		pointlightC += specLig;
+
+		pointlightC = pointlightC * max(0.0f, (1.0f - (length(Input.worldPos - PointLightSB[i].Point_position) / PointLightSB[i].Point_range)));
+		
+		
+
+		finalcolor += max(0.0f, pointlightC);
+	}
+
+	return finalcolor;
+}
+//スポット
+float4 SpotLightColor(PSInput Input)
+{
+	
+	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
+	float3 toEyeV = normalize(eyepos - Input.worldPos);
+	float3 reflecteyedir = -toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
+	float t = 0.0f;
+	float4 specLig = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	for (int i = 0; i < spotsum; i++)
+	{
+		
+		float3 spotLightV = Input.worldPos - SpotLightSB[i].Spot_position;
+		spotLightV = normalize(spotLightV);
+		float4 spotlightC = max(0, dot(-spotLightV, Input.Normal))*SpotLightSB[i].Spot_color;
+
+		float3 outV = Input.worldPos - SpotLightSB[i].Spot_position;
+		float angle = acos(dot(normalize(SpotLightSB[i].Spot_direction), normalize(outV)));
+
+		spotlightC = spotlightC * step(degrees(angle), SpotLightSB[i].Spot_angle);
+
+		t = max(0.0f, dot(spotLightV*-1.0f, reflecteyedir));
+		specLig = max(0.0f, pow(t, specPow) * SpotLightSB[i].Spot_color);
+		spotlightC += specLig;
+
+		spotlightC = spotlightC * max(0.0f, (1.0f - (length(Input.worldPos - SpotLightSB[i].Spot_position) / SpotLightSB[i].Spot_range)));
+		
+
+
+		
+
+		finalcolor += max(0.0f, spotlightC);
+	}
+
+	
+
+	return finalcolor;
+}
+
 
 /*!
  *@brief	スキン行列を計算。
@@ -157,18 +290,13 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 //--------------------------------------------------------------------------------------
 float4 PSMain( PSInput In ) : SV_Target0
 {
-	float3 m_d2 = normalize(m_Direction);
-	float4 DlightC = max(0, dot(-m_d2, In.Normal))*m_color;
 
-	float3 pointLightV = In.worldPos - light_pos;
-	pointLightV = normalize(pointLightV);
-	float4 pointlightC = max(0, dot(-pointLightV, In.Normal))*m_color;
 
-	float4 lig = /*DlightC + */pointlightC +float4(0.2f, 0.2f, 0.2f, 0.0f);
+	float4 lig = DirectionLightColor(In) + PointLightColor(In) + SpotLightColor(In) + float4(0.1f, 0.1f, 0.1f, 0.0f);
 
 	float4 texC2 = albedoTexture.Sample(Sampler ,In.TexCoord);
 	
 	float4 texC = texC2 * lig;
-
+	texC.w = 1.0f;
 	return texC;
 }

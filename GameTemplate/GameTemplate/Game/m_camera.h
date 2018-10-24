@@ -16,14 +16,27 @@ public:
 		return camera_rite;
 	}
 
+	const CVector3 GetPos() const
+	{
+		return camera_Pos;
+	}
+
+	const CVector3 GetXZ()
+	{
+		return cameraXZ;
+	}
+
 private:
 	CVector3 player_pos = CVector3::Zero();					//プレイヤーのポジションを格納する
+
 	CVector3 camera_Pos = CVector3::Zero();					//カメラのポジション
 	CVector3 camera_Target = CVector3::Zero();				//ターゲット
 	CVector3 camera_Up = CVector3::AxisY();					//カメラの上方向
 	CVector3 camera_forward = CVector3::Zero();				//カメラの前方向
+	CVector3 cameraXZ = CVector3::Zero();
 	CVector3 camera_rite = CVector3::Zero();				//カメラの右方向
-	CQuaternion rot = CQuaternion::Identity();				//回転
+	CQuaternion camrotX = CQuaternion::Identity();				//回転
+	CQuaternion camrotY = CQuaternion::Identity();				//回転
 	CVector3 target_to_pos = CVector3::Zero();				//ターゲットからカメラのポジションへ向かうベクトル
 	Player* player = nullptr;								//プレイヤーのポインター
 	float pad_X = 0.0f;										//パッドの入力量

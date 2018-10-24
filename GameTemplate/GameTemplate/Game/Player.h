@@ -2,6 +2,7 @@
 #include "character/CharacterController.h"
 #include"character/CharacterController.h"
 #include"graphics/sprite.h"
+#include"Light/LightBase.h"
 
 class m_camera;
 class Player:public GameObject
@@ -45,8 +46,6 @@ public:
 		return movespeed;
 	}
 
-
-
 	/*CMatrix Getmatrix()
 	{
 		&m_model.FindBone()->GetWorldMatrix()
@@ -56,14 +55,12 @@ private:
 	CVector3 m_position = CVector3::Zero();				//プレイヤーのポジション
 	CQuaternion m_rotation = CQuaternion::Identity();
 	CVector3 movespeed = CVector3::Zero();				//movespeed
+	CVector3 movedir = CVector3::Zero();
 	CMatrix rot_M;
 	CVector3 m_forward;
 	CVector3 m_rite;
 	CVector3 m_up;
-	CVector3 padinput_vector = CVector3::Zero();
-	CQuaternion rot = CQuaternion::Identity();
-	CVector3 padinput = CVector3::Zero();
-	CVector3 move_vector = CVector3::Zero();			
+	CQuaternion rot = CQuaternion::Identity();		
 	CharacterController m_characon;
 	ShaderResourceView shaderResource;
 	sprite sprite_ins;
@@ -80,14 +77,28 @@ private:
 		stop
 	};
 	m_state move_or_stop = stop;						//動いてるかどうか
-	void state_move();									//動いてる時
-	void state_stop();									//止まっている時
-	void Pad_Input();									//パッドの入力
+	void playermove();
 	void vector();
-	void Math();
+	void LightConf();
 
 
 	
 	m_camera* camera = nullptr;
+
+	/*
+	ライト
+	*/
+	std::vector<LightBase*> m_Light;
+	ligParam ligp;
+	SDirectionLight dirlightS[1];
+	SPointLight pointlightS[25];
+	SSpotLight spotlightS[1];
+	int spot_f = 1;
+	CVector3 colorV = CVector3::AxisZ();
+	CQuaternion Crot1 = CQuaternion::Identity();
+	CQuaternion Crot2 = CQuaternion::Identity();
+	CQuaternion Crot3 = CQuaternion::Identity();
+	CQuaternion Crot4 = CQuaternion::Identity();
+
 };
 

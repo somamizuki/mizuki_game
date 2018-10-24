@@ -104,7 +104,6 @@ private:
 	};
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
 	ConstantBuffer m_cb;
-	DirectionLight m_Dlight;
 	SDirectionLight m_sDrection;
 	//ID3D11Buffer*		m_cb = nullptr;					//!<定数バッファ。
 	Skeleton			m_skeleton;						//!<スケルトン。

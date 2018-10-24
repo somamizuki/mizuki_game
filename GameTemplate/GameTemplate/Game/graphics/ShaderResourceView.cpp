@@ -23,8 +23,10 @@ void ShaderResourceView::Release()
 
 bool ShaderResourceView::Create(StructuredBuffer& structuredBuffer)
 {
+
+	Release();
 	ID3D11Buffer* pBuf = structuredBuffer.GetBody();
-	if (pBuf = nullptr)
+	if (pBuf != nullptr)
 	{
 		D3D11_BUFFER_DESC descBuf;
 		ZeroMemory(&descBuf, sizeof(descBuf));
@@ -32,12 +34,13 @@ bool ShaderResourceView::Create(StructuredBuffer& structuredBuffer)
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
+		desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
 		desc.BufferEx.NumElements = 0;
 
 		desc.Format = DXGI_FORMAT_UNKNOWN;
 		desc.BufferEx.NumElements = descBuf.ByteWidth / descBuf.StructureByteStride;
 
-		HRESULT hr = GraphicsEngine().GetD3DDevice()->CreateShaderResourceView(pBuf, &desc, &m_srv);
+		HRESULT hr = g_graphicsEngine->GetD3DDevice()->CreateShaderResourceView(pBuf, &desc, &m_srv);
 		if (FAILED(hr))
 		{
 			return false;

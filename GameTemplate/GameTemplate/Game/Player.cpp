@@ -16,9 +16,119 @@ Player::~Player()
 
 bool Player::Start()
 {
+	/*
+	ライトの初期化
+	*/
+	float len = 1000.0f;
+
+	dirlightS[0].color = { 1.0f,1.0f,1.0f,1.0f };
+	dirlightS[0].Direction = { 1.0f,0.0f,0.0f,0.0f };
+
+	pointlightS[0].color = { 1.0f,0.0f,0.0f,1.0f };
+	pointlightS[0].position = { 2000.0f,200.0f,2000.0f,0.0f };
+	pointlightS[0].range = len;
+	pointlightS[1].color = { 1.0f,0.0f,0.0f,1.0f };
+	pointlightS[1].position = { 1000.0f,200.0f,2000.0f,0.0f };
+	pointlightS[1].range = len;
+	pointlightS[2].color = { 1.0f,0.0f,0.0f,1.0f };
+	pointlightS[2].position = { 0.0f,200.0f,2000.0f,0.0f };
+	pointlightS[2].range = len;
+	pointlightS[3].color = { 1.0f,0.0f,0.0f,1.0f };
+	pointlightS[3].position = { -1000.0f,200.0f,2000.0f,0.0f };
+	pointlightS[3].range = len;
+	pointlightS[4].color = { 1.0f,0.0f,0.0f,1.0f };
+	pointlightS[4].position = { -2000.0f,200.0f,2000.0f,0.0f };
+	pointlightS[4].range = len;
+
+	pointlightS[5].color = { 0.0f,1.0f,0.0f,1.0f };
+	pointlightS[5].position = { 2000.0f,200.0f,1000.0f,0.0f };
+	pointlightS[5].range = len;
+	pointlightS[6].color = { 0.0f,1.0f,0.0f,1.0f };
+	pointlightS[6].position = { 1000.0f,200.0f,1000.0f,0.0f };
+	pointlightS[6].range = len;
+	pointlightS[7].color = { 0.0f,1.0f,0.0f,1.0f };
+	pointlightS[7].position = { 0.0f,200.0f,1000.0f,0.0f };
+	pointlightS[7].range = len;
+	pointlightS[8].color = { 0.0f,1.0f,0.0f,1.0f };
+	pointlightS[8].position = { -1000.0f,200.0f,1000.0f,0.0f };
+	pointlightS[8].range = len;
+	pointlightS[9].color = { 0.0f,1.0f,0.0f,1.0f };
+	pointlightS[9].position = { -2000.0f,200.0f,1000.0f,0.0f };
+	pointlightS[9].range = len;
+
+	pointlightS[10].color = { 0.0f,0.0f,1.0f,1.0f };
+	pointlightS[10].position = { 2000.0f,200.0f,0.0f,0.0f };
+	pointlightS[10].range = len;
+	pointlightS[11].color = { 0.0f,0.0f,1.0f,1.0f };
+	pointlightS[11].position = { 1000.0f,200.0f,0.0f,0.0f };
+	pointlightS[11].range = len;
+	pointlightS[12].color = { 0.0f,0.0f,1.0f,1.0f };
+	pointlightS[12].position = { 0.0f,200.0f,0.0f,0.0f };
+	pointlightS[12].range = len;
+	pointlightS[13].color = { 0.0f,0.0f,1.0f,1.0f };
+	pointlightS[13].position = { -1000.0f,200.0f,0.0f,0.0f };
+	pointlightS[13].range = len;
+	pointlightS[14].color = { 0.0f,0.0f,1.0f,1.0f };
+	pointlightS[14].position = { -2000.0f,200.0f,0.0f,0.0f };
+	pointlightS[14].range = len;
+
+	pointlightS[15].color = { 0.0f,1.0f,1.0f,1.0f };
+	pointlightS[15].position = { 2000.0f,200.0f,-1000.0f,0.0f };
+	pointlightS[15].range = len;
+	pointlightS[16].color = { 0.0f,1.0f,1.0f,1.0f };
+	pointlightS[16].position = { 1000.0f,200.0f,-1000.0f,0.0f };
+	pointlightS[16].range = len;
+	pointlightS[17].color = { 0.0f,1.0f,1.0f,1.0f };
+	pointlightS[17].position = { 0.0f,200.0f,-1000.0f,0.0f };
+	pointlightS[17].range = len;
+	pointlightS[18].color = { 0.0f,1.0f,1.0f,1.0f };
+	pointlightS[18].position = { -1000.0f,200.0f,-1000.0f,0.0f };
+	pointlightS[18].range = len;
+	pointlightS[19].color = { 0.0f,1.0f,1.0f,1.0f };
+	pointlightS[19].position = { -2000.0f,200.0f,-1000.0f,0.0f };
+	pointlightS[19].range = len;
+
+	pointlightS[20].color = { 1.0f,0.0f,1.0f,1.0f };
+	pointlightS[20].position = { 2000.0f,200.0f,-2000.0f,0.0f };
+	pointlightS[20].range = len;
+	pointlightS[21].color = { 1.0f,0.0f,1.0f,1.0f };
+	pointlightS[21].position = { 1000.0f,200.0f,-2000.0f,0.0f };
+	pointlightS[21].range = len;
+	pointlightS[22].color = { 1.0f,0.0f,1.0f,1.0f };
+	pointlightS[22].position = { 0.0f,200.0f,-2000.0f,0.0f };
+	pointlightS[22].range = len;
+	pointlightS[23].color = { 1.0f,0.0f,1.0f,1.0f };
+	pointlightS[23].position = { -1000.0f,200.0f,-2000.0f,0.0f };
+	pointlightS[23].range = len;
+	pointlightS[24].color = { 1.0f,0.0f,1.0f,1.0f };
+	pointlightS[24].position = { -2000.0f,200.0f,-2000.0f,0.0f };
+	pointlightS[24].range = len;
+
+
+
+	spotlightS[0].color = { 1.0f,1.0f,1.0f,1.0f };
+	spotlightS[0].Direction = { 0.0f,-1.0f,0.0f,0.0f };
+	spotlightS[0].position = { 0.0f,1000.0f,0.0f,0.0f };
+	spotlightS[0].SpotAngle = 7.0f;
+	spotlightS[0].range = 20000.0f;
+
+
+	m_Light.push_back(new LightBase);
+	m_Light[0]->InitLight(&dirlightS,Direction,sizeof(dirlightS));
+	m_Light.push_back(new LightBase);
+	m_Light[1]->InitLight(&pointlightS,Point, sizeof(pointlightS));
+	m_Light.push_back(new LightBase);
+	m_Light[2]->InitLight(&spotlightS,Spot, sizeof(spotlightS));
+
+	m_Light[0]->setspecf(true);
+
+
+
+
+
 	camera = game_obj->FindGO<m_camera>("camera");
 	//cmoファイルの読み込み。
-	m_model.Init(L"Assets/modelData/unityChan.cmo");
+	m_model.Init(L"Assets/modelData/StarSparrow.cmo");
 	rot_M.MakeRotationFromQuaternion(m_rotation);
 	m_forward.x = rot_M.m[2][0];
 	m_forward.y = rot_M.m[2][1];
@@ -43,14 +153,27 @@ bool Player::Start()
 	return true;
 }
 
-void Player::state_move()
+void Player::playermove()
 {
+	pad_X = g_pad[0].GetLStickXF()*900.0f;
+	pad_Y = g_pad[0].GetLStickYF()*900.0f;
+
+	movespeed.x = 0.0f;
+	movespeed.z = 0.0f;
+	movespeed += camera->Get_camerarite()*pad_X;
+	movespeed += camera->GetXZ()*pad_Y;
+
+	float modelangle = 0.0f;
+	CVector3 modelrotAxis = CVector3::Zero();
+	movedir += camera->Get_camerarite()*pad_X;
+	movedir += camera->GetXZ()*pad_Y;
+	movedir.Normalize();
+	modelangle = CMath::RadToDeg(acosf(CVector3::AxisZ().Dot(movedir)));
+	modelrotAxis.Cross(CVector3::AxisZ(), movedir);
+	modelrotAxis.Normalize();
+	m_rotation.SetRotationDeg(modelrotAxis, modelangle);
 }
 
-void Player::state_stop()
-{
-}
-//いろんなベクトルの計算。
 void Player::vector()
 {
 	rot_M.MakeRotationFromQuaternion(m_rotation);
@@ -67,80 +190,64 @@ void Player::vector()
 	m_rite.Normalize();
 	m_up.Normalize();
 }
-//普通の計算
-void Player::Math()
-{
-	float MV_y = movespeed.y;
-	movespeed = camera->Get_camera_forward()* pad_Y * 300.0f+ camera->Get_camerarite()*pad_X*300.0f;
-	move_vector = movespeed;
-	
-	
-	move_vector.Normalize();
-	if (movespeed.Length() >= 0.00001f)
-	{
-		m_angle = acosf(move_vector.Dot(CVector3::AxisZ()));
-		CVector3 cross;
-		cross.Cross(CVector3::AxisZ(), move_vector);
-		cross.Normalize();
-		m_rotation.SetRotation(cross, m_angle);
-	}
-	movespeed.y = MV_y;
-}
 
-void Player::Pad_Input()
+void Player::LightConf()
 {
-	//パッドの入力量を代入
-	pad_X = g_pad[0].GetLStickXF();
-	pad_Y = g_pad[0].GetLStickYF();
-	padinput_vector = { pad_X ,0.0f,pad_Y };
-	//パッド入力があるかを判定
-	//入力有り。
-	if (padinput_vector.Length() >= 0.000001f)
-	{
-		move_or_stop = move;
-	}
-	//入力無し。
-	if (padinput_vector.Length() < 0.000001f)
-	{
-		move_or_stop = stop;
-	}
+	/*Crot1.SetRotationDeg(CVector3::AxisY(), 2.0f);
+	Crot1.Multiply(colorV);
+	Crot2.SetRotationDeg(CVector3::AxisX(), 2.0f);
+	Crot2.Multiply(colorV);
+	Crot3.SetRotationDeg(CVector3::AxisZ(), 2.0f);
+	Crot3.Multiply(colorV);
 
-	if (g_pad[0].IsTrigger(enButtonA) && m_characon.IsOnGround())
-	{
-		movespeed.y += 400.0f;
-	}
-	if (g_pad[0].IsTrigger(enButtonB))
-	{
-	}
+	dirlightS[0].color.x = colorV.x;
+	dirlightS[0].color.y = colorV.y;
+	dirlightS[0].color.z = colorV.z;
+	*/
+
+	Crot4.SetRotationDeg(CVector3::AxisY(), 2.0f);
+	Crot4.Multiply(dirlightS[0].Direction);
+
+	spotlightS[0].Direction.x = m_position.x - spotlightS[0].position.x;
+	spotlightS[0].Direction.y = m_position.y - spotlightS[0].position.y;
+	spotlightS[0].Direction.z = m_position.z - spotlightS[0].position.z;
+
+	ligp.eyepos = camera->GetPos();
+	ligp.specPow = 50.0f;
+
+	m_Light[0]->LightUpdateSubresource(&dirlightS);
+	m_Light[0]->SetlightParam(ligp);
+	m_Light[1]->LightUpdateSubresource(&pointlightS);
+	m_Light[2]->LightUpdateSubresource(&spotlightS);
 }
 
 void Player::Update()
 {
 	vector();
-	Pad_Input();
-	Math();
-	switch (move_or_stop) {
-	case stop:
-		state_stop();
-		break;
-	case move:
-		state_move();
-		break;
-	}
+	playermove();
+
+	LightConf();
+
+
 	
-	movespeed.y -= 9.8f;
+	/*movespeed.y -= 9.8f;*/
 	m_position = m_characon.Execute(1.0f/60.0f, movespeed);
 	//ワールド行列の更新。
+	
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
 }
 void Player::Draw()
 {
 	
+	m_Light[0]->SendConstantBuffer();
+	m_Light[1]->SendConstantBuffer();
+	m_Light[2]->SendConstantBuffer();
+
 	m_model.Draw(
 		g_camera3D.GetViewMatrix(), 
 		g_camera3D.GetProjectionMatrix()
 	);
-	sprite_ins.Draw(
-		*g_graphicsEngine->GetD3DDeviceContext()
-	);
+	//sprite_ins.Draw(
+	//	*g_graphicsEngine->GetD3DDeviceContext()
+	//);
 }

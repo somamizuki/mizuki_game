@@ -33,7 +33,7 @@
 #include "graphics/Shader.h"
 #include "graphics/sprite.h"
 
-#include"Light/DirectionLight.h"
+#include"Light/Light.h"
 #include "graphics/SkinModel.h"
 #include "graphics/Skeleton.h"
 

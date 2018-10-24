@@ -12,7 +12,7 @@ Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_
 		size_t convertedChars = 0;
 		mbstowcs_s(&convertedChars, WPmodel_name, char_size, CPmodel_name, _TRUNCATE);*/
 
-		if (std::wcscmp(Lobjdata.name, L"unityChan"/*char_to_wchar_t("unityChan")*/) == 0)
+		if (std::wcscmp(Lobjdata.name, L"StarSparrow"/*char_to_wchar_t("unityChan")*/) == 0)
 		{
 			player=new Player(0, "player");
 			player->setposition(Lobjdata.position);

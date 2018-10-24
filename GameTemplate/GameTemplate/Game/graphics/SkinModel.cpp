@@ -54,11 +54,6 @@ void SkinModel::InitSkeleton(const wchar_t* filePath)
 void SkinModel::InitConstantBuffer()
 {
 	m_cb.Create(NULL, sizeof(SVSConstantBuffer));
-	m_sDrection.color = { 1.0f,1.0f,1.0f,1.0f };
-	m_sDrection.Direction = { 0.0f,0.0f,1.0f, 1.0f };
-	m_sDrection.position = { 0.0f,200.0f,0.0f, 0.0f };
-	m_Dlight.Setm_directionLight(&m_sDrection);
-	m_Dlight.InitDirectionLight();
 
 	////作成するバッファのサイズをsizeof演算子で求める。
 	//int bufferSize = sizeof(SVSConstantBuffer);
@@ -127,12 +122,9 @@ void SkinModel::Draw(CMatrix viewMatrix, CMatrix projMatrix)
 	vsCb.mView = viewMatrix;
 	
 	d3dDeviceContext->UpdateSubresource(m_cb.GetBody(), 0, nullptr, &vsCb, 0, 0);
-	d3dDeviceContext->UpdateSubresource(m_Dlight.Get_constantBuffer()->GetBody(), 0, nullptr, &m_sDrection, 0, 0);
 	//定数バッファをGPUに転送。
 	d3dDeviceContext->VSSetConstantBuffers(0, 1, &m_cb.GetBody());
 	d3dDeviceContext->PSSetConstantBuffers(0, 1, &m_cb.GetBody());
-	d3dDeviceContext->VSSetConstantBuffers(1, 1, &m_Dlight.Get_constantBuffer()->GetBody());
-	d3dDeviceContext->PSSetConstantBuffers(1, 1, &m_Dlight.Get_constantBuffer()->GetBody());
 	//サンプラステートを設定。
 	d3dDeviceContext->PSSetSamplers(0, 1, &m_samplerState);
 	//ボーン行列をGPUに転送。

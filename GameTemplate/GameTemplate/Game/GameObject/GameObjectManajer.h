@@ -8,6 +8,7 @@ public:
 
 	void Set_push_list(GameObject* obj, int No)
 	{
+
 		GameObject_list[No].push_back(obj);
 	}
 
@@ -15,6 +16,7 @@ public:
 	template<class T>
 	T* FindGO(char *name)
 	{
+
 		for (auto& obj_list : GameObject_list)
 		{
 			for (auto obj : obj_list)
