@@ -17,10 +17,8 @@ sprite::~sprite()
 {
 }
 
-void sprite::Init(ShaderResourceView& tex, float w, float h,int d)
+void sprite::InitWorld2D(ShaderResourceView& tex, float w, float h)
 {
-	m_ps.Load("Assets/shader/sprite.fx", "PSMain", Shader::EnType::PS);
-	m_vs.Load("Assets/shader/sprite.fx", "VSMain", Shader::EnType::VS);
 	m_ps1.Load("Assets/shader/sprite.fx", "PS3DMain", Shader::EnType::PS);
 	m_vs1.Load("Assets/shader/sprite.fx", "VS3DMain", Shader::EnType::VS);
 	m_size.x = w;
@@ -28,11 +26,8 @@ void sprite::Init(ShaderResourceView& tex, float w, float h,int d)
 	float halfW = w * 0.5f;
 	float halfH = h * 0.5f;
 
-	SSinpleVertex vertices[4];
-	if (d==3)
+	SSinpleVertex vertices[4]=
 	{
-		SSinpleVertex vertices2[] =
-		{
 			{
 				CVector4(-halfW,-halfH,0.0f,1.0f),
 				CVector2(0.0f,1.0f),
@@ -49,32 +44,9 @@ void sprite::Init(ShaderResourceView& tex, float w, float h,int d)
 				CVector4(halfW, halfH, 0.0f, 1.0f),
 				CVector2(1.0f, 0.0f)
 			}
-		};
-		memcpy(vertices, vertices2, sizeof(SSinpleVertex) * 4);
-	}
-	else if(d==2)
-	{
-		SSinpleVertex vertices2[] =
-		{
-			{
-				CVector4(-1.0f,-1.0f,0.0f,1.0f),
-				CVector2(0.0f,1.0f),
-			},
-			{
-				CVector4(1.0f,-1.0f,0.0f,1.0f),
-				CVector2(1.0f,1.0f),
-			},
-			{
-				CVector4(-1.0f, 1.0f, 0.0f, 1.0f),
-				CVector2(0.0f, 0.0f)
-			},
-			{
-				CVector4(1.0f, 1.0f, 0.0f, 1.0f),
-				CVector2(1.0f, 0.0f)
-			}
-		};
-		memcpy(vertices, vertices2, sizeof(SSinpleVertex) * 4);
-	}
+	};
+
+	
 	short indices[] = { 0,1,2,3 };
 
 	m_primitive.Create(
@@ -88,6 +60,54 @@ void sprite::Init(ShaderResourceView& tex, float w, float h,int d)
 	);
 	m_textureSRV = &tex;
 	m_cb.Create(nullptr, sizeof(SSpriteCB));
+}
+
+void sprite::InitScreen2D(ShaderResourceView& tex, float w, float h,float size)
+{
+	m_ps.Load("Assets/shader/sprite.fx", "PSMain", Shader::EnType::PS);
+	m_vs.Load("Assets/shader/sprite.fx", "VSMain", Shader::EnType::VS);
+	m_size.x = w;
+	m_size.y = h;
+
+	cb2D.trans.x = 0.0f;
+	cb2D.trans.y = 0.0f;
+	cb2D.trans.z = 0.0f;
+	cb2D.trans.w = 0.0f;
+
+	SSinpleVertex vertices[4] =
+	{
+			{
+				CVector4(-1.0f*size+w,-1.0f*size+h,0.0f,1.0f),
+				CVector2(0.0f,1.0f),
+			},
+			{
+				CVector4(1.0f*size+w,-1.0f*size+h,0.0f,1.0f),
+				CVector2(1.0f,1.0f),
+			},
+			{
+				CVector4(-1.0f*size+w, 1.0f*size+h, 0.0f, 1.0f),
+				CVector2(0.0f, 0.0f)
+			},
+			{
+				CVector4(1.0f*size+w, 1.0f*size+h, 0.0f, 1.0f),
+				CVector2(1.0f, 0.0f)
+			}
+	};
+
+
+	short indices[] = { 0,1,2,3 };
+
+	m_primitive.Create(
+		D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
+		4,
+		sizeof(SSinpleVertex),
+		vertices,
+		4,
+		IndexBuffer::enIndexType_16,
+		indices
+	);
+	m_textureSRV = &tex;
+	m_cb2D.Create(nullptr, sizeof(SSpriteCB2D));
 }
 
 void sprite::Update(const CVector3& trans, const CQuaternion& rot, const CVector3& scale, const CVector2& pivot)
@@ -137,18 +157,26 @@ void sprite::Draw(ID3D11DeviceContext& rc, const CMatrix& viewMatrix, const CMat
 	m_primitive.Draw(rc);
 }
 
+void sprite::Update(const CVector2& trans)
+{
+	
+	cb2D.trans.x = trans.x;
+	cb2D.trans.y = trans.y;
+	cb2D.trans.z = 0.0f;
+	cb2D.trans.w = 0.0f;
+}
+
 void sprite::Draw(ID3D11DeviceContext& rc)
 {
 	if (m_textureSRV == nullptr) {
 		throw;
 		return;
 	}
-	SSpriteCB cb;
 
-	cb.mulColor = m_mulColor;
-	rc.UpdateSubresource(m_cb.GetBody(), 0, NULL, &cb, 0, 0);
-	rc.VSSetConstantBuffers(0, 1, &m_cb.GetBody());
-	rc.PSSetConstantBuffers(0, 1, &m_cb.GetBody());
+	cb2D.mulColor = m_mulColor;
+	rc.UpdateSubresource(m_cb2D.GetBody(), 0, NULL, &cb2D, 0, 0);
+	rc.VSSetConstantBuffers(11, 1, &m_cb2D.GetBody());
+	rc.PSSetConstantBuffers(11, 1, &m_cb2D.GetBody());
 	rc.PSSetShaderResources(0, 1, &m_textureSRV->GetBody());
 	rc.PSSetShader((ID3D11PixelShader*)m_ps.GetBody(), NULL, 0);
 	rc.VSSetShader((ID3D11VertexShader*)m_vs.GetBody(), NULL, 0);

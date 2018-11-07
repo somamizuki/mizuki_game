@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "GameObjectManajer.h"
+//#include "GameObjectManajer.h"
 
 
 GameObjectManajer::GameObjectManajer()
@@ -14,9 +14,9 @@ GameObjectManajer::~GameObjectManajer()
 
 void GameObjectManajer::Execute()
 {
-	for (auto obj_list : GameObject_list)
+	for (auto& obj_list : GameObject_list)				
 	{
-		for (const auto obj : obj_list)
+		for (const auto& obj : obj_list)
 		{
 			if (obj->Get_isStart()==false)
 			{
@@ -29,11 +29,16 @@ void GameObjectManajer::Execute()
 
 		}
 	}
-	for (auto obj_list : GameObject_list)
+	for (auto& obj_list : GameObject_list)
 	{
-		for (const auto obj : obj_list)
+		for (const auto& obj : obj_list)
 		{
-			obj->Draw();
+			if (obj->Get_isStart() == true)
+			{
+				
+				obj->Draw();
+			}
+			
 		}
 	}
 }
@@ -42,7 +47,7 @@ void GameObjectManajer::DeleteGO(char *name)
 {
 	for (auto& obj_list : GameObject_list)
 	{
-		for (auto obj : obj_list)
+		for (auto& obj : obj_list)
 		{
 			if (std::strcmp(name, obj->GetName()))
 			{

@@ -49,7 +49,6 @@ private:
 	ID3D11RasterizerState*	m_rasterizerState = NULL;	//ラスタライザステート。
 	ID3D11Texture2D*		m_depthStencil = NULL;		//デプスステンシル。
 	ID3D11DepthStencilView* m_depthStencilView = NULL;	//デプスステンシルビュー。
-	//DirectionLight m_Drection;
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

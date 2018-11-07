@@ -67,7 +67,7 @@ struct SSpotLight {
 
 
 
-StructuredBuffer <SDirectionLight>DirectionLightSB:register(t101);
+StructuredBuffer <SDirectionLight>DirectionLightSB:register(t100);
 StructuredBuffer <SPointLight>PointLightSB : register(t102);
 StructuredBuffer <SSpotLight>SpotLightSB : register(t103);
 
@@ -130,11 +130,10 @@ float4 DirectionLightColor(PSInput Input)
 
 		float4 DlightC = max(0, dot(-m_d2, Input.Normal)) * DirectionLightSB[i].Dir_color;
 
-		t = max(0.0f, dot(m_d2*-1.0f, reflecteyedir));
+		/*t = max(0.0f, dot(m_d2*-1.0f, reflecteyedir));
 		specLig = max(0.0f,pow(t, specPow) * DirectionLightSB[i].Dir_color);
-		DlightC += specLig;
+		DlightC += specLig;*/
 		finalcolor += max(0.0f, DlightC);
-		
 		
 	}
 	return finalcolor;
@@ -292,7 +291,7 @@ float4 PSMain( PSInput In ) : SV_Target0
 {
 
 
-	float4 lig = DirectionLightColor(In) + PointLightColor(In) + SpotLightColor(In) + float4(0.1f, 0.1f, 0.1f, 0.0f);
+	float4 lig = DirectionLightColor(In) + /*PointLightColor(In) + SpotLightColor(In) + */float4(0.1f, 0.1f, 0.1f, 0.0f);
 
 	float4 texC2 = albedoTexture.Sample(Sampler ,In.TexCoord);
 	

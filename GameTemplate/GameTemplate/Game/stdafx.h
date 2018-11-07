@@ -34,6 +34,8 @@
 #include "graphics/sprite.h"
 
 #include"Light/Light.h"
+#include"Light/LightBase.h"
+#include"Light/LightManager.h"
 #include "graphics/SkinModel.h"
 #include "graphics/Skeleton.h"
 
@@ -45,6 +47,7 @@
 
 
 extern GameObjectManajer *game_obj;
+extern LightManager *Light_obj;
 static wchar_t* char_to_wchar_t(char* name)
 {
 	char* CPmodel_name = name;

@@ -2,6 +2,7 @@
 #include "Player.h"
 #include"math/kMath.h"
 #include "m_camera.h"
+#include"bullet.h"
 
 
 Player::Player(int No, const char* obj_name):GameObject(No, obj_name)
@@ -16,13 +17,16 @@ Player::~Player()
 
 bool Player::Start()
 {
+
+
+
 	/*
 	ライトの初期化
 	*/
 	float len = 1000.0f;
 
-	dirlightS[0].color = { 1.0f,1.0f,1.0f,1.0f };
-	dirlightS[0].Direction = { 1.0f,0.0f,0.0f,0.0f };
+	/*dirlightS[0].color = { 1.0f,1.0f,1.0f,1.0f };
+	dirlightS[0].Direction = { 1.0f,-1.0f,0.0f,0.0f };
 
 	pointlightS[0].color = { 1.0f,0.0f,0.0f,1.0f };
 	pointlightS[0].position = { 2000.0f,200.0f,2000.0f,0.0f };
@@ -120,7 +124,7 @@ bool Player::Start()
 	m_Light.push_back(new LightBase);
 	m_Light[2]->InitLight(&spotlightS,Spot, sizeof(spotlightS));
 
-	m_Light[0]->setspecf(true);
+	m_Light[0]->setspecf(true);*/
 
 
 
@@ -129,6 +133,9 @@ bool Player::Start()
 	camera = game_obj->FindGO<m_camera>("camera");
 	//cmoファイルの読み込み。
 	m_model.Init(L"Assets/modelData/StarSparrow.cmo");
+	
+
+
 	rot_M.MakeRotationFromQuaternion(m_rotation);
 	m_forward.x = rot_M.m[2][0];
 	m_forward.y = rot_M.m[2][1];
@@ -143,22 +150,49 @@ bool Player::Start()
 	m_rite.Normalize();
 	m_up.Normalize();
 	m_characon.Init(
-		30.0f,
-		80.0f,
+		100.0f,
+		100.0f,
 		m_position
 	);
 
 	shaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/damage.dds");
-	sprite_ins.Init(shaderResource, 1000.0f, 1000.0f,2);
+	sprite_ins.InitScreen2D(shaderResource, 0.0f, 0.0f,0.05f);
 	return true;
 }
 
 void Player::playermove()
 {
-	pad_X = g_pad[0].GetLStickXF()*900.0f;
-	pad_Y = g_pad[0].GetLStickYF()*900.0f;
+	CQuaternion rotX = CQuaternion::Identity();
+	CQuaternion rotY = CQuaternion::Identity();
+	float pad_X;									//パッドXの入力量
+	float pad_Y;									//パッドYの入力量
+	pad_X = g_pad[0].GetLStickXF()*3.0f;
+	pad_Y = g_pad[0].GetLStickYF()*3.0f;
 
-	movespeed.x = 0.0f;
+	movespeed = m_forward * 2000.0f;
+	if (g_pad[0].IsPress(enButtonB))
+	{
+		movespeed = m_forward * 6000.0f;
+	}
+	
+	rotX.SetRotationDeg(CVector3::AxisZ(), -pad_X);
+	m_rotation.Multiply(rotX);
+	rotY.SetRotationDeg(CVector3::AxisX(), pad_Y);
+	m_rotation.Multiply(rotY);
+	if (g_pad[0].IsPress(enButtonLB1))
+	{
+		rotY.SetRotationDeg(CVector3::AxisY(), -0.7f);
+		m_rotation.Multiply(rotY);
+	}
+	if (g_pad[0].IsPress(enButtonRB1))
+	{
+		rotY.SetRotationDeg(CVector3::AxisY(), 0.7f);
+		m_rotation.Multiply(rotY);
+	}
+
+
+
+	/*movespeed.x = 0.0f;
 	movespeed.z = 0.0f;
 	movespeed += camera->Get_camerarite()*pad_X;
 	movespeed += camera->GetXZ()*pad_Y;
@@ -171,7 +205,7 @@ void Player::playermove()
 	modelangle = CMath::RadToDeg(acosf(CVector3::AxisZ().Dot(movedir)));
 	modelrotAxis.Cross(CVector3::AxisZ(), movedir);
 	modelrotAxis.Normalize();
-	m_rotation.SetRotationDeg(modelrotAxis, modelangle);
+	m_rotation.SetRotationDeg(modelrotAxis, modelangle);*/
 }
 
 void Player::vector()
@@ -202,13 +236,13 @@ void Player::LightConf()
 
 	dirlightS[0].color.x = colorV.x;
 	dirlightS[0].color.y = colorV.y;
-	dirlightS[0].color.z = colorV.z;
-	*/
+	dirlightS[0].color.z = colorV.z;*/
+	
 
-	Crot4.SetRotationDeg(CVector3::AxisY(), 2.0f);
-	Crot4.Multiply(dirlightS[0].Direction);
+	/*Crot4.SetRotationDeg(CVector3::AxisY(), 2.0f);
+	Crot4.Multiply(dirlightS[0].Direction);*/
 
-	spotlightS[0].Direction.x = m_position.x - spotlightS[0].position.x;
+	/*spotlightS[0].Direction.x = m_position.x - spotlightS[0].position.x;
 	spotlightS[0].Direction.y = m_position.y - spotlightS[0].position.y;
 	spotlightS[0].Direction.z = m_position.z - spotlightS[0].position.z;
 
@@ -218,36 +252,95 @@ void Player::LightConf()
 	m_Light[0]->LightUpdateSubresource(&dirlightS);
 	m_Light[0]->SetlightParam(ligp);
 	m_Light[1]->LightUpdateSubresource(&pointlightS);
-	m_Light[2]->LightUpdateSubresource(&spotlightS);
+	m_Light[2]->LightUpdateSubresource(&spotlightS);*/
 }
 
 void Player::Update()
 {
-	vector();
+	
 	playermove();
 
 	LightConf();
 
 
+
+
 	
 	/*movespeed.y -= 9.8f;*/
+	vector();
 	m_position = m_characon.Execute(1.0f/60.0f, movespeed);
-	//ワールド行列の更新。
+	bool atack_f = true;
+	for (auto& tama : m_bullet)
+	{
+		CVector3 to_bullet = m_position - tama->Getpos();
+		if (to_bullet.Length() <= 1500.0f)
+		{
+			atack_f = false;
+		}
+		CVector3 player_to_bullet = m_position - tama->Getpos();
+		if (player_to_bullet.Length() > 50000.0f)
+		{
+			game_obj->DeleteGO(tama);
+			m_bullet.erase(std::remove(m_bullet.begin(), m_bullet.end(), tama), m_bullet.end());
+		}
+	}
 	
+	if (g_pad[0].IsTrigger(enButtonRB2)&& atack_f==true)
+	{
+		m_bullet.push_back(new bullet(0, "bullet"));
+	}
+	
+	
+	//ワールド行列の更新。
+
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
+
+	/*if (yf == true)
+	{
+		if (sp_y <= 1.0f)
+		{
+			sp_y += 0.017f;
+		}
+		else
+		{
+			yf = false;
+		}
+	}
+	if (yf == false) 
+	{
+		if (sp_y >= -1.0f)
+		{
+			sp_y -= 0.017f;
+		}
+		else {
+			yf = true;
+		}
+	}*/
+
+	
+
+	CVector2 sptrans = CVector2(0.0f, 0.0f);
+	CVector4 tmp = m_position + m_up * 100.0f + m_forward * 500.0f;
+	g_camera3D.GetViewMatrix().Mul(tmp);
+	g_camera3D.GetProjectionMatrix().Mul(tmp);
+	sptrans.x = tmp.x / tmp.w ;
+	sptrans.y = tmp.y / tmp.w ;
+
+	sprite_ins.Update(sptrans);
+	
 }
 void Player::Draw()
 {
 	
-	m_Light[0]->SendConstantBuffer();
+	/*m_Light[0]->SendConstantBuffer();
 	m_Light[1]->SendConstantBuffer();
-	m_Light[2]->SendConstantBuffer();
+	m_Light[2]->SendConstantBuffer();*/
 
 	m_model.Draw(
 		g_camera3D.GetViewMatrix(), 
 		g_camera3D.GetProjectionMatrix()
 	);
-	//sprite_ins.Draw(
-	//	*g_graphicsEngine->GetD3DDeviceContext()
-	//);
+	sprite_ins.Draw(
+		*g_graphicsEngine->GetD3DDeviceContext()
+	);
 }

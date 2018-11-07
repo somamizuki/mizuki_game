@@ -3,12 +3,12 @@
 #include"character/CharacterController.h"
 #include"graphics/sprite.h"
 #include"Light/LightBase.h"
-
 class m_camera;
+class bullet;
 class Player:public GameObject
 {
 public:
-	Player(int No, /*const*/ const char* obj_name);
+	Player(int No, const char* obj_name);
 	~Player();
 	bool Start();
 	void Update();
@@ -52,6 +52,9 @@ public:
 	}*/
 private:
 	SkinModel m_model;									//スキンモデル。
+
+	
+
 	CVector3 m_position = CVector3::Zero();				//プレイヤーのポジション
 	CQuaternion m_rotation = CQuaternion::Identity();
 	CVector3 movespeed = CVector3::Zero();				//movespeed
@@ -68,8 +71,7 @@ private:
 	float m_angle = 0.0f;
 
 
-	float pad_X = 0.0f;									//パッドXの入力量
-	float pad_Y = 0.0f;									//パッドYの入力量
+	
 
 
 	enum m_state {
@@ -88,7 +90,7 @@ private:
 	/*
 	ライト
 	*/
-	std::vector<LightBase*> m_Light;
+	/*std::vector<LightBase*> m_Light;
 	ligParam ligp;
 	SDirectionLight dirlightS[1];
 	SPointLight pointlightS[25];
@@ -98,7 +100,15 @@ private:
 	CQuaternion Crot1 = CQuaternion::Identity();
 	CQuaternion Crot2 = CQuaternion::Identity();
 	CQuaternion Crot3 = CQuaternion::Identity();
-	CQuaternion Crot4 = CQuaternion::Identity();
+	CQuaternion Crot4 = CQuaternion::Identity();*/
+	std::vector<bullet*> m_bullet;
+
+
+	float sp_y = 0.0f;
+	bool yf = true;
+
+	
+	/*ShaderResourceView* m_normal*/
 
 };
 

@@ -2,6 +2,8 @@
 #include "level/Level.h"
 #include "Player.h"
 #include"m_camera.h"
+#include"Enemy.h"
+#include"Light/CDirectionLight.h"
 
 class Class_of_NewGO:public GameObject
 {
@@ -15,9 +17,10 @@ public:
 private:
 	
 	Player* player = nullptr;
-	int i = 0;
+	std::vector<Enemy*> m_enemy;
 	Level *level = new Level;
 	m_camera* camera;
+	CDirectionLight m_dirlig;
 	
 };
 

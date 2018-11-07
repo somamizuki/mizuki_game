@@ -4,6 +4,16 @@
 
 Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_name)
 {
+	SDirectionLight sdir;
+	sdir.color = { 1.0f,1.0f,1.0f,1.0f };
+	sdir.Direction = { 0.0f,-1.0f,0.0f,0.0f };
+	m_dirlig.SetLight(sdir);
+	sdir.color = { 1.0f,0.0f,0.0f,1.0f };
+	sdir.Direction = { 0.0f,1.0f,0.0f,0.0f };
+	m_dirlig.SetLight(sdir);
+
+
+	int enemyNo = 0;
 	level->Init(L"Assets/level/stage_02.tkl", [&](LevelObjectData Lobjdata) {
 
 		/*char* CPmodel_name = "unityChan";
@@ -17,7 +27,13 @@ Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_
 			player=new Player(0, "player");
 			player->setposition(Lobjdata.position);
 			player->setrot(Lobjdata.rotation);
-			i++;
+		}
+		else if (std::wcscmp(Lobjdata.name, L"Enemy")==0)
+		{
+			m_enemy.push_back(new Enemy(0, "enemy"));
+			m_enemy[enemyNo]->Setpos(Lobjdata.position);
+			m_enemy[enemyNo]->Setrot(Lobjdata.rotation);
+			enemyNo++;
 		}
 		else
 		{

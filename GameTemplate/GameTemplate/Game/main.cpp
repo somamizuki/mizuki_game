@@ -22,6 +22,7 @@ public:
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
 GameObjectManajer* game_obj;
+LightManager *Light_obj;
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
 	//ゲームの初期化。
@@ -33,6 +34,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D.SetFar(10000.0f);*/
 
 	game_obj = new GameObjectManajer;
+	Light_obj = new LightManager;
 
 	Class_of_NewGO *newObject = new Class_of_NewGO(0,"newObject");
 
@@ -51,7 +53,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		}
 		//物理エンジンの更新。
 		g_physics.Update();
+		Light_obj->LightExecute();
 		game_obj->Execute();
+
 
 		
 		//描画終了。

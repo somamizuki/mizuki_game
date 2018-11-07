@@ -99,9 +99,14 @@
     </MeshContentTask>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bullet.cpp" />
+    <ClCompile Include="Light\CDirectionLight.cpp" />
+    <ClCompile Include="Light\LightBase.cpp" />
+    <ClCompile Include="Light\LightManager.cpp" />
     <ClCompile Include="character\CharacterController.cpp" />
     <ClCompile Include="Class_of_NewGO.cpp" />
-    <ClCompile Include="Light\LightBase.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="enemybullet.cpp" />
     <ClCompile Include="graphics\GPUBuffer.cpp" />
     <ClCompile Include="graphics\ConstantBuffer.cpp" />
     <ClCompile Include="GameObject\GameObjectManajer.cpp" />
@@ -146,10 +151,15 @@
     <ClCompile Include="graphics\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="character\CharacterController.h" />
-    <ClInclude Include="Class_of_NewGO.h" />
+    <ClInclude Include="bullet.h" />
+    <ClInclude Include="Light\CDirectionLight.h" />
     <ClInclude Include="Light\Light.h" />
     <ClInclude Include="Light\LightBase.h" />
+    <ClInclude Include="Light\LightManager.h" />
+    <ClInclude Include="character\CharacterController.h" />
+    <ClInclude Include="Class_of_NewGO.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="enemybullet.h" />
     <ClInclude Include="graphics\GPUBuffer.h" />
     <ClInclude Include="graphics\ConstantBuffer.h" />
     <ClInclude Include="GameObject\GameObjectManajer.h" />
@@ -194,6 +204,8 @@
     <ClInclude Include="graphics\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <MeshContentTask Include="Assets\modelData\Enemy.FBX" />
+    <MeshContentTask Include="Assets\modelData\kyutai.FBX" />
     <MeshContentTask Include="Assets\modelData\obj.fbx" />
     <MeshContentTask Include="Assets\modelData\stage.fbx" />
     <MeshContentTask Include="Assets\modelData\StarSparrow.fbx" />

@@ -12,7 +12,8 @@ public:
 	sprite();
 	~sprite();
 
-	void Init(ShaderResourceView& tex, float w, float h,int d);			//èâä˙âª
+	void InitWorld2D(ShaderResourceView& tex, float w, float h);			//èâä˙âª
+	void InitScreen2D(ShaderResourceView& tex, float w, float h,float size);
 
 	void SetTexture(ShaderResourceView& tex)							//
 	{
@@ -25,12 +26,16 @@ public:
 	}
 
 	void Update(const CVector3& trans, const CQuaternion& rot, const CVector3& scale, const CVector2& pivot = DEFAULT_PIVOT);
-
+	void Update(const CVector2& trans);
 	void Draw(ID3D11DeviceContext& renderContext, const CMatrix& viewMatrix, const CMatrix& projMatrix);
 	void Draw(ID3D11DeviceContext& renderContext);
 private:
 	struct SSpriteCB {
 		CMatrix WVP;
+		CVector4 mulColor;
+	};
+	struct SSpriteCB2D {
+		CVector4 trans;
 		CVector4 mulColor;
 	};
 
@@ -43,10 +48,13 @@ private:
 	Shader m_ps1;
 	Shader m_vs1;
 
+
+	SSpriteCB2D cb2D;
 	CVector4 m_mulColor = CVector4::White();
 	Primitive m_primitive;
 	ShaderResourceView* m_textureSRV = nullptr;
 	ConstantBuffer m_cb;
+	ConstantBuffer m_cb2D;
 
 	CVector2 m_size = CVector2::Zero();
 };
