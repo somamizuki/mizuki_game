@@ -5,24 +5,26 @@
 Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_name)
 {
 	SDirectionLight sdir;
+	SPointLight spoint;
+
 	sdir.color = { 1.0f,1.0f,1.0f,1.0f };
 	sdir.Direction = { 0.0f,-1.0f,0.0f,0.0f };
 	m_dirlig.SetLight(sdir);
 	sdir.color = { 1.0f,0.0f,0.0f,1.0f };
 	sdir.Direction = { 0.0f,1.0f,0.0f,0.0f };
 	m_dirlig.SetLight(sdir);
+	spoint.color= { 1.0f,0.0f,0.0f,1.0f };
+	spoint.position= { 0.0f,100.0f,0.0f,0.0f };
+	spoint.range = 1000.0f;
+	m_pointlig.SetLight(spoint);
 
 
 	int enemyNo = 0;
 	level->Init(L"Assets/level/stage_02.tkl", [&](LevelObjectData Lobjdata) {
 
-		/*char* CPmodel_name = "unityChan";
-		size_t char_size = strlen(CPmodel_name) + 1;
-		wchar_t *WPmodel_name = new wchar_t[char_size];
-		size_t convertedChars = 0;
-		mbstowcs_s(&convertedChars, WPmodel_name, char_size, CPmodel_name, _TRUNCATE);*/
+		
 
-		if (std::wcscmp(Lobjdata.name, L"StarSparrow"/*char_to_wchar_t("unityChan")*/) == 0)
+		if (std::wcscmp(Lobjdata.name, L"StarSparrow") == 0)
 		{
 			player=new Player(0, "player");
 			player->setposition(Lobjdata.position);

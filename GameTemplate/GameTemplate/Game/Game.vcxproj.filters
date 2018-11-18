@@ -159,8 +159,15 @@
     <ClCompile Include="Light\LightManager.cpp">
       <Filter>Light</Filter>
     </ClCompile>
-    <ClCompile Include="Light\LightBase.cpp" />
-    <ClCompile Include="Light\CDirectionLight.cpp" />
+    <ClCompile Include="Light\CDirectionLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\CPointLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\LightBase.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -291,9 +298,18 @@
     <ClInclude Include="Light\LightManager.h">
       <Filter>Light</Filter>
     </ClInclude>
-    <ClInclude Include="Light\LightBase.h" />
-    <ClInclude Include="Light\Light.h" />
-    <ClInclude Include="Light\CDirectionLight.h" />
+    <ClInclude Include="Light\CDirectionLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\CPointLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\Light.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\LightBase.h">
+      <Filter>Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -308,11 +324,13 @@
     <MeshContentTask Include="Assets\modelData\yuka.fbx">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
-    <MeshContentTask Include="Assets\modelData\Enemy.FBX" />
     <MeshContentTask Include="Assets\modelData\kyutai.FBX">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\StarSparrow.fbx">
+      <Filter>Assets\modelData</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\Enemy.FBX">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
   </ItemGroup>
@@ -320,5 +338,6 @@
     <ImageContentTask Include="Assets\sprite\damage.png">
       <Filter>Assets\modelData</Filter>
     </ImageContentTask>
+    <ImageContentTask Include="Assets\sprite\mato.png" />
   </ItemGroup>
 </Project>

@@ -32,35 +32,63 @@ bool m_camera::Start()
 	return true;
 }
 
-void m_camera::Update()
+void m_camera::CameraMove()
 {
-	float Abs = 150.0f;
-	float amount = 10.0f;
-	pad_Y += g_pad[0].GetLStickYF()*amount;
-	pad_Y = min(pad_Y, Abs);
-	pad_Y = max(pad_Y, -Abs);
-	if (g_pad[0].GetLStickYF()==0.0f)
+	pad_Y = g_pad[0].GetLStickYF();
+	pad_X = g_pad[0].GetLStickXF();
+	rotYmax = pad_Y * 20.0f;
+	if (rotYmax > m_angleY)
 	{
-		if (pad_Y > 0.0f)
-		{
-			pad_Y -= amount;
-			pad_Y = max(pad_Y, 0.0f);
-		}
-		if (pad_Y < 0.0f)
-		{
-			pad_Y += amount;
-			pad_Y = min(pad_Y, 0.0f);
-		}
+		m_angleY += (rotYmax - m_angleY)*(1.0f / 15.0f);
 	}
+	if (rotYmax < m_angleY)
+	{
+		m_angleY += (rotYmax - m_angleY)*(1.0f / 15.0f);
+	}
+	/*rotXmax = (pad_X * 10.0f)*abs(pad_Y);
+	if (rotXmax > m_angleX)
+	{
+		m_angleX += (rotXmax - m_angleX)*(1.0f / 10.0f);
+	}
+	if (rotXmax < m_angleX)
+	{
+		m_angleX += (rotXmax - m_angleX)*(1.0f / 10.0f);
+	}*/
+
+
 
 	camera_rite = player->Getrite();
 	player_pos = player->Getpos();
 	camera_Target = player_pos + player->Getup()*100.0f;
-	camera_Pos = camera_Target - player->Getforward()*500.0f + player->Getup()*-pad_Y;
+	if (g_pad[0].IsPress(enButtonB))
+	{
+		CamLen = min(800.0f, CamLen + 10.0f);
+	}
+	else {
+		CamLen = max(500.0f, CamLen - 10.0f);
+	}
+
+
+	CVector3 vec = player->Getforward()*CamLen;
+	CQuaternion rotY = CQuaternion::Identity();
+	rotY.SetRotationDeg(player->Getrite(), -m_angleY);
+	rotY.Multiply(vec);
+	/*CQuaternion rotX = CQuaternion::Identity();
+	rotX.SetRotationDeg(player->Getup(), -m_angleX);
+	rotX.Multiply(vec);*/
+
+	camera_Pos = camera_Target - vec;
 	if (g_pad[0].IsPress(enButtonLB2))
 	{
 		camera_Pos = camera_Target + player->Getforward()*500.0f + player->Getup()*-pad_Y;
 	}
+}
+
+void m_camera::Update()
+{
+	CameraMove();
+
+	
 
 	target_to_pos = camera_Pos - camera_Target;
 	camera_forward = target_to_pos * -1.0f;
@@ -68,43 +96,15 @@ void m_camera::Update()
 
 
 
-	/*pad_X = g_pad[0].GetRStickXF()*2.0f;
-	pad_Y = g_pad[0].GetRStickYF()*2.0f;
-	camrotX.SetRotationDeg(player->Getup(), pad_X);
-	camrotX.Multiply(target_to_pos);
-	camrotX.Multiply(camera_rite);
-	camrotY.SetRotationDeg(camera_rite, -pad_Y);
-	camrotY.Multiply(target_to_pos);
-
-
-	player_pos = player->Getpos();
-	camera_Target = player_pos + player->Getup()*100.0f;
-	camera_Pos = camera_Target+target_to_pos;
-
-	target_to_pos = camera_Pos - camera_Target;
-	camera_forward = target_to_pos * -1.0f;
-	camera_forward.Normalize();
-	cameraXZ = camera_forward;
-	cameraXZ.y = 0.0f;
-	cameraXZ.Normalize();
-	float Y_angle = 0.0f;
-	Y_angle = CMath::RadToDeg(acosf(cameraXZ.Dot(camera_forward)));
-	if (Y_angle >= 80.0f)
-	{
-		camrotY.SetRotationDeg(camera_rite, pad_Y);
-		camrotY.Multiply(target_to_pos);
-
-		camera_Pos = camera_Target + target_to_pos;
-		target_to_pos = camera_Pos - camera_Target;
-		camera_forward = target_to_pos * -1.0f;
-		camera_forward.Normalize();
-		cameraXZ = camera_forward;
-		cameraXZ.y = 0.0f;
-		cameraXZ.Normalize();
-	}*/
+	
 
 
 	camera_Up = player->Getup();
+
+	ligParam ligp;
+	ligp.eyepos = camera_Pos;
+	ligp.specPow = 50.0f;
+	Light_obj->SetLightParam(ligp);
 
 	g_camera3D.SetPosition(camera_Pos);
 	g_camera3D.SetTarget(camera_Target);

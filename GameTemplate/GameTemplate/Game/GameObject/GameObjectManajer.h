@@ -21,8 +21,7 @@ public:
 			{
 				if (obj == obj_t)
 				{
-					obj_list.erase(std::remove(obj_list.begin(), obj_list.end(), obj), obj_list.end());
-					delete obj_t;
+					obj_t->SetDeath_f(true);
 					break;
 				}
 			}
@@ -36,7 +35,7 @@ public:
 		{
 			for (auto& obj : obj_list)
 			{
-				if (std::strcmp(name, obj->GetName())==0)
+				if (!(std::strcmp(name, obj->GetName())))
 				{
 					return (T*)obj;
 				}
@@ -44,6 +43,24 @@ public:
 		}
 		return nullptr;
 	}
+
+	template<class T>
+	T* FindGO(T* obj_t)
+	{
+
+		for (auto& obj_list : GameObject_list)
+		{
+			for (auto& obj : obj_list)
+			{
+				if (obj== obj_t)
+				{
+					return (T*)obj;
+				}
+			}
+		}
+		return nullptr;
+	}
+
 	void Execute();
 private:
 	std::vector<std::list<GameObject*>> GameObject_list;

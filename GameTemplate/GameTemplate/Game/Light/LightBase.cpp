@@ -2,7 +2,6 @@
 
 LightBase::LightBase()
 {
-	Light_obj->PushLight(this);
 }
 
 

@@ -16,17 +16,23 @@ public:
 		return camera_rite;
 	}
 
-	const CVector3 GetPos() const
+	const CVector3 GetPos() const							//カメラのポジションのゲッター
 	{
 		return camera_Pos;
 	}
 
-	const CVector3 GetXZ()
+	const CVector3 GetXZ() const							//気にしない
 	{
 		return cameraXZ;
 	}
-
+	
 private:
+	void CameraMove();										//カメラの動きを管理する関数
+
+
+
+
+
 	CVector3 player_pos = CVector3::Zero();					//プレイヤーのポジションを格納する
 
 	CVector3 camera_Pos = CVector3::Zero();					//カメラのポジション
@@ -45,19 +51,16 @@ private:
 	Player* player = nullptr;								//プレイヤーのポインター
 	float pad_X = 0.0f;										//パッドの入力量
 	float pad_Y = 0.0f;
-	float m_angle = 0.0f;									//角度
+	float oldrot = 0.0f;
+	float rotYmax = 0.0f;
+	float rotXmax = 0.0f;
+	float m_angleY = 0.0f;									//角度
+	float m_angleX = 0.0f;
 	float rot_f = 0.0f;										//回転を徐々にさせるための変数
+	float CamLen = 0.0f;
 	void Math_Vector();										//いくつかのベクトルの計算
 	void Various_Getter();									//様々なゲッター
 	void PadInput();										//パッドの入力
-	void camera_move();										//
-	void camera_stop();
-
-	enum m_state {
-		move,
-		stop
-	};
-	m_state move_or_stop = stop;
 
 };
 

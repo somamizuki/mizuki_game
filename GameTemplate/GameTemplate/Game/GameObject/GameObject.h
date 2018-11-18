@@ -28,9 +28,19 @@ public:
 	{
 		m_start = start_f;
 	}
+	bool GetDeath_f()
+	{
+		return death_f;
+	}
+
+	void SetDeath_f(bool flag)
+	{
+		death_f = flag;
+	}
 private:
 	const char* this_name;
 	bool m_start = false;
+	bool death_f = false;
 
 };
 

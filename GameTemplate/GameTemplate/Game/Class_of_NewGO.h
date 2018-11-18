@@ -4,6 +4,7 @@
 #include"m_camera.h"
 #include"Enemy.h"
 #include"Light/CDirectionLight.h"
+#include"Light/CPointLight.h"
 
 class Class_of_NewGO:public GameObject
 {
@@ -13,6 +14,10 @@ public:
 	bool Start() { return true; }
 	void Update();
 	void Draw();
+	std::vector<Enemy*>& GetEnemy()
+	{
+		return m_enemy;
+	}
 
 private:
 	
@@ -21,6 +26,7 @@ private:
 	Level *level = new Level;
 	m_camera* camera;
 	CDirectionLight m_dirlig;
-	
+	CPointLight m_pointlig;
+
 };
 

@@ -68,8 +68,8 @@ struct SSpotLight {
 
 
 StructuredBuffer <SDirectionLight>DirectionLightSB:register(t100);
-StructuredBuffer <SPointLight>PointLightSB : register(t102);
-StructuredBuffer <SSpotLight>SpotLightSB : register(t103);
+StructuredBuffer <SPointLight>PointLightSB : register(t101);
+StructuredBuffer <SSpotLight>SpotLightSB : register(t102);
 
 
 /////////////////////////////////////////////////////////////
@@ -118,8 +118,8 @@ float4 DirectionLightColor(PSInput Input)
 {
 	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
 	
-	float3 toEyeV = normalize(eyepos - Input.worldPos);
-	float3 reflecteyedir = -toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
+	float3 toEyeV = normalize(Input.worldPos-eyepos);
+	float3 reflecteyedir = reflect(toEyeV, Input.Normal);//-toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
 	float t = 0.0f;
 	float4 specLig = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	for (int i = 0; i < dirsum; i++)
@@ -130,9 +130,9 @@ float4 DirectionLightColor(PSInput Input)
 
 		float4 DlightC = max(0, dot(-m_d2, Input.Normal)) * DirectionLightSB[i].Dir_color;
 
-		/*t = max(0.0f, dot(m_d2*-1.0f, reflecteyedir));
+		t = max(0.0f, dot(m_d2*-1.0f, reflecteyedir));
 		specLig = max(0.0f,pow(t, specPow) * DirectionLightSB[i].Dir_color);
-		DlightC += specLig;*/
+		DlightC += specLig;
 		finalcolor += max(0.0f, DlightC);
 		
 	}
@@ -142,8 +142,8 @@ float4 DirectionLightColor(PSInput Input)
 float4 PointLightColor(PSInput Input)
 {
 	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
-	float3 toEyeV = normalize(eyepos - Input.worldPos);
-	float3 reflecteyedir = -toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
+	float3 toEyeV = normalize(Input.worldPos-eyepos);
+	float3 reflecteyedir = reflect(toEyeV, Input.Normal);//-toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
 	float t = 0.0f;
 	float4 specLig = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	for (int i = 0; i < pointsum; i++)
@@ -171,8 +171,8 @@ float4 SpotLightColor(PSInput Input)
 {
 	
 	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
-	float3 toEyeV = normalize(eyepos - Input.worldPos);
-	float3 reflecteyedir = -toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
+	float3 toEyeV = normalize(Input.worldPos-eyepos);
+	float3 reflecteyedir = reflect(toEyeV, Input.Normal);//-toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
 	float t = 0.0f;
 	float4 specLig = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	for (int i = 0; i < spotsum; i++)
@@ -291,7 +291,7 @@ float4 PSMain( PSInput In ) : SV_Target0
 {
 
 
-	float4 lig = DirectionLightColor(In) + /*PointLightColor(In) + SpotLightColor(In) + */float4(0.1f, 0.1f, 0.1f, 0.0f);
+	float4 lig = DirectionLightColor(In) + PointLightColor(In) + /*SpotLightColor(In) + */float4(0.1f, 0.1f, 0.1f, 0.0f);
 
 	float4 texC2 = albedoTexture.Sample(Sampler ,In.TexCoord);
 	
