@@ -11,6 +11,7 @@ public:
 	bool Start();
 	void Update();
 	void Draw();
+	void PostDraw();
 	void Setpos(CVector3 pos)									//エネミーのポジションをセット
 	{
 		m_position = pos;
@@ -48,7 +49,7 @@ private:
 	void enemyMove();
 	void SpriteManager();
 
-	CVector3 side_vec(CVector3 forward_or_rite);
+	CVector3 side_vec(CVector3 forward_or_rite);  //プレイヤーの方向を任意の軸に垂直な平面上に直したもの
 	float p_angle(CVector3 forward_or_rite);
 	float rot_dir(CVector3 forward_or_rite);
 	float Acos(float t)					//acosf()で、1.0fよりも大きい数を

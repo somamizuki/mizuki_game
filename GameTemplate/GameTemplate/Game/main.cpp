@@ -3,21 +3,8 @@
 #include "level/Level.h"
 #include "GameObject/GameObjectManajer.h"
 #include "Player.h"
-#include "Class_of_NewGO.h"
+#include"Game.h"
 
-class Hoge
-{
-public:
-	Hoge()
-	{
-		hogeP = new int;
-	}
-	~Hoge()
-	{
-		delete hogeP;
-	}
-	int* hogeP;
-};
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -28,17 +15,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, "Game");
 
-	//カメラを初期化。
-	/*g_camera3D.SetPosition({ 0.0f, 100.0f, 300.0f });
-	g_camera3D.SetTarget({ 0.0f, 100.0f, 0.0f });
-	g_camera3D.SetFar(10000.0f);*/
-
 	game_obj = new GameObjectManajer;
 	Light_obj = new LightManager;
 
-	Class_of_NewGO *newObject = new Class_of_NewGO(0,"newObject");
-
 	
+
+	Game game(0,"game");
 
 	
 	::_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -61,6 +43,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//描画終了。
 		g_graphicsEngine->EndRender();
 	}
-
-
+	delete game_obj;
+	delete Light_obj;
 }

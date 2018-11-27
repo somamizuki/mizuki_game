@@ -16,19 +16,18 @@ bool enemybullet::Start()
 	m_tama.Init(L"Assets/modelData/kyutai.cmo");
 	//m_enemy = game_obj->FindGO<Enemy>("enemy");
 	tamadir = m_enemy->Getforward();
-	bulletpos = m_enemy->Getpos();
-	bulletspeed = m_enemy->Getmovespeed().Length() + 10000.0f;
-	bulletpos = m_enemy->Getpos() + m_enemy->Getforward()*500.0f;
+	speed = m_enemy->Getmovespeed().Length() + bulletspeed;
+	bulletpos = m_enemy->Getpos() + tamadir * 500.0f;
 	return true;
 }
 
 void enemybullet::Update()
 {
-	if (game_obj->FindGO(m_enemy)==NULL)
+	if (m_enemy->GetDeath_f())
 	{
 		game_obj->DeleteGO(this);
 	}
-	bulletpos += tamadir * (bulletspeed / 60.0f);
+	bulletpos += tamadir * (speed*(1.0f / 60.0f));
 	m_tama.UpdateWorldMatrix(bulletpos, CQuaternion::Identity(), {0.05f,0.05f,0.05f});
 }
 

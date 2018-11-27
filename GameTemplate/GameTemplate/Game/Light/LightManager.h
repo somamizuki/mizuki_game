@@ -7,6 +7,16 @@ public:
 
 	void LightExecute();
 	void SetLightParam(ligParam& ligparam);
+	void DeleteLight(LightBase* light)
+	{
+		for (auto& lig : anyLight)
+		{
+			if (lig == light)
+			{
+				anyLight.erase(std::remove(anyLight.begin(), anyLight.end(), lig), anyLight.end());
+			}
+		}
+	}
 
 	void PushLight(LightBase* light)
 	{

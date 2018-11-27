@@ -14,20 +14,23 @@ GameObjectManajer::~GameObjectManajer()
 
 void GameObjectManajer::Execute()
 {
-	for (auto& obj_list : GameObject_list)
+	for (auto& deleteobj : deletelist)
 	{
-		for (auto& obj : obj_list)
+		for (auto& obj_list : GameObject_list)
 		{
-
-			if (obj->GetDeath_f())
+			for (auto& obj : obj_list)
 			{
-				delete obj;
-				obj = nullptr;
-				obj_list.erase(std::remove(obj_list.begin(), obj_list.end(), obj), obj_list.end());
-				break;
+				if (deleteobj == obj)
+				{
+					delete obj;
+					obj_list.erase(std::find(obj_list.begin(), obj_list.end(),obj));
+					break;
+				}
 			}
 		}
 	}
+	deletelist.clear();
+	
 	for (auto& obj_list : GameObject_list)				
 	{
 		for (auto& obj : obj_list)
@@ -42,7 +45,8 @@ void GameObjectManajer::Execute()
 						obj->Set_isStart(true);
 					}
 				}
-				obj->Update();
+				if (!obj->GetDeath_f()&&!obj->Getstop_f()) obj->Update();
+				
 				
 			}
 		}
@@ -55,11 +59,40 @@ void GameObjectManajer::Execute()
 			{
 				if (obj->Get_isStart() == true)
 				{
-					obj->Draw();
+					if (!obj->GetDeath_f()) obj->Draw();
 				}
 			}
 		}
 	}
+
+	for (auto& obj_list : GameObject_list)
+	{
+		for (const auto& obj : obj_list)
+		{
+			if (obj != nullptr)
+			{
+				if (obj->Get_isStart() == true)
+				{
+					if (!obj->GetDeath_f()) obj->PostDraw();
+				}
+			}
+		}
+	}
+
+	for (auto& obj_list : GameObject_list)
+	{
+		for (const auto& obj : obj_list)
+		{
+			if (obj != nullptr)
+			{
+				if (obj->Get_isStart() == true)
+				{
+					if (!obj->GetDeath_f()) obj->UIDraw();
+				}
+			}
+		}
+	}
+
 	
 }
 
@@ -72,6 +105,7 @@ void GameObjectManajer::DeleteGO(char *name)
 			if (std::strcmp(name, obj->GetName()))
 			{
 				obj->SetDeath_f(true);
+				deletelist.push_back(obj);
 				break;
 			}
 		}

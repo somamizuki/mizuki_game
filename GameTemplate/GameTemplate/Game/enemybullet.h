@@ -1,5 +1,8 @@
 #pragma once
 #include "Enemy.h"
+#include "bulletinfo.h"
+
+using namespace BulletInfo;
 class enemybullet:public GameObject
 {
 public:
@@ -23,7 +26,7 @@ private:
 	SkinModel m_tama;
 	CVector3 tamadir = CVector3::Zero();
 	CVector3 bulletpos = CVector3::Zero();
-	float bulletspeed = 0.0f;
+	float speed = 0.0f;
 	Enemy* m_enemy = nullptr;
 };
 

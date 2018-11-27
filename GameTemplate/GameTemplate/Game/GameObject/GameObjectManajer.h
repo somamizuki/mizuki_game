@@ -6,14 +6,13 @@ public:
 	GameObjectManajer();
 	~GameObjectManajer();
 
-	void Set_push_list(GameObject* obj, int No)
+	void Set_push_list(GameObject* obj, int No)				//オブジェクトのリストにプッシュする関数
 	{
 		GameObject_list[No].push_back(obj);
 	}
-
-	void DeleteGO(char *name);
+	void DeleteGO(char *name);								//オブジェクトを名前で削除するクラス
 	template<class T>
-	void DeleteGO(T* obj_t)
+	void DeleteGO(T* obj_t)									//オブジェクトをポインターで削除するクラス
 	{
 		for (auto& obj_list : GameObject_list)
 		{
@@ -22,15 +21,15 @@ public:
 				if (obj == obj_t)
 				{
 					obj_t->SetDeath_f(true);
+					deletelist.push_back(obj);
 					break;
 				}
 			}
 		}
 	}
 	template<class T>
-	T* FindGO(char *name)
+	T* FindGO(char *name)									//オブジェクトを名前で見つけるクラス
 	{
-
 		for (auto& obj_list : GameObject_list)
 		{
 			for (auto& obj : obj_list)
@@ -45,7 +44,7 @@ public:
 	}
 
 	template<class T>
-	T* FindGO(T* obj_t)
+	T* FindGO(T* obj_t)										//オブジェクトをポインターで見つけるクラス
 	{
 
 		for (auto& obj_list : GameObject_list)
@@ -61,9 +60,33 @@ public:
 		return nullptr;
 	}
 
+	void allStop(GameObject* object)
+	{
+		for (auto& objlist : GameObject_list)
+		{
+			for (auto& obj : objlist)
+			{
+				if (obj != object)
+				{
+					obj->Setstop_f(true);
+				}
+			}
+		}
+	}
+	void alltomarunjanee()
+	{
+		for (auto& objlist : GameObject_list)
+		{
+			for (auto& obj : objlist)
+			{
+				obj->Setstop_f(false);
+			}
+		}
+	}
+
 	void Execute();
 private:
 	std::vector<std::list<GameObject*>> GameObject_list;
-
+	std::list<GameObject*> deletelist;
 };
 

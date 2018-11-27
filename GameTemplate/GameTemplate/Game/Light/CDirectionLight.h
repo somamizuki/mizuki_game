@@ -39,7 +39,7 @@ private:
 	StructuredBuffer m_sb;
 	ConstantBuffer m_cb;
 	static const int DirectionMaxSum = 8;
-	int DirSum = 0.0f;
+	int DirSum = 0;
 	std::vector<SDirectionLight> s_Light;
 	SDirectionLight ligstruct[DirectionMaxSum];
 	bool creatf = false;

@@ -23,10 +23,10 @@ private:
 	
 	Player* player = nullptr;
 	std::vector<Enemy*> m_enemy;
-	Level *level = new Level;
-	m_camera* camera;
+	Level level;
 	CDirectionLight m_dirlig;
 	CPointLight m_pointlig;
+	m_camera* camera = nullptr;
 
 };
 

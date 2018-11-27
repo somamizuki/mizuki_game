@@ -11,6 +11,7 @@ CDirectionLight::CDirectionLight()
 
 CDirectionLight::~CDirectionLight()
 {
+	Light_obj->DeleteLight(this);
 }
 
 bool CDirectionLight::InitLightSB()

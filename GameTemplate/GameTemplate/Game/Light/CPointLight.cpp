@@ -11,6 +11,7 @@ CPointLight::CPointLight()
 
 CPointLight::~CPointLight()
 {
+	Light_obj->DeleteLight(this);
 }
 
 bool CPointLight::InitLightSB()

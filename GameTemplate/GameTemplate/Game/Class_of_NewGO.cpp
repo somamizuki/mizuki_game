@@ -20,7 +20,7 @@ Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_
 
 
 	int enemyNo = 0;
-	level->Init(L"Assets/level/stage_02.tkl", [&](LevelObjectData Lobjdata) {
+	level.Init(L"Assets/level/stage_02.tkl", [&](LevelObjectData Lobjdata) {
 
 		
 
@@ -43,13 +43,18 @@ Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_
 		}
 		return true;
 	});
-	m_camera* camera = new m_camera(1, "camera");
+	camera = new m_camera(1, "camera");
 }
 
 
 Class_of_NewGO::~Class_of_NewGO()
 {
-
+	for (auto& enemy : m_enemy)
+	{
+		game_obj->DeleteGO(enemy);
+	}
+	game_obj->DeleteGO(camera);
+	game_obj->DeleteGO(player);
 }
 
 void Class_of_NewGO::Update()
@@ -59,5 +64,5 @@ void Class_of_NewGO::Update()
 
 void Class_of_NewGO::Draw()
 {
-	level->Draw();
+	level.Draw();
 }

@@ -168,6 +168,9 @@
     <ClCompile Include="Light\LightBase.cpp">
       <Filter>Light</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\RenderTarget.cpp" />
+    <ClCompile Include="graphics\ShadowMap.cpp" />
+    <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -310,6 +313,10 @@
     <ClInclude Include="Light\LightBase.h">
       <Filter>Light</Filter>
     </ClInclude>
+    <ClInclude Include="bulletinfo.h" />
+    <ClInclude Include="graphics\RenderTarget.h" />
+    <ClInclude Include="graphics\ShadowMap.h" />
+    <ClInclude Include="Game.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -339,5 +346,6 @@
       <Filter>Assets\modelData</Filter>
     </ImageContentTask>
     <ImageContentTask Include="Assets\sprite\mato.png" />
+    <ImageContentTask Include="Assets\sprite\menue.png" />
   </ItemGroup>
 </Project>

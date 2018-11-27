@@ -15,6 +15,14 @@ sprite::sprite()
 
 sprite::~sprite()
 {
+	m_ps1.Release();
+	m_vs1.Release();
+	m_primitive.Release();
+	m_textureSRV->Release();
+	m_cb.Release();
+	m_ps.Release();
+	m_vs.Release();
+	m_cb2D.Release();
 }
 
 void sprite::InitWorld2D(ShaderResourceView& tex, float w, float h)

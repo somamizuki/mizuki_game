@@ -44,6 +44,7 @@ private:
 	bool InitStruct = false;
 	LightType ligtype = nolig;
 
+
 };
 
 

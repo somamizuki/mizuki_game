@@ -13,34 +13,47 @@ public:
 	{
 
 	}
-	virtual bool Start() { return true; }
-	virtual void Update(){}
-	virtual void Draw(){}
-	const char* GetName()
+	virtual bool Start() { return true; }//スタート関数(初期化とか)
+	virtual void Update(){}				 //更新処理
+	virtual void Draw(){}				 //描画
+	virtual void PostDraw(){}			 //手前に描画したいものの描画
+	virtual void UIDraw() {}			 //UIとかの描画
+	const char* GetName()				 //クラス名のゲッター
 	{
 		return this_name;
 	}
-	bool Get_isStart()
+	bool Get_isStart()					 //スタートフラグをゲットする関数
 	{
 		return m_start;
 	}
-	void Set_isStart(bool start_f)
+	void Set_isStart(bool start_f)		 //スタートフラグをセットする関数
 	{
 		m_start = start_f;
 	}
-	bool GetDeath_f()
+	bool GetDeath_f()					 //自分が死んだかどうかのフラグをゲットする関数
 	{
 		return death_f;
 	}
 
-	void SetDeath_f(bool flag)
+	void SetDeath_f(bool flag)			 //自分が死んだかどうかのフラグをセットする関数
 	{
 		death_f = flag;
 	}
+
+	bool Getstop_f()					 //停止フラグをゲットする関数
+	{
+		return stop_f;
+	}
+
+	void Setstop_f(bool flag)			 //停止フラグをセットする関数
+	{
+		stop_f = flag;
+	}
 private:
-	const char* this_name;
-	bool m_start = false;
-	bool death_f = false;
+	const char* this_name;				//名前
+	bool m_start = false;				//スタートフラグ
+	bool death_f = false;				//死亡フラグ(この後死ぬ)
+	bool stop_f = false;				//停止フラグ
 
 };
 

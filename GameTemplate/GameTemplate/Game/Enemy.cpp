@@ -9,6 +9,10 @@ Enemy::Enemy(int No, const char* obj_name):GameObject(No, obj_name)
 
 Enemy::~Enemy()
 {
+	for (auto& tama : m_bullet)
+	{
+		game_obj->DeleteGO(tama);
+	}
 }
 
 bool Enemy::Start()
@@ -223,9 +227,9 @@ void Enemy::SpriteManager()
 
 
 	//まとの位置を予測
-	float bulletspeed = m_player->Get_PlayerMove().Length() + 10000.0f;
+	float speed = m_player->Get_PlayerMove().Length() + bulletspeed;
 	p_to_e = m_position - m_player->Getpos();
-	float yosoku_f = p_to_e.Length()*(1.0f / bulletspeed);
+	float yosoku_f = p_to_e.Length()*(1.0f / speed);
 	CVector4 matopos = m_position + movespeed * yosoku_f;
 	
 	//まとの位置をスクリーン座標系に変換
@@ -234,7 +238,7 @@ void Enemy::SpriteManager()
 	g_camera3D.GetProjectionMatrix().Mul(matopos);
 	matotrans.x = matopos.x / matopos.w;
 	matotrans.y = matopos.y / matopos.w;
-	//2Dの位置をアップデート
+	//まとの位置をアップデート
 	mato.Update(matotrans);
 
 
@@ -243,10 +247,10 @@ void Enemy::SpriteManager()
 
 void Enemy::Update()
 {
-	
-	float bulletspeed = movespeed.Length() + 10000.0f;
+
+	float speed = movespeed.Length() + bulletspeed;
 	CVector3 e_to_p = m_player->Getpos() - m_position;
-	float yosoku_f = e_to_p.Length()*(1.0f / bulletspeed);
+	float yosoku_f = e_to_p.Length()*(1.0f / speed);
 	targetPos = m_player->Getpos() + m_player->Get_PlayerMove()*yosoku_f;
 	
 	atack_f = false;
@@ -263,7 +267,7 @@ void Enemy::Update()
 		{
 			atack_f = false;
 		}
-		if (to_bullet.Length() > 30000.0f)
+		if (to_bullet.Length() > 20000.0f)
 		{
 			game_obj->DeleteGO(tama);
 			m_bullet.erase(std::remove(m_bullet.begin(), m_bullet.end(), tama), m_bullet.end());
@@ -283,8 +287,6 @@ void Enemy::Update()
 
 	SpriteManager();
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
-
-	
 }
 
 void Enemy::Draw()
@@ -293,6 +295,13 @@ void Enemy::Draw()
 		g_camera3D.GetViewMatrix(), 
 		g_camera3D.GetProjectionMatrix()
 	);
+	
+	
+	
+}
+
+void Enemy::PostDraw()
+{
 	if (posinScreen == true)
 	{
 		sprite_ins.Draw(
@@ -305,6 +314,4 @@ void Enemy::Draw()
 			*g_graphicsEngine->GetD3DDeviceContext()
 		);
 	}
-	
-	
 }
