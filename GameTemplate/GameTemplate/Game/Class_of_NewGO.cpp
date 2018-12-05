@@ -4,25 +4,23 @@
 
 Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_name)
 {
-	SDirectionLight sdir;
-	SPointLight spoint;
-
-	sdir.color = { 1.0f,1.0f,1.0f,1.0f };
+	SDirectionLight sdir;		//ディレクションライトの構造体
+	SPointLight spoint;			//スポットライトの構造体
+	/*ディレクションライトをセット*/
+	sdir.color = { 0.0f,0.0f,0.0f,1.0f };
 	sdir.Direction = { 0.0f,-1.0f,0.0f,0.0f };
 	m_dirlig.SetLight(sdir);
-	sdir.color = { 1.0f,0.0f,0.0f,1.0f };
+	sdir.color = { 0.0f,0.0f,0.0f,1.0f };
 	sdir.Direction = { 0.0f,1.0f,0.0f,0.0f };
 	m_dirlig.SetLight(sdir);
-	spoint.color= { 1.0f,0.0f,0.0f,1.0f };
-	spoint.position= { 0.0f,100.0f,0.0f,0.0f };
-	spoint.range = 1000.0f;
-	m_pointlig.SetLight(spoint);
+	/*ポイントライトをセット*/
+	spoint.color= { 1.0f,1.0f,1.0f,1.0f };
+	spoint.range = 530000.0f;
 
-
-	int enemyNo = 0;
+	map = new sky(0,"map");
+	map->Init(L"Assets/modelData/skyCubeMap.dds", L"Assets/modelData/sky.cmo", CVector3{ 90000.0f,90000.0f,90000.0f });
+	int enemyNo = 0;	/*エネミーの添字*/
 	level.Init(L"Assets/level/stage_02.tkl", [&](LevelObjectData Lobjdata) {
-
-		
 
 		if (std::wcscmp(Lobjdata.name, L"StarSparrow") == 0)
 		{
@@ -36,6 +34,14 @@ Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_
 			m_enemy[enemyNo]->Setpos(Lobjdata.position);
 			m_enemy[enemyNo]->Setrot(Lobjdata.rotation);
 			enemyNo++;
+		}
+		else if (std::wcscmp(Lobjdata.name, L"Sun") == 0)
+		{
+			Sun.Init(L"Assets/modelData/Sun.cmo");
+			Sun.UpdateWorldMatrix(Lobjdata.position, CQuaternion::Identity(), CVector3::One()*10.0f);
+
+			spoint.position = Lobjdata.position ;
+			m_pointlig.SetLight(spoint);
 		}
 		else
 		{
@@ -53,16 +59,23 @@ Class_of_NewGO::~Class_of_NewGO()
 	{
 		game_obj->DeleteGO(enemy);
 	}
+	game_obj->DeleteGO(map);
 	game_obj->DeleteGO(camera);
 	game_obj->DeleteGO(player);
 }
 
 void Class_of_NewGO::Update()
 {
-
+	CVector3 pos = player->Getpos();
+	map->SetPositon(pos);
 }
 
 void Class_of_NewGO::Draw()
 {
 	level.Draw();
+	Sun.Draw(
+		3,
+		g_camera3D.GetViewMatrix(),
+		g_camera3D.GetProjectionMatrix()
+	);
 }

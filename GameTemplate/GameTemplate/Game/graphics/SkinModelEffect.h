@@ -18,15 +18,16 @@ protected:
 public:
 	ModelEffect()
 	{
-		m_psShader.Load("Assets/shader/model.fx", "PSMain", Shader::EnType::PS);
-		
-		m_pPSShader = &m_psShader;
 	}
 	virtual ~ModelEffect()
 	{
 		if (m_albedoTex) {
 			m_albedoTex->Release();
 		}
+	}
+	void SetMode(const unsigned int mode)
+	{
+		m = mode;
 	}
 	void __cdecl Apply(ID3D11DeviceContext* deviceContext) override;
 
@@ -48,6 +49,8 @@ public:
 	{
 		return wcscmp(name, m_materialName.c_str()) == 0;
 	}
+public:
+	unsigned int m;
 	
 };
 /*!
@@ -87,7 +90,8 @@ public:
 class SkinModelEffectFactory : public DirectX::EffectFactory {
 public:
 	SkinModelEffectFactory(ID3D11Device* device) :
-		EffectFactory(device) {}
+		EffectFactory(device)
+	{}
 	std::shared_ptr<DirectX::IEffect> __cdecl CreateEffect(const EffectInfo& info, ID3D11DeviceContext* deviceContext)override
 	{
 		std::shared_ptr<ModelEffect> effect;
@@ -113,4 +117,5 @@ public:
 	{
 		return DirectX::EffectFactory::CreateTexture(name, deviceContext, textureView);
 	}
+private:
 };

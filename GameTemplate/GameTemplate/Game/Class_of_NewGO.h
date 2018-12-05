@@ -5,28 +5,31 @@
 #include"Enemy.h"
 #include"Light/CDirectionLight.h"
 #include"Light/CPointLight.h"
+#include"graphics/sky.h"
 
 class Class_of_NewGO:public GameObject
 {
 public:
 	Class_of_NewGO(int No, const char* obj_name);
 	~Class_of_NewGO();
-	bool Start() { return true; }
-	void Update();
-	void Draw();
-	std::vector<Enemy*>& GetEnemy()
+	bool Start() { return true; }				//スタート関数
+	void Update();								//アップデート関数
+	void Draw();								//描画関数
+	std::vector<Enemy*>& GetEnemy()				//エネミーの配列を渡す
 	{
 		return m_enemy;
 	}
 
 private:
 	
-	Player* player = nullptr;
-	std::vector<Enemy*> m_enemy;
-	Level level;
-	CDirectionLight m_dirlig;
-	CPointLight m_pointlig;
-	m_camera* camera = nullptr;
+	Player* player = nullptr;					//プレイヤーのポインター
+	std::vector<Enemy*> m_enemy;				//エネミーの配列
+	Level level;								//レベルのインスタンス
+	CDirectionLight m_dirlig;					//ディレクションライトのインスタンス
+	CPointLight m_pointlig;						//ポイントライト
+	m_camera* camera = nullptr;					//カメラのポインター
+	sky* map = nullptr;
+	SkinModel Sun;
 
 };
 

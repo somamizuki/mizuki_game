@@ -34,6 +34,7 @@ void enemybullet::Update()
 void enemybullet::Draw()
 {
 	m_tama.Draw(
+		1,
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);

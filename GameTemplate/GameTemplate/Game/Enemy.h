@@ -45,41 +45,41 @@ public:
 
 private:
 
-	void mathVector();
-	void enemyMove();
-	void SpriteManager();
+	void mathVector();								//前右上のベクトルを計算する関数
+	void enemyMove();								//エネミーの移動をする関数
+	void SpriteManager();							//スプライトの管理をする関数
 
-	CVector3 side_vec(CVector3 forward_or_rite);  //プレイヤーの方向を任意の軸に垂直な平面上に直したもの
-	float p_angle(CVector3 forward_or_rite);
-	float rot_dir(CVector3 forward_or_rite);
+	CVector3 side_vec(CVector3 forward_or_rite);	//プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトルを求める関数
+	float p_angle(CVector3 forward_or_rite);		//任意の軸から見たプレイヤーの角度を求める関数
+	float rot_dir(CVector3 forward_or_rite);		//回転方向を求める関数
 	float Acos(float t)					//acosf()で、1.0fよりも大きい数を
 	{									//渡さないようにするためのラップ関数。
 		t = min(1.0f, max(-1.0f,t));
 		return t;
 	}
 
-	bool posinScreen = false;
+	bool posinScreen = false;					//スプライトを描画するかどうかのフラグ
 	
 
 	/*エネミーのデータ（モデル、ポジション、回転など）。*/
 	SkinModel m_model;											//スキンモデル
 	CVector3 m_position = CVector3::Zero();						//ポジション
-	CVector3 targetPos = CVector3::Zero();
+	CVector3 targetPos = CVector3::Zero();						//ターゲットのポジション
 	CQuaternion m_rotation = CQuaternion::Identity();			//回転
 	/*エネミーの前、右、上*/
 	CVector3 m_forward = CVector3::Zero();						//前
 	CVector3 m_rite = CVector3::Zero();							//右
 	CVector3 m_up = CVector3::Zero();							//上
 
-	CVector3 movespeed = CVector3::Zero();
-	//float bulletspeed = 0.0f;
-	Player* m_player = nullptr;
-	bool atack_f = false;
-	std::vector<enemybullet*> m_bullet;
-	ShaderResourceView shaderResource;
-	ShaderResourceView matoshaderResource;
+	CVector3 movespeed = CVector3::Zero();						//移動速度
+	float speed = 0.0f;
+	Player* m_player = nullptr;									//プレイヤーのポインター
+	bool atack_f = false;										//攻撃フラグ
+	std::vector<enemybullet*> m_bullet;							//エネミーの弾の配列
+	ShaderResourceView shaderResource;							//エネミーの位置表示スプライトのシェーダーリソース
+	ShaderResourceView matoshaderResource;						//まとのシェーダーリソース
 
-	sprite sprite_ins;
+	sprite sprite_ins;//エネミーの位置表示スプライト
 	sprite mato;//まと
 };
 

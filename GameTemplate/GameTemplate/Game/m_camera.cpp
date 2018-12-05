@@ -14,7 +14,7 @@ bool m_camera::Start()
 {
 	player = game_obj->FindGO<Player>("player");
 	camera_rite = player->Getrite();
-	g_camera3D.SetFar(50000.0f);
+	g_camera3D.SetFar(100000.0f);
 	g_camera3D.SetNear(1.0f);
 	player_pos = player->Getpos();
 	camera_Target = player_pos + player->Getup()*100.0f;

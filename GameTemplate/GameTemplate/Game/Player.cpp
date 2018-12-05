@@ -62,13 +62,14 @@ void Player::playermove()
 	*/
 	if (g_pad[0].IsPress(enButtonLB1))				//Lバンパーが押されたら
 	{
-		
+		//回転
 		rotY.SetRotationDeg(CVector3::AxisY(), -bityousei);
 		m_rotation.Multiply(rotY);
 	}
 	if (g_pad[0].IsPress(enButtonRB1))				//Rバンパーが押されたら
 	{
-		rotY.SetRotationDeg(CVector3::AxisY(), bityousei);
+		//回転
+		rotY.SetRotationDeg(CVector3::AxisY(), bityousei);		
 		m_rotation.Multiply(rotY);
 	}
 
@@ -77,16 +78,20 @@ void Player::playermove()
 
 void Player::vector()
 {
-	rot_M.MakeRotationFromQuaternion(m_rotation);
-	m_forward.x = rot_M.m[2][0];
-	m_forward.y = rot_M.m[2][1];
-	m_forward.z = rot_M.m[2][2];
+	rot_M.MakeRotationFromQuaternion(m_rotation);	//クオータニオンから回転行列を作成
 	m_rite.x = rot_M.m[0][0];
 	m_rite.y = rot_M.m[0][1];
 	m_rite.z = rot_M.m[0][2];
 	m_up.x = rot_M.m[1][0];
 	m_up.y = rot_M.m[1][1];
 	m_up.z = rot_M.m[1][2];
+	m_forward.x = rot_M.m[2][0];
+	m_forward.y = rot_M.m[2][1];
+	m_forward.z = rot_M.m[2][2];
+
+	/*
+	正規化
+	*/
 	m_forward.Normalize();
 	m_rite.Normalize();
 	m_up.Normalize();
@@ -99,27 +104,28 @@ void Player::Update()
 	playermove();
 	
 	vector();
-	m_position += movespeed * (1.0f / 60.0f);
+	m_position += movespeed * (1.0f / 60.0f);//現在は可変フレームレートではない。
 	
 	
 
 	for (auto& tama : m_bullet)
 	{
-		float eraseLength = 20000.0f;
-		CVector3 player_to_bullet = m_position - tama->Getpos();
-		if (player_to_bullet.Length() > eraseLength || tama->GetDeath_f())
+		float eraseLength = eraselength;	//弾を消す距離
+		CVector3 player_to_bullet = m_position - tama->Getpos();	//弾からプレイヤーに向かうベクトル
+		if (player_to_bullet.Length() > eraseLength || tama->GetDeath_f())	//player_to_bulletがeraseLengthより大きければ弾を消す
 		{
 			game_obj->DeleteGO(tama);
 			m_bullet.erase(std::remove(m_bullet.begin(), m_bullet.end(), tama), m_bullet.end());
 			break;
 		}
 	}
+
+	/*ここは弾を毎フレーム出ないようにする処理*/
 	bool atack_f = true;
 	for (auto& tama : m_bullet)
 	{
-		float atackLength = 2000.0f;
 		CVector3 player_to_bullet = m_position - tama->Getpos();
-		if (player_to_bullet.Length() < atackLength)
+		if (player_to_bullet.Length() < firelength)
 		{
 			atack_f = false;
 		}
@@ -132,11 +138,10 @@ void Player::Update()
 	
 	
 	//ワールド行列の更新。
-
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
-
-
-	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/*スプライトのポジションを弾が1フレーム後にいるいちをスクリーン座標系に直したものに設定*/
+	/*ここはクラス化又は関数化すべき*/
 
 	CVector2 sptrans = CVector2(0.0f, 0.0f);
 	CVector4 tmp = m_position + m_forward * (movespeed.Length()+bulletspeed);
@@ -146,12 +151,16 @@ void Player::Update()
 	sptrans.y = tmp.y / tmp.w ;
 
 	aim.Update(sptrans);
-	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
+/*
+通常の描画
+*/
 void Player::Draw()
 {
-
+	//プレイヤーの描画
 	m_model.Draw(
+		2,
 		g_camera3D.GetViewMatrix(), 
 		g_camera3D.GetProjectionMatrix()
 	);
@@ -159,6 +168,7 @@ void Player::Draw()
 
 void Player::PostDraw()
 {
+	//スプライトの描画
 	aim.Draw(
 		*g_graphicsEngine->GetD3DDeviceContext()
 	);

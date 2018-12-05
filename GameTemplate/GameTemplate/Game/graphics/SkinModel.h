@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Skeleton.h"
-
+#include "SkinModelEffect.h"
 using namespace Light;
 /*!
 *@brief	FBXの上方向。
@@ -53,7 +53,7 @@ public:
 	*@param[in]	projMatrix		プロジェクション行列。
 	*  カメラ座標系の3Dモデルをスクリーン座標系に変換する行列です。
 	*/
-	void Draw( CMatrix viewMatrix, CMatrix projMatrix );
+	void Draw(const unsigned int mode, CMatrix viewMatrix, CMatrix projMatrix );
 	/*!
 	*@brief	スケルトンの取得。
 	*/

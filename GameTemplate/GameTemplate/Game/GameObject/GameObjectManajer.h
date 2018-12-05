@@ -60,7 +60,7 @@ public:
 		return nullptr;
 	}
 
-	void allStop(GameObject* object)
+	void allStop(GameObject* object)						//引数で渡されたオブジェクト以外全ての更新をスキップ
 	{
 		for (auto& objlist : GameObject_list)
 		{
@@ -73,7 +73,7 @@ public:
 			}
 		}
 	}
-	void alltomarunjanee()
+	void alltomarunjanee()								//全ての更新を再開
 	{
 		for (auto& objlist : GameObject_list)
 		{
@@ -84,9 +84,9 @@ public:
 		}
 	}
 
-	void Execute();
+	void Execute();							//更新関数
 private:
-	std::vector<std::list<GameObject*>> GameObject_list;
-	std::list<GameObject*> deletelist;
+	std::vector<std::list<GameObject*>> GameObject_list;	//オブジェクトリスト
+	std::list<GameObject*> deletelist;						//デリートリスト
 };
 

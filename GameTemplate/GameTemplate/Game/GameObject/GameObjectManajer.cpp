@@ -14,6 +14,7 @@ GameObjectManajer::~GameObjectManajer()
 
 void GameObjectManajer::Execute()
 {
+	/*deletelistに登録されたオブジェクトを削除*/
 	for (auto& deleteobj : deletelist)
 	{
 		for (auto& obj_list : GameObject_list)
@@ -29,8 +30,10 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
+	//deletelistの要素を削除
 	deletelist.clear();
 	
+	//更新処理。ついでにスタート関数も呼んでいる
 	for (auto& obj_list : GameObject_list)				
 	{
 		for (auto& obj : obj_list)
@@ -51,6 +54,7 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
+	/*通常描画*/
 	for (auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
@@ -64,7 +68,7 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
-
+	/*ポスト描画*/
 	for (auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
@@ -78,7 +82,7 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
-
+	/*UIなど、一番前に描画したいものの描画*/
 	for (auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)

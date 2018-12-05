@@ -11,21 +11,20 @@ Enemy::~Enemy()
 {
 	for (auto& tama : m_bullet)
 	{
-		game_obj->DeleteGO(tama);
+		game_obj->DeleteGO(tama);//自分が死んだら弾も消す
 	}
 }
 
 bool Enemy::Start()
 {
-	m_player = game_obj->FindGO<Player>("player");
-	
-
-	m_model.Init(L"Assets/modelData/Enemy.cmo");
-	mathVector();
-
-	shaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/damage.dds");
+	m_player = game_obj->FindGO<Player>("player");			//プレイヤーを検索
+	m_model.Init(L"Assets/modelData/Enemy.cmo");			//モデルのイニット
+	mathVector();											//前右上を計算
+	/*スプライトのシェーダーリソースの作成*/
+	shaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/EnemyPos.dds");
 	matoshaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/mato.dds");
-	sprite_ins.InitScreen2D(shaderResource, 0.0f, 0.0f, 0.05f);
+	/*スプライトの初期化*/
+	sprite_ins.InitScreen2D(shaderResource, 0.0f, 0.0f, 0.1f);
 	mato.InitScreen2D(matoshaderResource, 0.0f, 0.0f, 0.05f);
 	return true;
 }
@@ -33,11 +32,13 @@ bool Enemy::Start()
 void Enemy::mathVector()
 {
 	CMatrix m_Matrix = CMatrix::Identity();
+	/*クオータニオンから回転行列を作成*/
 	m_Matrix.MakeRotationFromQuaternion(m_rotation);
-
+	/*回転行列から前右上を取得*/
 	m_rite = { m_Matrix.m[0][0] ,m_Matrix.m[0][1] ,m_Matrix.m[0][2] };
 	m_up = { m_Matrix.m[1][0] ,m_Matrix.m[1][1] ,m_Matrix.m[1][2] };
 	m_forward = { m_Matrix.m[2][0] ,m_Matrix.m[2][1] ,m_Matrix.m[2][2] };
+	/*正規化*/
 	m_rite.Normalize();
 	m_up.Normalize();
 	m_forward.Normalize();
@@ -49,9 +50,10 @@ void Enemy::mathVector()
 CVector3 Enemy::side_vec(CVector3 forward_or_rite)
 {
 	
-	CVector3 e_to_p = CVector3::Zero();
-	CVector3 sideVec = CVector3::Zero();
-	float len = 0.0f;
+	CVector3 e_to_p = CVector3::Zero();				//エネミーからプレイヤーに向かうベクトル
+	CVector3 sideVec = CVector3::Zero();			//プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトル
+	float len = 0.0f;								//プレイヤーの位置を引数で受け取った軸に射影した際の長さ
+	/*プレイヤーの位置といっても、正確には弾が到達した際にプレイヤーがいるであろう位置*/
 	e_to_p = targetPos - m_position;
 	len = forward_or_rite.Dot(e_to_p);
 	sideVec = e_to_p - (forward_or_rite*len);
@@ -62,20 +64,22 @@ CVector3 Enemy::side_vec(CVector3 forward_or_rite)
 
 float Enemy::p_angle(CVector3 forward_or_rite)
 {
-	CVector3 e_to_p = targetPos - m_position;
+	CVector3 e_to_p = targetPos - m_position;				//エネミーからプレイヤーに向かうベクトル
 	e_to_p.Normalize();
-	float acos_f = forward_or_rite.Dot(e_to_p);
-	float angle = CMath::RadToDeg(acosf(Acos(acos_f)));
+	float acos_f = forward_or_rite.Dot(e_to_p);				//引数で受け取った軸とe_to_pのcosθを求める
+	float angle = CMath::RadToDeg(acosf(Acos(acos_f)));		//アークcosして、θを求めてデグリーになおす(分りやすいから)
 	
 	return angle;
 }
 
 float Enemy::rot_dir(CVector3 forward_or_rite)
 {
-	CVector3 SV = side_vec(forward_or_rite);
+	CVector3 SV = side_vec(forward_or_rite);			//プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトル
 	
 
-	float dir = 0.0f;
+	float dir = 0.0f;		//回転方向
+	/*受け取った軸が何なのかを判定している*/
+	/*SVとの内積結果が0より大きいか小さいかで回転方向を決定する*/
 	if (forward_or_rite.x == m_forward.x&&forward_or_rite.y == m_forward.y&&forward_or_rite.z == m_forward.z)
 	{
 		if (SV.Dot(m_rite) > 0.0f)
@@ -108,26 +112,25 @@ void Enemy::enemyMove()
 	//前横上の方向を更新
 	mathVector();
 
-	CVector3 e_to_p = CVector3::Zero();
-	CQuaternion rot = CQuaternion::Identity();
-	float forwardrotangle = 0.0f;
-	float ritedrotangle = 0.0f;
-	float frotspeed = 0.0f;
-	float rrotspeed = 0.0f;
-	float rrotspeed_max = 1.0f;
-	float frotspeed_max = 2.0f;
-	float speed = 4000.0f;
+	CVector3 e_to_p = CVector3::Zero();					//エネミーからプレイヤーに向かうベクトル
+	CQuaternion rot = CQuaternion::Identity();			//回転
+	float forwardrotangle = 0.0f;						//前軸周りに何度回転させるか
+	float ritedrotangle = 0.0f;							//右軸周りに何度回転させるか
+	float frotspeed = 0.0f;								//前軸周りの回転速度
+	float rrotspeed = 0.0f;								//右軸周りの回転速度
+	float rrotspeed_max = 1.0f;							//右軸周りの回転速度の最大値
+	float frotspeed_max = 2.0f;							//前軸周りの回転速度の最大値
+	
 
+	/*ここはrrotspeed_maxをいい感じに調整しているだけ*/
 	CVector3 p_to_e = m_position - m_player->Getpos();
 	p_to_e.Normalize();
 	float acos_f = m_player->Getforward().Dot(p_to_e);
 	float angle = CMath::RadToDeg(acosf(Acos(acos_f)));
 	rrotspeed_max = max(0.5f, min(1.5f,angle*(1.0f / 100.0f)));
-	
+	///////////////////////////////////////////////////////////
 
 
-	e_to_p = m_player->Getpos() - m_position;
-	
 	
 	forwardrotangle = CMath::RadToDeg(acosf(Acos(m_up.Dot(side_vec(m_forward)))));
 	frotspeed = min(frotspeed_max, forwardrotangle);
@@ -146,21 +149,44 @@ void Enemy::enemyMove()
 		m_rotation.Multiply(rot);
 		mathVector();
 	}
-
+	/*プレイヤーの前方向とプレイヤーから自分に向かうベクトルとの角度を求める*/
 	p_to_e = m_position - m_player->Getpos();
 	p_to_e.Normalize();
 	acos_f = m_player->Getforward().Dot(p_to_e);
 	angle = CMath::RadToDeg(acosf(Acos(acos_f)));
 
+	e_to_p = m_player->Getpos() - m_position;
+	/*まだ、数字が定まっていません。いろいろと*/
 	if (p_angle(m_forward)<45.0f&&e_to_p.Length() < 4000.0f)
 	{
-
-		speed = m_player->Get_PlayerMove().Length() - 1000.0f;
+		if (speed > m_player->Get_PlayerMove().Length() - 1000.0f)
+		{
+			speed -= 50.0f;
+		}
+	}
+	else 
+	{
+		if (speed < 4000.0f)
+		{
+			speed += 50.0f;
+		}
 	}
 
 	if (p_angle(m_forward) > 120.0f/*&&angle<30.0f*/)
 	{
-		speed = 8000.0f;
+		if (speed < 8000.0f)
+		{
+			speed += 50.0f;
+
+		}
+	}
+	else
+	{
+		if (speed > 4000.0f)
+		{
+			speed -= 50.0f;
+
+		}
 	}
 	
 	
@@ -247,27 +273,30 @@ void Enemy::SpriteManager()
 
 void Enemy::Update()
 {
-
-	float speed = movespeed.Length() + bulletspeed;
-	CVector3 e_to_p = m_player->Getpos() - m_position;
-	float yosoku_f = e_to_p.Length()*(1.0f / speed);
+	/*弾が到達した際にプレイヤーがいるであろう位置を予測*/
+	float speed = movespeed.Length() + bulletspeed;							//弾の最終速度
+	CVector3 e_to_p = m_player->Getpos() - m_position;						//エネミーからプレイヤーに向かうベクトル
+	float yosoku_f = e_to_p.Length()*(1.0f / speed);						//弾が到達するまでの時間
 	targetPos = m_player->Getpos() + m_player->Get_PlayerMove()*yosoku_f;
 	
 	atack_f = false;
 	enemyMove();
 	if (p_angle(m_forward)<2.0f)
 	{
+		/*プレイヤーが前方向2.0度以内にいたら撃つ*/
 		atack_f = true;
 	}
 
 	for (auto& tama : m_bullet)
 	{
 		CVector3 to_bullet = tama->Getpos() - m_position;
-		if (to_bullet.Length() <= 2000.0f)
+		//弾をゆっくり撃つ処理
+		if (to_bullet.Length() <= firelength)
 		{
 			atack_f = false;
 		}
-		if (to_bullet.Length() > 20000.0f)
+		//遠くなったら弾を消す
+		if (to_bullet.Length() > eraselength)
 		{
 			game_obj->DeleteGO(tama);
 			m_bullet.erase(std::remove(m_bullet.begin(), m_bullet.end(), tama), m_bullet.end());
@@ -275,7 +304,7 @@ void Enemy::Update()
 	}
 	if (atack_f==true)
 	{
-
+		//弾を撃つ
 		enemybullet* tama= new enemybullet(0, "enemybullet");
 		tama->setpoint(this);
 		m_bullet.push_back(tama);
@@ -292,6 +321,7 @@ void Enemy::Update()
 void Enemy::Draw()
 {
 	m_model.Draw(
+		2,
 		g_camera3D.GetViewMatrix(), 
 		g_camera3D.GetProjectionMatrix()
 	);

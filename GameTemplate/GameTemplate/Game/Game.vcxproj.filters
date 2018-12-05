@@ -171,6 +171,7 @@
     <ClCompile Include="graphics\RenderTarget.cpp" />
     <ClCompile Include="graphics\ShadowMap.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="graphics\sky.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -317,6 +318,7 @@
     <ClInclude Include="graphics\RenderTarget.h" />
     <ClInclude Include="graphics\ShadowMap.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="graphics\sky.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -340,6 +342,8 @@
     <MeshContentTask Include="Assets\modelData\Enemy.FBX">
       <Filter>Assets\modelData</Filter>
     </MeshContentTask>
+    <MeshContentTask Include="Assets\modelData\sky.fbx" />
+    <MeshContentTask Include="Assets\modelData\Sun.FBX" />
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\damage.png">
@@ -347,5 +351,8 @@
     </ImageContentTask>
     <ImageContentTask Include="Assets\sprite\mato.png" />
     <ImageContentTask Include="Assets\sprite\menue.png" />
+    <ImageContentTask Include="Assets\sprite\start.png" />
+    <ImageContentTask Include="Assets\sprite\OnGame.png" />
+    <ImageContentTask Include="Assets\sprite\EnemyPos.png" />
   </ItemGroup>
 </Project>

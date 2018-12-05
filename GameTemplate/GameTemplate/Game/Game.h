@@ -20,6 +20,10 @@ private:
 
 	Class_of_NewGO *newObject = nullptr;
 	ShaderResourceView shaderResource;
+	ShaderResourceView startshaderResource;
+	ShaderResourceView OnGameshaderResource;
 	sprite m_sprite;
+	sprite m_startSprite;
+	sprite OnGameSprite;
 };
 

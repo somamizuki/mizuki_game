@@ -7,6 +7,7 @@
 /////////////////////////////////////////////////////////////
 //アルベドテクスチャ。
 Texture2D<float4> albedoTexture : register(t0);	
+TextureCube<float4> skyCubeMap : register(t0);	//スカイキューブマップ。
 //ボーン行列
 StructuredBuffer<float4x4> boneMatrix : register(t1);
 
@@ -166,6 +167,23 @@ float4 PointLightColor(PSInput Input)
 
 	return finalcolor;
 }
+
+float4 PostPointLightColor(PSInput Input)
+{
+	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
+	for (int i = 0; i < pointsum; i++)
+	{
+
+		float3 pointLightV = Input.worldPos - PointLightSB[i].Point_position;
+		pointLightV = normalize(pointLightV);
+		float4 pointlightC = max(0.0f, dot(pointLightV, Input.Normal)) * PointLightSB[i].Point_color;
+		finalcolor += max(0.0f, pointlightC);
+	}
+
+	return finalcolor;
+}
+
+
 //スポット
 float4 SpotLightColor(PSInput Input)
 {
@@ -290,12 +308,32 @@ PSInput VSMainSkin( VSInputNmTxWeights In )
 float4 PSMain( PSInput In ) : SV_Target0
 {
 
+	float4 texC = albedoTexture.Sample(Sampler ,In.TexCoord);
+	
+	return texC;
+}
 
+float4 PS2Main(PSInput In):SV_Target0
+{
 	float4 lig = DirectionLightColor(In) + PointLightColor(In) + /*SpotLightColor(In) + */float4(0.1f, 0.1f, 0.1f, 0.0f);
 
 	float4 texC2 = albedoTexture.Sample(Sampler ,In.TexCoord);
-	
+
 	float4 texC = texC2 * lig;
 	texC.w = 1.0f;
 	return texC;
+}
+
+float4 PS3Main(PSInput In) :SV_Target0
+{
+	float4 texC = albedoTexture.Sample(Sampler ,In.TexCoord);
+	float4 lig = PostPointLightColor(In) + float4(0.1f, 0.1f, 0.1f, 0.0f);
+	texC = texC * lig;
+	return texC;
+}
+
+float4 PSCubeMain(PSInput In) : SV_Target0
+{
+	float4 color = skyCubeMap.Sample(Sampler, In.Normal*-1.0f);
+	return color;
 }

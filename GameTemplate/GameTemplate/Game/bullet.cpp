@@ -56,6 +56,7 @@ void bullet::Update()
 void bullet::Draw()
 {
 	m_tama.Draw(																				//‹Ê‚Ì•`‰æ
+		1,
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);
