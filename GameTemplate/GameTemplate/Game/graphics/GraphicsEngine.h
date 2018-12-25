@@ -1,4 +1,6 @@
 #pragma once
+#include"RenderTarget.h"
+#include"ShadowMap.h"
 /*!
  *@brief	グラフィックスエンジン。
  */
@@ -31,6 +33,15 @@ public:
 		return m_pd3dDeviceContext;
 	}
 
+	void SetShadowMap(ShadowMap* shadow)
+	{
+		m_shadowMap = shadow;
+	}
+
+	ShadowMap* GetShadowMap()
+	{
+		return m_shadowMap;
+	}
 	
 	/*!
 	 *@brief	描画開始。
@@ -49,6 +60,7 @@ private:
 	ID3D11RasterizerState*	m_rasterizerState = NULL;	//ラスタライザステート。
 	ID3D11Texture2D*		m_depthStencil = NULL;		//デプスステンシル。
 	ID3D11DepthStencilView* m_depthStencilView = NULL;	//デプスステンシルビュー。
+	ShadowMap*              m_shadowMap = nullptr;		//シャドウマップ
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

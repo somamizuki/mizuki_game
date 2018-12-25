@@ -48,6 +48,7 @@ public :
 	*									詳細はHookWhenBuildObjectFuncのコメントを参照。
 	*/
 	void Init(const wchar_t* levelDataFilePath, HookWhenBuildObjectFunc hookFunc);
+
 	/*!
 	* @brief	レベルを描画。
 	*/

@@ -1,5 +1,5 @@
 #pragma once
-#include "Class_of_NewGO.h"
+class Class_of_NewGO;
 class Game:public GameObject
 {
 public:
@@ -25,5 +25,6 @@ private:
 	sprite m_sprite;
 	sprite m_startSprite;
 	sprite OnGameSprite;
+	ShadowMap shadowMap;
 };
 

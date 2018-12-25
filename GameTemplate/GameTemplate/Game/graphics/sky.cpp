@@ -37,7 +37,7 @@ void sky::Update()
 void sky::Draw()
 {
 	m_skinmodel.Draw(
-		4,
+		CubeMap,
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);

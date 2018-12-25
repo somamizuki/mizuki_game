@@ -1,5 +1,5 @@
 #include "stdafx.h"
-//#include "GameObjectManajer.h"
+#include "GameObjectManajer.h"
 
 
 GameObjectManajer::GameObjectManajer()
@@ -54,6 +54,12 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
+	if (g_graphicsEngine->GetShadowMap() != nullptr)
+	{
+		ShadowMap* shadowMap = g_graphicsEngine->GetShadowMap();
+		shadowMap->ShadowMapDraw();
+	}
+	
 	/*’Êí•`‰æ*/
 	for (auto& obj_list : GameObject_list)
 	{

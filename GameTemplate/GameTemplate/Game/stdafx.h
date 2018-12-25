@@ -29,16 +29,25 @@
 
 #include "math/Vector.h"
 #include "math/Matrix.h"
-#include "graphics/GraphicsEngine.h"
 #include "graphics/Shader.h"
 #include "graphics/sprite.h"
+
+enum DrawMode {
+	Diffuse,
+	LightOn,
+	PointLight,
+	CubeMap,
+	Shadow
+};
+#include "graphics/GraphicsEngine.h"
+#include "graphics/SkinModel.h"
+
+
 
 #include"Light/Light.h"
 #include"Light/LightBase.h"
 #include"Light/LightManager.h"
-#include "graphics/SkinModel.h"
 #include "graphics/Skeleton.h"
-
 #include "graphics/animation/Animation.h"
 #include "graphics/animation/AnimationClip.h"
 #include "graphics/Camera.h"

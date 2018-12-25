@@ -30,6 +30,7 @@ private:
 	m_camera* camera = nullptr;					//カメラのポインター
 	sky* map = nullptr;
 	SkinModel Sun;
-
+	CVector3 SCamDir = CVector3::Zero();
+	SPointLight spoint;			//ポイントライトの構造体
 };
 

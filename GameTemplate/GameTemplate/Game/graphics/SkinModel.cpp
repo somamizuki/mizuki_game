@@ -8,6 +8,10 @@ SkinModel::~SkinModel()
 		//定数バッファを解放。
 		m_cb.Release();
 	}
+	if (&m_shadowCb != nullptr) {
+		//定数バッファを解放。
+		m_shadowCb.Release();
+	}
 	if (m_samplerState != nullptr) {
 		//サンプラステートを解放。
 		m_samplerState->Release();
@@ -54,7 +58,7 @@ void SkinModel::InitSkeleton(const wchar_t* filePath)
 void SkinModel::InitConstantBuffer()
 {
 	m_cb.Create(NULL, sizeof(SVSConstantBuffer));
-
+	m_shadowCb.Create(NULL, sizeof(SShadowConstantBuffer));
 	////作成するバッファのサイズをsizeof演算子で求める。
 	//int bufferSize = sizeof(SVSConstantBuffer);
 	////どんなバッファを作成するのかをせてbufferDescに設定する。
@@ -107,11 +111,29 @@ void SkinModel::UpdateWorldMatrix(CVector3 position, CQuaternion rotation, CVect
 	//スケルトンの更新。
 	m_skeleton.Update(m_worldMatrix);
 }
-void SkinModel::Draw(const unsigned int mode,CMatrix viewMatrix, CMatrix projMatrix)
+void SkinModel::Draw(DrawMode mode,CMatrix viewMatrix, CMatrix projMatrix)
 {
 	DirectX::CommonStates state(g_graphicsEngine->GetD3DDevice());
-
 	ID3D11DeviceContext* d3dDeviceContext = g_graphicsEngine->GetD3DDeviceContext();
+
+	if (g_graphicsEngine->GetShadowMap() != nullptr)
+	{
+		ShadowMap* shadowMap = g_graphicsEngine->GetShadowMap();
+		SShadowConstantBuffer s_SCB;
+		s_SCB.mLightView = shadowMap->GetLighViewMatrix();
+		s_SCB.mLightProj = shadowMap->GetLightProjMatrix();
+		if (m_isShadowReciever == true)
+		{
+			s_SCB.isShadowReciever = 1;
+		}
+		else
+		{
+			s_SCB.isShadowReciever = 0;
+		}
+		d3dDeviceContext->UpdateSubresource(m_shadowCb.GetBody(), 0, nullptr, &s_SCB, 0, 0);
+		d3dDeviceContext->VSSetConstantBuffers(4, 1, &m_shadowCb.GetBody());
+		d3dDeviceContext->PSSetConstantBuffers(4, 1, &m_shadowCb.GetBody());
+	}
 
 	//定数バッファの内容を更新。
 	SVSConstantBuffer vsCb;
@@ -122,6 +144,7 @@ void SkinModel::Draw(const unsigned int mode,CMatrix viewMatrix, CMatrix projMat
 	vsCb.mView = viewMatrix;
 	
 	d3dDeviceContext->UpdateSubresource(m_cb.GetBody(), 0, nullptr, &vsCb, 0, 0);
+	
 	//定数バッファをGPUに転送。
 	d3dDeviceContext->VSSetConstantBuffers(0, 1, &m_cb.GetBody());
 	d3dDeviceContext->PSSetConstantBuffers(0, 1, &m_cb.GetBody());

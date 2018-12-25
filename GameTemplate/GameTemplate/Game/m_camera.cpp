@@ -1,6 +1,8 @@
 #include "stdafx.h"
+#include "Player.h"
 #include "m_camera.h"
 #include"math/kMath.h"
+
 m_camera::m_camera(int No, char* obj_name):GameObject(No, obj_name)
 {
 }

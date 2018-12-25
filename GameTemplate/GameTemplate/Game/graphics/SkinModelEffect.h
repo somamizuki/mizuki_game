@@ -25,7 +25,7 @@ public:
 			m_albedoTex->Release();
 		}
 	}
-	void SetMode(const unsigned int mode)
+	void SetMode(DrawMode mode)
 	{
 		m = mode;
 	}
@@ -50,7 +50,7 @@ public:
 		return wcscmp(name, m_materialName.c_str()) == 0;
 	}
 public:
-	unsigned int m;
+	DrawMode m;
 	
 };
 /*!

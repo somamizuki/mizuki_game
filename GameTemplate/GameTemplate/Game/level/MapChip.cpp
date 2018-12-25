@@ -8,11 +8,14 @@ MapChip::MapChip(const LevelObjectData& objData)
 	swprintf_s(filePath, L"Assets/modelData/%s.cmo", objData.name);
 	m_model.Init(filePath);
 	m_model.UpdateWorldMatrix(objData.position, objData.rotation, CVector3::One());
+	m_model.SetShadowReciever(true);
+	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 	//静的物理オブジェクトをメッシュコライダーから作成する。
 	m_physicsStaticObject.CreateMeshObject(m_model, objData.position, objData.rotation);
 }
 
 void MapChip::Draw()
 {
-	m_model.Draw(2,g_camera3D.GetViewMatrix(), g_camera3D.GetProjectionMatrix());
+
+	m_model.Draw(LightOn,g_camera3D.GetViewMatrix(), g_camera3D.GetProjectionMatrix());
 }

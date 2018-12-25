@@ -5,14 +5,12 @@
 Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_name)
 {
 	SDirectionLight sdir;		//ディレクションライトの構造体
-	SPointLight spoint;			//スポットライトの構造体
+	
 	/*ディレクションライトをセット*/
-	sdir.color = { 0.0f,0.0f,0.0f,1.0f };
+	/*sdir.color = { 1.0f,1.0f,1.0f,1.0f };
 	sdir.Direction = { 0.0f,-1.0f,0.0f,0.0f };
-	m_dirlig.SetLight(sdir);
-	sdir.color = { 0.0f,0.0f,0.0f,1.0f };
-	sdir.Direction = { 0.0f,1.0f,0.0f,0.0f };
-	m_dirlig.SetLight(sdir);
+	m_dirlig.SetLight(sdir);*/
+	
 	/*ポイントライトをセット*/
 	spoint.color= { 1.0f,1.0f,1.0f,1.0f };
 	spoint.range = 530000.0f;
@@ -38,10 +36,10 @@ Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_
 		else if (std::wcscmp(Lobjdata.name, L"Sun") == 0)
 		{
 			Sun.Init(L"Assets/modelData/Sun.cmo");
-			Sun.UpdateWorldMatrix(Lobjdata.position, CQuaternion::Identity(), CVector3::One()*10.0f);
+			Sun.UpdateWorldMatrix(Lobjdata.position, CQuaternion::Identity(), CVector3::One());
 
 			spoint.position = Lobjdata.position ;
-			m_pointlig.SetLight(spoint);
+			m_pointlig.SetLight(spoint,"sun");
 		}
 		else
 		{
@@ -51,7 +49,6 @@ Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_
 	});
 	camera = new m_camera(1, "camera");
 }
-
 
 Class_of_NewGO::~Class_of_NewGO()
 {
@@ -66,15 +63,24 @@ Class_of_NewGO::~Class_of_NewGO()
 
 void Class_of_NewGO::Update()
 {
+	
 	CVector3 pos = player->Getpos();
+	SCamDir = CVector3(spoint.position.x, spoint.position.y, spoint.position.z) - pos;
+	SCamDir.Normalize();
 	map->SetPositon(pos);
+	g_graphicsEngine->GetShadowMap()->UpdateFromLightTarget(
+		pos+(SCamDir*1000.0f),
+		pos
+	);
+	/*spoint.position.x += 10.0f;
+	m_pointlig.Update(&spoint, "sun");*/
 }
 
 void Class_of_NewGO::Draw()
 {
 	level.Draw();
 	Sun.Draw(
-		3,
+		PointLight,
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);

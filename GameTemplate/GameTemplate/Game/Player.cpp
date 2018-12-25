@@ -23,6 +23,8 @@ bool Player::Start()
 {
 	camera = game_obj->FindGO<m_camera>("camera");				//カメラのインスタンスを検索
 	m_model.Init(L"Assets/modelData/StarSparrow.cmo");			//cmoファイルの読み込み。
+	m_model.SetShadowReciever(true);
+	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 	vector();				//プレイヤーの前右上のベクトルを計算する
 	shaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/damage.dds");	//aim用のシェーダーリソースを作成
 	aim.InitScreen2D(shaderResource, 0.0f, 0.0f,0.02f);			//aimを初期化
@@ -45,7 +47,6 @@ void Player::playermove()
 	}
 	if (g_pad[0].IsTrigger(enButtonA))					//Aボタンが押されたら
 	{
-
 		movespeed = m_forward * slowspeed;				//減速
 	}
 
@@ -76,6 +77,57 @@ void Player::playermove()
 	vector();
 }
 
+void Player::playerreturn()
+{
+	movespeed = m_forward * defaultspeed;				//前方向にデフォルトスピードを
+	CQuaternion rotX = CQuaternion::Identity();
+	CQuaternion rotY = CQuaternion::Identity();
+	CVector3 mpos_to_zero = CVector3::Zero() - m_position;
+	float flen = m_forward.Dot(mpos_to_zero);
+	CVector3 fsidevec = mpos_to_zero - (m_forward * flen);
+	fsidevec.Normalize();
+	float fangle = CMath::RadToDeg(acosf(Acos(fsidevec.Dot(m_up))));
+	if (m_rite.Dot(fsidevec)>0.0f)
+	{
+		rotX.SetRotationDeg(CVector3::AxisZ(), max(-rotspeedX, -rotspeedX * fangle));		//マルチプライするので回転軸はワールドの軸でよい
+		m_rotation.Multiply(rotX);
+	}
+	if (m_rite.Dot(fsidevec) <0.0f)
+	{
+		rotX.SetRotationDeg(CVector3::AxisZ(), min(rotspeedX, rotspeedX*fangle));		//マルチプライするので回転軸はワールドの軸でよい
+		m_rotation.Multiply(rotX);
+	}
+	if (m_rite.Dot(fsidevec) == 0.0f&&fangle>179.0f)
+	{
+		rotX.SetRotationDeg(CVector3::AxisZ(), min(rotspeedX, rotspeedX*fangle));		//マルチプライするので回転軸はワールドの軸でよい
+		m_rotation.Multiply(rotX);
+	}
+	vector();
+	if (fangle < 1.0f)
+	{
+		mpos_to_zero = CVector3::Zero() - m_position;
+		float rlen = m_rite.Dot(mpos_to_zero);
+		CVector3 rsidevec = mpos_to_zero - (m_rite * rlen);
+		rsidevec.Normalize();
+		float rangle = CMath::RadToDeg(acosf(Acos(rsidevec.Dot(m_forward))));
+		if (m_up.Dot(rsidevec) > 0.0f)
+		{
+			rotY.SetRotationDeg(CVector3::AxisX(), max(-rotspeedZ, -rotspeedZ * rangle));		//マルチプライするので回転軸はワールドの軸でよい
+			m_rotation.Multiply(rotY);
+		}
+		if (m_up.Dot(rsidevec) < 0.0f)
+		{
+			rotY.SetRotationDeg(CVector3::AxisX(), min(rotspeedZ, rotspeedZ*rangle));		//マルチプライするので回転軸はワールドの軸でよい
+			m_rotation.Multiply(rotY);
+		}
+		if (m_up.Dot(rsidevec) == 0.0f&&rangle > 179.0f)
+		{
+			rotY.SetRotationDeg(CVector3::AxisX(), min(rotspeedZ, rotspeedZ*rangle));		//マルチプライするので回転軸はワールドの軸でよい
+			m_rotation.Multiply(rotY);
+		}
+	}
+}
+
 void Player::vector()
 {
 	rot_M.MakeRotationFromQuaternion(m_rotation);	//クオータニオンから回転行列を作成
@@ -101,18 +153,33 @@ void Player::vector()
 
 void Player::Update()
 {
-	playermove();
-	
+	switch (pState)
+	{
+	case Nomal:
+	{
+		playermove();
+		break;
+	}
+	case Return:
+	{
+		playerreturn();
+		break;
+	}
+	}
 	vector();
 	m_position += movespeed * (1.0f / 60.0f);//現在は可変フレームレートではない。
-	
-	
-
+	if (CVector3(m_position - CVector3::Zero()).Length() > 80000.0f)
+	{
+		pState = Return;
+	}
+	else
+	{
+		pState = Nomal;
+	}
 	for (auto& tama : m_bullet)
 	{
-		float eraseLength = eraselength;	//弾を消す距離
 		CVector3 player_to_bullet = m_position - tama->Getpos();	//弾からプレイヤーに向かうベクトル
-		if (player_to_bullet.Length() > eraseLength || tama->GetDeath_f())	//player_to_bulletがeraseLengthより大きければ弾を消す
+		if (player_to_bullet.Length() > eraselength || tama->GetDeath_f())	//player_to_bulletがeraseLengthより大きければ弾を消す
 		{
 			game_obj->DeleteGO(tama);
 			m_bullet.erase(std::remove(m_bullet.begin(), m_bullet.end(), tama), m_bullet.end());
@@ -139,10 +206,10 @@ void Player::Update()
 	
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
+	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/*スプライトのポジションを弾が1フレーム後にいるいちをスクリーン座標系に直したものに設定*/
 	/*ここはクラス化又は関数化すべき*/
-
 	CVector2 sptrans = CVector2(0.0f, 0.0f);
 	CVector4 tmp = m_position + m_forward * (movespeed.Length()+bulletspeed);
 	g_camera3D.GetViewMatrix().Mul(tmp);
@@ -160,7 +227,7 @@ void Player::Draw()
 {
 	//プレイヤーの描画
 	m_model.Draw(
-		2,
+		LightOn,
 		g_camera3D.GetViewMatrix(), 
 		g_camera3D.GetProjectionMatrix()
 	);

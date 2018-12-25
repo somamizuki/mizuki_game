@@ -9,7 +9,6 @@ public:
 
 	void Create(unsigned int w, unsigned int h, DXGI_FORMAT texFormat);
 
-	
 	void ClearRenderTarget(float* clearColor);
 
 	
@@ -18,13 +17,11 @@ public:
 		return m_renderTargetView;
 	}
 
-	
 	ID3D11DepthStencilView* GetDepthStensilView()
 	{
 		return m_depthStencilView;
 	}
 
-	
 	ID3D11ShaderResourceView* GetRenderTargetSRV()
 	{
 		return m_renderTargetSRV;

@@ -1,8 +1,5 @@
 #pragma once
-#include "character/CharacterController.h"
-#include"character/CharacterController.h"
-#include"graphics/sprite.h"
-#include"Light/LightBase.h"
+
 class m_camera;
 class bullet;
 class Player:public GameObject
@@ -73,10 +70,23 @@ private:
 	float bityousei = 0.3f;							//エイムを微調整する変数
 
 	void playermove();								//プレイヤーの移動関数
+	void playerreturn();
 	void vector();									//プレイヤーの前右上のベクトルを計算する関数
+	float Acos(float t)					//acosf()で、1.0fよりも大きい数を
+	{									//渡さないようにするためのラップ関数。
+		t = min(1.0f, max(-1.0f, t));
+		return t;
+	}
+
 
 	m_camera* camera = nullptr;						//カメラのポインター
 
 	std::vector<bullet*> m_bullet;					//玉の配列
+	enum PlayerState								//プレイヤーのステート
+	{
+		Nomal,		//通常
+		Return		//原点に戻る(ミッション範囲を超えた時)
+	};
+	PlayerState pState = Nomal;
 };
 

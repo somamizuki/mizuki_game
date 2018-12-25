@@ -1,5 +1,7 @@
 #include "stdafx.h"
+
 #include "Game.h"
+#include "Class_of_NewGO.h"
 
 
 Game::Game(int No, char* obj_name) :GameObject(No, obj_name)
@@ -19,6 +21,7 @@ bool Game::Start()
 	m_startSprite.InitScreen2D(startshaderResource, 0.0f, 0.0f, 1.0f);
 	OnGameshaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/OnGame.dds");
 	OnGameSprite.InitScreen2D(OnGameshaderResource, 0.0f, 0.0f, 1.0f);
+	g_graphicsEngine->SetShadowMap(&shadowMap);
 	return true;
 }
 
@@ -48,6 +51,7 @@ void Game::Update()
 			state = start;
 		}
 	}
+
 }
 
 void Game::Draw()

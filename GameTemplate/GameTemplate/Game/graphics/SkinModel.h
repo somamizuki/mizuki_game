@@ -2,7 +2,7 @@
 
 #include "Skeleton.h"
 #include "SkinModelEffect.h"
-using namespace Light;
+
 /*!
 *@brief	FBXの上方向。
 */
@@ -10,6 +10,7 @@ enum EnFbxUpAxis {
 	enFbxUpAxisY,		//Y-up
 	enFbxUpAxisZ,		//Z-up
 };
+
 /*!
 *@brief	スキンモデルクラス。
 */
@@ -53,7 +54,7 @@ public:
 	*@param[in]	projMatrix		プロジェクション行列。
 	*  カメラ座標系の3Dモデルをスクリーン座標系に変換する行列です。
 	*/
-	void Draw(const unsigned int mode, CMatrix viewMatrix, CMatrix projMatrix );
+	void Draw(DrawMode mode, CMatrix viewMatrix, CMatrix projMatrix );
 	/*!
 	*@brief	スケルトンの取得。
 	*/
@@ -61,6 +62,9 @@ public:
 	{
 		return m_skeleton;
 	}
+
+	
+
 	/*!
 	*@brief	メッシュを検索する。
 	*@param[in] onFindMesh		メッシュが見つかったときのコールバック関数
@@ -73,6 +77,12 @@ public:
 			}
 		}
 	}
+
+	void SetShadowReciever(bool flag)
+	{
+		m_isShadowReciever = flag;
+	}
+
 	/*!
 	*@brief	SRVのレジスタ番号。
 	*/
@@ -102,13 +112,24 @@ private:
 		CMatrix mView;
 		CMatrix mProj;
 	};
+
+	struct SShadowConstantBuffer
+	{
+		
+		CMatrix mLightView;		//todo ライトビュー行列。
+		CMatrix mLightProj;		//todo ライトプロジェクション行列。
+		int isShadowReciever;	//todo シャドウレシーバーのフラグ。
+		
+	};
+
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
 	ConstantBuffer m_cb;
-	SDirectionLight m_sDrection;
+	ConstantBuffer m_shadowCb;
 	//ID3D11Buffer*		m_cb = nullptr;					//!<定数バッファ。
 	Skeleton			m_skeleton;						//!<スケルトン。
 	CMatrix				m_worldMatrix;					//!<ワールド行列。
 	DirectX::Model*		m_modelDx;						//!<DirectXTKが提供するモデルクラス。
 	ID3D11SamplerState* m_samplerState = nullptr;		//!<サンプラステート。
+	bool m_isShadowReciever = false;						//シャドウレシーバーのフラグ。
 };
 

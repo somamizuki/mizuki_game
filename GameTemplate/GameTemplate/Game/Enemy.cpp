@@ -19,6 +19,7 @@ bool Enemy::Start()
 {
 	m_player = game_obj->FindGO<Player>("player");			//プレイヤーを検索
 	m_model.Init(L"Assets/modelData/Enemy.cmo");			//モデルのイニット
+	m_model.SetShadowReciever(true);
 	mathVector();											//前右上を計算
 	/*スプライトのシェーダーリソースの作成*/
 	shaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/EnemyPos.dds");
@@ -49,7 +50,6 @@ void Enemy::mathVector()
 
 CVector3 Enemy::side_vec(CVector3 forward_or_rite)
 {
-	
 	CVector3 e_to_p = CVector3::Zero();				//エネミーからプレイヤーに向かうベクトル
 	CVector3 sideVec = CVector3::Zero();			//プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトル
 	float len = 0.0f;								//プレイヤーの位置を引数で受け取った軸に射影した際の長さ
@@ -201,7 +201,7 @@ void Enemy::enemyMove()
 
 
 
-
+	
 }
 
 void Enemy::SpriteManager()
@@ -321,7 +321,7 @@ void Enemy::Update()
 void Enemy::Draw()
 {
 	m_model.Draw(
-		2,
+		LightOn,
 		g_camera3D.GetViewMatrix(), 
 		g_camera3D.GetProjectionMatrix()
 	);

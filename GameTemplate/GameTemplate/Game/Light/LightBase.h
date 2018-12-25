@@ -43,6 +43,7 @@ private:
 	bool isInit = false;
 	bool InitStruct = false;
 	LightType ligtype = nolig;
+	
 
 
 };
