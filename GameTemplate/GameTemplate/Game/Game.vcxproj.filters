@@ -344,6 +344,7 @@
     </MeshContentTask>
     <MeshContentTask Include="Assets\modelData\sky.fbx" />
     <MeshContentTask Include="Assets\modelData\Sun.FBX" />
+    <MeshContentTask Include="Assets\modelData\Planet_B.fbx" />
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\damage.png">

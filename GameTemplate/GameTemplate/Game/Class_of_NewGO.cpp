@@ -13,10 +13,10 @@ Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_
 	
 	/*ポイントライトをセット*/
 	spoint.color= { 1.0f,1.0f,1.0f,1.0f };
-	spoint.range = 530000.0f;
+	spoint.range = 8000000.0f;
 
 	map = new sky(0,"map");
-	map->Init(L"Assets/modelData/skyCubeMap.dds", L"Assets/modelData/sky.cmo", CVector3{ 90000.0f,90000.0f,90000.0f });
+	map->Init(L"Assets/modelData/skyCubeMap.dds", L"Assets/modelData/sky.cmo", CVector3{ 4000000.0f,4000000.0f,4000000.0f });
 	int enemyNo = 0;	/*エネミーの添字*/
 	level.Init(L"Assets/level/stage_02.tkl", [&](LevelObjectData Lobjdata) {
 
@@ -63,13 +63,12 @@ Class_of_NewGO::~Class_of_NewGO()
 
 void Class_of_NewGO::Update()
 {
-	
 	CVector3 pos = player->Getpos();
 	SCamDir = CVector3(spoint.position.x, spoint.position.y, spoint.position.z) - pos;
 	SCamDir.Normalize();
-	map->SetPositon(pos);
+	map->SetPositon(CVector3::Zero());
 	g_graphicsEngine->GetShadowMap()->UpdateFromLightTarget(
-		pos+(SCamDir*1000.0f),
+		pos+(SCamDir*500.0f),
 		pos
 	);
 	/*spoint.position.x += 10.0f;

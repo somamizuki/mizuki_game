@@ -168,7 +168,7 @@ void Player::Update()
 	}
 	vector();
 	m_position += movespeed * (1.0f / 60.0f);//現在は可変フレームレートではない。
-	if (CVector3(m_position - CVector3::Zero()).Length() > 80000.0f)
+	if (CVector3(m_position - CVector3::Zero()).Length() > 200000.0f)
 	{
 		pState = Return;
 	}

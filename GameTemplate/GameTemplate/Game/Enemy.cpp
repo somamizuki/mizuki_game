@@ -77,7 +77,7 @@ float Enemy::rot_dir(CVector3 forward_or_rite)
 	CVector3 SV = side_vec(forward_or_rite);			//プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトル
 	
 
-	float dir = 0.0f;		//回転方向
+	float dir = 1.0f;		//回転方向
 	/*受け取った軸が何なのかを判定している*/
 	/*SVとの内積結果が0より大きいか小さいかで回転方向を決定する*/
 	if (forward_or_rite.x == m_forward.x&&forward_or_rite.y == m_forward.y&&forward_or_rite.z == m_forward.z)

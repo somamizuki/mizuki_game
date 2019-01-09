@@ -218,6 +218,7 @@
     <MeshContentTask Include="Assets\modelData\Enemy.FBX" />
     <MeshContentTask Include="Assets\modelData\kyutai.FBX" />
     <MeshContentTask Include="Assets\modelData\obj.fbx" />
+    <MeshContentTask Include="Assets\modelData\Planet_B.fbx" />
     <MeshContentTask Include="Assets\modelData\sky.fbx" />
     <MeshContentTask Include="Assets\modelData\stage.fbx" />
     <MeshContentTask Include="Assets\modelData\StarSparrow.fbx" />

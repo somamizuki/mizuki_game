@@ -349,9 +349,11 @@ float4 PSMain( PSInput In ) : SV_Target0
 float4 PS2Main(PSInput In):SV_Target0
 {
 	float ligmin = 0.2f;
-	float4 lig = DirectionLightColor(In) + PointLightColor(In) + /*SpotLightColor(In) + */float4(ligmin, ligmin, ligmin, 0.0f);
+	float4 lig = DirectionLightColor(In) + PointLightColor(In);
+	lig = max(ligmin, lig);
 
 	float4 texC2 = albedoTexture.Sample(Sampler ,In.TexCoord);
+	texC2 *= 2.0f;
 
 
 
@@ -372,7 +374,7 @@ float4 PS2Main(PSInput In):SV_Target0
 			//シャドウマップに書き込まれている深度値を取得。
 			float zInShadowMap = shadowMap.Sample(Sampler, shadowMapUV);
 
-			if (zInLVP > zInShadowMap+0.00005f) {
+			if (zInLVP > zInShadowMap+0.001f) {
 				//影が落ちているので、光を弱くする
 				lig *= ligmin;
 			}
@@ -390,6 +392,8 @@ float4 PS3Main(PSInput In) :SV_Target0
 	float4 texC = albedoTexture.Sample(Sampler ,In.TexCoord);
 	float4 lig = PostPointLightColor(In);// +float4(0.1f, 0.1f, 0.1f, 0.0f);
 	texC = texC * lig;
+	texC *= 2.5f;
+
 	return texC;
 }
 
