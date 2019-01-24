@@ -99,6 +99,8 @@
     </MeshContentTask>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="graphics\GaussianBlur.cpp" />
+    <ClCompile Include="graphics\Bloom.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Light\CPointLight.cpp" />
@@ -146,6 +148,7 @@
     <ClCompile Include="graphics\RenderTarget.cpp" />
     <ClCompile Include="graphics\ShadowMap.cpp" />
     <ClCompile Include="graphics\sky.cpp" />
+    <ClCompile Include="graphics\PostEffect.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -156,6 +159,8 @@
     <ClCompile Include="graphics\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graphics\GaussianBlur.h" />
+    <ClInclude Include="graphics\Bloom.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="bulletinfo.h" />
     <ClInclude Include="Game.h" />
@@ -208,6 +213,7 @@
     <ClInclude Include="graphics\RenderTarget.h" />
     <ClInclude Include="graphics\ShadowMap.h" />
     <ClInclude Include="graphics\sky.h" />
+    <ClInclude Include="graphics\PostEffect.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="graphics\StructuredBuffer.h" />
     <ClInclude Include="system\system.h" />

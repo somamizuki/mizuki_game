@@ -24,7 +24,66 @@ sprite::~sprite()
 	m_vs.Release();
 	m_cb2D.Release();
 }
+void sprite::Release()
+{
+	m_ps1.Release();
+	m_vs1.Release();
+	m_primitive.Release();
+	m_textureSRV->Release();
+	m_cb.Release();
+	m_ps.Release();
+	m_vs.Release();
+	m_cb2D.Release();
+}
+void sprite::Init(ID3D11ShaderResourceView* tex, float w, float h)
+{
+	m_ps.Load("Assets/shader/sprite.fx", "PSMain", Shader::EnType::PS);
+	m_vs.Load("Assets/shader/sprite.fx", "VSMain", Shader::EnType::VS);
+	m_size.x = w;
+	m_size.y = h;
+	float halfW = w * 0.5f;
+	float halfH = h * 0.5f;
 
+	SSinpleVertex vertices[4] =
+	{
+			{
+				CVector4(-halfW,-halfH,0.0f,1.0f),
+				CVector2(0.0f,1.0f),
+			},
+			{
+				CVector4(halfW,-halfH,0.0f,1.0f),
+				CVector2(1.0f,1.0f),
+			},
+			{
+				CVector4(-halfW, halfH, 0.0f, 1.0f),
+				CVector2(0.0f, 0.0f)
+			},
+			{
+				CVector4(halfW, halfH, 0.0f, 1.0f),
+				CVector2(1.0f, 0.0f)
+			}
+	};
+
+
+	short indices[] = { 0,1,2,3 };
+
+	m_primitive.Create(
+		D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
+		4,
+		sizeof(SSinpleVertex),
+		vertices,
+		4,
+		IndexBuffer::enIndexType_16,
+		indices
+	);
+
+	m_textureSRV = tex;
+	m_cb2D.Create(nullptr, sizeof(SSpriteCB2D));
+	cb2D.trans.x = 0.0f;
+	cb2D.trans.y = 0.0f;
+	cb2D.trans.z = 0.0f;
+	cb2D.trans.w = 0.0f;
+}
 void sprite::InitWorld2D(ShaderResourceView& tex, float w, float h)
 {
 	m_ps1.Load("Assets/shader/sprite.fx", "PS3DMain", Shader::EnType::PS);
@@ -66,7 +125,7 @@ void sprite::InitWorld2D(ShaderResourceView& tex, float w, float h)
 		IndexBuffer::enIndexType_16,
 		indices
 	);
-	m_textureSRV = &tex;
+	m_textureSRV = tex.GetBody();
 	m_cb.Create(nullptr, sizeof(SSpriteCB));
 }
 
@@ -114,7 +173,7 @@ void sprite::InitScreen2D(ShaderResourceView& tex, float w, float h,float size)
 		IndexBuffer::enIndexType_16,
 		indices
 	);
-	m_textureSRV = &tex;
+	m_textureSRV = tex.GetBody();
 	m_cb2D.Create(nullptr, sizeof(SSpriteCB2D));
 }
 
@@ -158,7 +217,8 @@ void sprite::Draw(ID3D11DeviceContext& rc, const CMatrix& viewMatrix, const CMat
 	rc.UpdateSubresource(m_cb.GetBody(),0,NULL,&cb,0,0);
 	rc.VSSetConstantBuffers(0,1, &m_cb.GetBody());
 	rc.PSSetConstantBuffers(0,1, &m_cb.GetBody());
-	rc.PSSetShaderResources(0,1, &m_textureSRV->GetBody());
+	rc.VSSetShaderResources(0, 1, &m_textureSRV);
+	rc.PSSetShaderResources(0, 1, &m_textureSRV);
 	rc.PSSetShader((ID3D11PixelShader*)m_ps1.GetBody(),NULL,0);
 	rc.VSSetShader((ID3D11VertexShader*)m_vs1.GetBody(),NULL,0);
 	rc.IASetInputLayout(m_vs1.GetInputLayout());
@@ -185,7 +245,8 @@ void sprite::Draw(ID3D11DeviceContext& rc)
 	rc.UpdateSubresource(m_cb2D.GetBody(), 0, NULL, &cb2D, 0, 0);
 	rc.VSSetConstantBuffers(11, 1, &m_cb2D.GetBody());
 	rc.PSSetConstantBuffers(11, 1, &m_cb2D.GetBody());
-	rc.PSSetShaderResources(0, 1, &m_textureSRV->GetBody());
+	rc.VSSetShaderResources(0, 1, &m_textureSRV);
+	rc.PSSetShaderResources(0, 1, &m_textureSRV);
 	rc.PSSetShader((ID3D11PixelShader*)m_ps.GetBody(), NULL, 0);
 	rc.VSSetShader((ID3D11VertexShader*)m_vs.GetBody(), NULL, 0);
 	rc.IASetInputLayout(m_vs.GetInputLayout());

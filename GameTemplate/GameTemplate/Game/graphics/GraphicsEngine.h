@@ -1,6 +1,7 @@
 #pragma once
 #include"RenderTarget.h"
 #include"ShadowMap.h"
+#include"Bloom.h"
 /*!
  *@brief	グラフィックスエンジン。
  */
@@ -14,6 +15,17 @@ public:
 	 *@param[in]	hWnd		ウィンドウハンドル。
 	 */
 	void Init(HWND hWnd);
+	void ChangeRenderTarget(RenderTarget* RT, D3D11_VIEWPORT* VP);
+	void ReSetRenderTarget();
+	void RenderTargetDraw(RenderTarget* RT, ID3D11ShaderResourceView* SRV, D3D11_VIEWPORT* VP);
+	RenderTarget* GetmainRenderTarget()
+	{
+		return &m_mainRenderTarget;
+	}
+	D3D11_VIEWPORT* GetmainViewport()
+	{
+		return &m_mainViewport;
+	}
 	/*!
 	 *@brief	解放。
 	 */
@@ -42,6 +54,11 @@ public:
 	{
 		return m_shadowMap;
 	}
+
+	Bloom* GetBloom()
+	{
+		return &m_bloom;
+	}
 	
 	/*!
 	 *@brief	描画開始。
@@ -57,10 +74,22 @@ private:
 	IDXGISwapChain*			m_pSwapChain = NULL;		//スワップチェイン。
 	ID3D11DeviceContext*	m_pd3dDeviceContext = NULL;	//D3D11デバイスコンテキスト。
 	ID3D11RenderTargetView* m_backBuffer = NULL;		//バックバッファ。
+	ID3D11RenderTargetView*           m_BackUpRT = NULL;
 	ID3D11RasterizerState*	m_rasterizerState = NULL;	//ラスタライザステート。
 	ID3D11Texture2D*		m_depthStencil = NULL;		//デプスステンシル。
 	ID3D11DepthStencilView* m_depthStencilView = NULL;	//デプスステンシルビュー。
+	ID3D11DepthStencilView* m_BackUpDSV = NULL;
+	D3D11_VIEWPORT			m_mainViewport;
+	D3D11_VIEWPORT			BackUpViewport;
+	RenderTarget m_mainRenderTarget;
+	sprite m_copyMainRtToFrameBufferSprite;
+	bool RTspriteInitF = false;
+	bool backupF = false;
 	ShadowMap*              m_shadowMap = nullptr;		//シャドウマップ
+	Bloom m_bloom;
+
+
+
 };
 
 extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン

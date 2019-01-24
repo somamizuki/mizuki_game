@@ -17,7 +17,7 @@ public:
 	void Draw();								//描画関数
 	std::vector<Enemy*>& GetEnemy()				//エネミーの配列を渡す
 	{
-		return m_enemy;
+		return *&m_enemy;
 	}
 
 private:

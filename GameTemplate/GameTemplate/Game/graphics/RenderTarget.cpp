@@ -37,6 +37,7 @@ void RenderTarget::Release()
 }
 void RenderTarget::Create(unsigned int w, unsigned int h, DXGI_FORMAT texFormat)
 {
+	HRESULT hr;
 	//D3Dデバイスを取得。
 	auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 	//1.レンダリングターゲットとなるテクスチャを作成。
@@ -69,7 +70,7 @@ void RenderTarget::Create(unsigned int w, unsigned int h, DXGI_FORMAT texFormat)
 		texDesc.CPUAccessFlags = 0;
 		texDesc.MiscFlags = 0;
 		//テクスチャを作成。
-		d3dDevice->CreateTexture2D(&texDesc, nullptr, &m_renderTargetTex);
+		hr = d3dDevice->CreateTexture2D(&texDesc, nullptr, &m_renderTargetTex);
 	}
 	//2.レンダリングターゲットビューの作成
 	{
@@ -84,7 +85,7 @@ void RenderTarget::Create(unsigned int w, unsigned int h, DXGI_FORMAT texFormat)
 		viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		viewDesc.Texture2D.MipSlice = 0;
 		//レンダリングターゲットビューの作成。
-		d3dDevice->CreateRenderTargetView(m_renderTargetTex, &viewDesc, &m_renderTargetView);
+		hr = d3dDevice->CreateRenderTargetView(m_renderTargetTex, &viewDesc, &m_renderTargetView);
 	}
 	//3.シェーダーリソースビューの作成
 	{
@@ -102,7 +103,7 @@ void RenderTarget::Create(unsigned int w, unsigned int h, DXGI_FORMAT texFormat)
 		srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
 		srvDesc.Texture2D.MostDetailedMip = 0;
 		//SRVを作成する。
-		d3dDevice->CreateShaderResourceView(m_renderTargetTex, &srvDesc, &m_renderTargetSRV);
+		hr = d3dDevice->CreateShaderResourceView(m_renderTargetTex, &srvDesc, &m_renderTargetSRV);
 	}
 	//4.デプスステンシルテクスチャの作成
 	D3D11_TEXTURE2D_DESC depthTexDesc = texDesc;

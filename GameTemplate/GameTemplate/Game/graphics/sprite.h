@@ -14,10 +14,21 @@ public:
 
 	void InitWorld2D(ShaderResourceView& tex, float w, float h);			//èâä˙âª
 	void InitScreen2D(ShaderResourceView& tex, float w, float h,float size);
-
-	void SetTexture(ShaderResourceView& tex)							//
+	void Init(ID3D11ShaderResourceView* tex, float w, float h);
+	void Release();
+	void SetScreen2DShader(const char* filepathVS, const char* filepathPS)
 	{
-		m_textureSRV = &tex;
+		m_ps.Load(filepathPS, "PSMain", Shader::EnType::PS);
+		m_vs.Load(filepathVS, "VSMain", Shader::EnType::VS);
+	}
+	void SetScreen2DShader(Shader* VS, Shader* PS)
+	{
+		m_ps = *PS;
+		m_vs = *VS;
+	}
+	void SetTexture(ID3D11ShaderResourceView* tex)							//
+	{
+		m_textureSRV = tex;
 	}
 
 	void SetMulColor(const CVector4& mulColor)
@@ -52,7 +63,7 @@ private:
 	SSpriteCB2D cb2D;
 	CVector4 m_mulColor = CVector4::White();
 	Primitive m_primitive;
-	ShaderResourceView* m_textureSRV = nullptr;
+	ID3D11ShaderResourceView* m_textureSRV = nullptr;
 	ConstantBuffer m_cb;
 	ConstantBuffer m_cb2D;
 

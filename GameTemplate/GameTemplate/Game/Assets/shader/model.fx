@@ -353,7 +353,6 @@ float4 PS2Main(PSInput In):SV_Target0
 	lig = max(ligmin, lig);
 
 	float4 texC2 = albedoTexture.Sample(Sampler ,In.TexCoord);
-	texC2 *= 2.0f;
 
 
 
@@ -392,7 +391,6 @@ float4 PS3Main(PSInput In) :SV_Target0
 	float4 texC = albedoTexture.Sample(Sampler ,In.TexCoord);
 	float4 lig = PostPointLightColor(In);// +float4(0.1f, 0.1f, 0.1f, 0.0f);
 	texC = texC * lig;
-	texC *= 2.5f;
 
 	return texC;
 }

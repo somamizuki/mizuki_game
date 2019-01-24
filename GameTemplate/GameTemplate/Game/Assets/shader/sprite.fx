@@ -22,7 +22,7 @@ sampler Sampler : register(s0);
 PSInput VSMain(VSInput In)
 {
 	PSInput psIn;
-	psIn.pos = In.pos + trans;
+	psIn.pos = In.pos +trans;
 	psIn.uv = In.uv;
 	return psIn;
 }
@@ -37,7 +37,7 @@ PSInput VS3DMain(VSInput In)
 
 float4 PSMain(PSInput In) : SV_Target0
 {
-	return  colorTexture.Sample(Sampler,In.uv) * mulColor2d;
+	return  colorTexture.Sample(Sampler,In.uv) *mulColor2d;
 }
 float4 PS3DMain(PSInput In) : SV_Target0
 {

@@ -59,7 +59,9 @@ void GameObjectManajer::Execute()
 		ShadowMap* shadowMap = g_graphicsEngine->GetShadowMap();
 		shadowMap->ShadowMapDraw();
 	}
-	
+	g_graphicsEngine->ChangeRenderTarget(g_graphicsEngine->GetmainRenderTarget(), g_graphicsEngine->GetmainViewport());
+	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	g_graphicsEngine->GetmainRenderTarget()->ClearRenderTarget(clearColor);
 	/*’Êí•`‰æ*/
 	for (auto& obj_list : GameObject_list)
 	{
@@ -74,6 +76,9 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
+	g_graphicsEngine->GetBloom()->Update();
+
+	g_graphicsEngine->ReSetRenderTarget();
 	/*ƒ|ƒXƒg•`‰æ*/
 	for (auto& obj_list : GameObject_list)
 	{
@@ -88,6 +93,7 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
+
 	/*UI‚È‚ÇAˆê”Ô‘O‚É•`‰æ‚µ‚½‚¢‚à‚Ì‚Ì•`‰æ*/
 	for (auto& obj_list : GameObject_list)
 	{

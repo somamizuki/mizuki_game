@@ -4,6 +4,7 @@
 
 GraphicsEngine::GraphicsEngine()
 {
+	
 }
 
 
@@ -151,4 +152,85 @@ void GraphicsEngine::Init(HWND hWnd)
 	viewport.MaxDepth = 1.0f;
 	m_pd3dDeviceContext->RSSetViewports(1, &viewport);
 	m_pd3dDeviceContext->RSSetState(m_rasterizerState);
+
+	m_mainRenderTarget.Create(
+		FRAME_BUFFER_W,
+		FRAME_BUFFER_H,
+		DXGI_FORMAT_R16G16B16A16_FLOAT
+	);
+
+
+	m_mainViewport.Width = FRAME_BUFFER_W;
+	m_mainViewport.Height = FRAME_BUFFER_H;
+	m_mainViewport.TopLeftX = 0;
+	m_mainViewport.TopLeftY = 0;
+	m_mainViewport.MinDepth = 0.0f;
+	m_mainViewport.MaxDepth = 1.0f;
+
+	m_bloom.Init();
+}
+
+void GraphicsEngine::ChangeRenderTarget(RenderTarget* RT, D3D11_VIEWPORT* VP)
+{
+	if (!backupF)
+	{
+		m_pd3dDeviceContext->OMGetRenderTargets(
+			1,
+			&m_BackUpRT,
+			&m_BackUpDSV
+		);
+		unsigned int numViewport = 1;
+		m_pd3dDeviceContext->RSGetViewports(
+			&numViewport,
+			&BackUpViewport
+		);
+		backupF = true;
+	}
+	
+	//メインとなるレンダリングターゲットを作成する。
+	if (!RTspriteInitF)
+	{
+		//メインレンダリングターゲットに描かれた絵を
+		//フレームバッファにコピーするためのスプライトを初期化する。
+		m_copyMainRtToFrameBufferSprite.Init(
+			RT->GetRenderTargetSRV(),
+			2.0f,
+			2.0f
+		);
+		RTspriteInitF = true;
+	}
+	
+	ID3D11RenderTargetView* rtTbl[] = {
+		RT->GetRenderTargetView(),
+	};
+	//レンダリングターゲットの切り替え。
+	m_pd3dDeviceContext->OMSetRenderTargets(1, rtTbl, RT->GetDepthStensilView());
+	m_pd3dDeviceContext->RSSetViewports(1, VP);
+}
+
+void GraphicsEngine::RenderTargetDraw(RenderTarget* RT, ID3D11ShaderResourceView* SRV, D3D11_VIEWPORT* VP)
+{
+	ID3D11RenderTargetView* rtTbl[] = {
+		RT->GetRenderTargetView(),
+	};
+	//レンダリングターゲットの切り替え。
+	m_pd3dDeviceContext->OMSetRenderTargets(1, rtTbl, RT->GetDepthStensilView());
+	m_pd3dDeviceContext->RSSetViewports(1, VP);
+	m_copyMainRtToFrameBufferSprite.SetTexture(SRV);
+	m_copyMainRtToFrameBufferSprite.Draw(*m_pd3dDeviceContext);
+	m_copyMainRtToFrameBufferSprite.SetTexture(RT->GetRenderTargetSRV());
+	m_pd3dDeviceContext->ClearDepthStencilView(RT->GetDepthStensilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void GraphicsEngine::ReSetRenderTarget()
+{
+	ID3D11RenderTargetView* rtTbl[] = {
+		m_BackUpRT,
+	};
+	//レンダリングターゲットの切り替え。
+	m_pd3dDeviceContext->OMSetRenderTargets(1, rtTbl, m_BackUpDSV);
+	m_pd3dDeviceContext->RSSetViewports(1, &BackUpViewport);
+	
+	m_copyMainRtToFrameBufferSprite.Draw(*m_pd3dDeviceContext);
+	m_pd3dDeviceContext->ClearDepthStencilView(m_BackUpDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
