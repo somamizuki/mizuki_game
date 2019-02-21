@@ -48,12 +48,22 @@ void GameObjectManajer::Execute()
 						obj->Set_isStart(true);
 					}
 				}
-				if (!obj->GetDeath_f()&&!obj->Getstop_f()) obj->Update();
-				
-				
 			}
 		}
 	}
+
+	for (auto& obj_list : GameObject_list)
+	{
+		for (auto& obj : obj_list)
+		{
+			if (obj != nullptr)
+			{
+				if (!obj->GetDeath_f() && !obj->Getstop_f()&& obj->Get_isStart())
+					obj->Update();
+			}
+		}
+	}
+
 	if (g_graphicsEngine->GetShadowMap() != nullptr)
 	{
 		ShadowMap* shadowMap = g_graphicsEngine->GetShadowMap();
@@ -72,6 +82,19 @@ void GameObjectManajer::Execute()
 				if (obj->Get_isStart() == true)
 				{
 					if (!obj->GetDeath_f()) obj->Draw();
+				}
+			}
+		}
+	}
+	for (auto& obj_list : GameObject_list)
+	{
+		for (const auto& obj : obj_list)
+		{
+			if (obj != nullptr)
+			{
+				if (obj->Get_isStart() == true)
+				{
+					if (!obj->GetDeath_f()) obj->EffectDraw();
 				}
 			}
 		}

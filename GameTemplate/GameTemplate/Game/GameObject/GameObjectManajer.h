@@ -20,7 +20,9 @@ public:
 			{
 				if (obj == obj_t)
 				{
-					obj_t->SetDeath_f(true);
+					obj->SetDeath_f(true);
+					//リスナーに削除されたことを通知する。
+					obj->NotifyDeleteGOListeners();
 					deletelist.push_back(obj);
 					break;
 				}

@@ -175,6 +175,17 @@
     <ClCompile Include="graphics\Bloom.cpp" />
     <ClCompile Include="graphics\GaussianBlur.cpp" />
     <ClCompile Include="graphics\PostEffect.cpp" />
+    <ClCompile Include="character\HitObject.cpp" />
+    <ClCompile Include="SpriteEffect.cpp" />
+    <ClCompile Include="game_start.cpp" />
+    <ClCompile Include="StartCamera.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="sound\SoundEngine.cpp" />
+    <ClCompile Include="sound\SoundSource.cpp" />
+    <ClCompile Include="sound\WaveFile.cpp" />
+    <ClCompile Include="sound\WaveFileBank.cpp" />
+    <ClCompile Include="missileRechargeHUD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -317,7 +328,6 @@
     <ClInclude Include="Light\LightBase.h">
       <Filter>Light</Filter>
     </ClInclude>
-    <ClInclude Include="bulletinfo.h" />
     <ClInclude Include="graphics\RenderTarget.h" />
     <ClInclude Include="graphics\ShadowMap.h" />
     <ClInclude Include="Game.h" />
@@ -325,6 +335,18 @@
     <ClInclude Include="graphics\Bloom.h" />
     <ClInclude Include="graphics\GaussianBlur.h" />
     <ClInclude Include="graphics\PostEffect.h" />
+    <ClInclude Include="ObjectInfo.h" />
+    <ClInclude Include="character\HitObject.h" />
+    <ClInclude Include="SpriteEffect.h" />
+    <ClInclude Include="game_start.h" />
+    <ClInclude Include="StartCamera.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="sound\SoundEngine.h" />
+    <ClInclude Include="sound\SoundSource.h" />
+    <ClInclude Include="sound\WaveFile.h" />
+    <ClInclude Include="sound\WaveFileBank.h" />
+    <ClInclude Include="missileRechargeHUD.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -351,6 +373,7 @@
     <MeshContentTask Include="Assets\modelData\sky.fbx" />
     <MeshContentTask Include="Assets\modelData\Sun.FBX" />
     <MeshContentTask Include="Assets\modelData\Planet_B.fbx" />
+    <MeshContentTask Include="Assets\modelData\missile.FBX" />
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\damage.png">
@@ -361,5 +384,14 @@
     <ImageContentTask Include="Assets\sprite\start.png" />
     <ImageContentTask Include="Assets\sprite\OnGame.png" />
     <ImageContentTask Include="Assets\sprite\EnemyPos.png" />
+    <ImageContentTask Include="Assets\modelData\StarSparrow_Normal.png" />
+    <ImageContentTask Include="Assets\modelData\7_normal.png" />
+    <ImageContentTask Include="Assets\sprite\Enemy.png" />
+    <ImageContentTask Include="Assets\sprite\cursor.png" />
+    <ImageContentTask Include="Assets\sprite\fog.png" />
+    <ImageContentTask Include="Assets\sprite\missileGauge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\sprite\missileGauge_waku.png" />
   </ItemGroup>
 </Project>

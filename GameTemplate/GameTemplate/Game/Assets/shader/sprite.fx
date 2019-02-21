@@ -1,45 +1,39 @@
-cbuffer cb:register(b0) {
-	float4x4 mvp;
-	float4 mulColor;
-};
-cbuffer cb2D:register(b11) {
-	float4 trans;
-	float4 mulColor2d;
+/*!
+ * @brief	スプライト用のシェーダー。
+ */
+
+cbuffer cb : register(b0) {
+	float4x4 mvp;		//ワールドビュープロジェクション行列。
+	float4 mulColor;	//乗算カラー。
 };
 struct VSInput {
 	float4 pos : SV_Position;
-	float2 uv  : TEXCOORDO;
+	float2 uv  : TEXCOORD0;
 };
 
 struct PSInput {
 	float4 pos : SV_POSITION;
-	float2 uv  : TEXCOORDO;
+	float2 uv  : TEXCOORD0;
 };
 
-Texture2D<float4> colorTexture : register(t0);
+Texture2D<float4> colorTexture : register(t0);	//カラーテクスチャ。
 sampler Sampler : register(s0);
 
 PSInput VSMain(VSInput In)
-{
-	PSInput psIn;
-	psIn.pos = In.pos +trans;
-	psIn.uv = In.uv;
-	return psIn;
-}
-
-PSInput VS3DMain(VSInput In)
 {
 	PSInput psIn;
 	psIn.pos = mul(mvp, In.pos);
 	psIn.uv = In.uv;
 	return psIn;
 }
-
+PSInput PEVSMain(VSInput In)
+{
+	PSInput psIn;
+	psIn.pos = In.pos;
+	psIn.uv = In.uv;
+	return psIn;
+}
 float4 PSMain(PSInput In) : SV_Target0
 {
-	return  colorTexture.Sample(Sampler,In.uv) *mulColor2d;
-}
-float4 PS3DMain(PSInput In) : SV_Target0
-{
-	return colorTexture.Sample(Sampler,In.uv) * mulColor;
+	return colorTexture.Sample(Sampler, In.uv);
 }

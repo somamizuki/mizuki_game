@@ -12,16 +12,15 @@ public:
 	sprite();
 	~sprite();
 
-	void InitWorld2D(ShaderResourceView& tex, float w, float h);			//èâä˙âª
-	void InitScreen2D(ShaderResourceView& tex, float w, float h,float size);
 	void Init(ID3D11ShaderResourceView* tex, float w, float h);
+	void FullScreenInit();
 	void Release();
-	void SetScreen2DShader(const char* filepathVS, const char* filepathPS)
+	void SetShader(const char* filepathVS, const char* filepathPS)
 	{
 		m_ps.Load(filepathPS, "PSMain", Shader::EnType::PS);
 		m_vs.Load(filepathVS, "VSMain", Shader::EnType::VS);
 	}
-	void SetScreen2DShader(Shader* VS, Shader* PS)
+	void SetShader(Shader* VS, Shader* PS)
 	{
 		m_ps = *PS;
 		m_vs = *VS;
@@ -31,42 +30,44 @@ public:
 		m_textureSRV = tex;
 	}
 
+	void SetViewProj(CMatrix& viewM,CMatrix& projM)
+	{
+		m_view = viewM;
+		m_proj = projM;
+	}
+	void SetProj(CMatrix& projM)
+	{
+		m_proj = projM;
+	}
+
 	void SetMulColor(const CVector4& mulColor)
 	{
 		m_mulColor = mulColor;
 	}
 
 	void Update(const CVector3& trans, const CQuaternion& rot, const CVector3& scale, const CVector2& pivot = DEFAULT_PIVOT);
-	void Update(const CVector2& trans);
-	void Draw(ID3D11DeviceContext& renderContext, const CMatrix& viewMatrix, const CMatrix& projMatrix);
 	void Draw(ID3D11DeviceContext& renderContext);
+	void PostEffectDraw(ID3D11DeviceContext& renderContext);
 private:
 	struct SSpriteCB {
 		CMatrix WVP;
 		CVector4 mulColor;
 	};
-	struct SSpriteCB2D {
-		CVector4 trans;
-		CVector4 mulColor;
-	};
-
 	CVector3 m_position = CVector3::Zero();
 	CQuaternion m_rotation = CQuaternion::Identity();
 	CVector3 m_scale = CVector3::One();
 	CMatrix m_world = CMatrix::Identity();
 	Shader m_ps;
 	Shader m_vs;
-	Shader m_ps1;
-	Shader m_vs1;
-
-
-	SSpriteCB2D cb2D;
 	CVector4 m_mulColor = CVector4::White();
 	Primitive m_primitive;
 	ID3D11ShaderResourceView* m_textureSRV = nullptr;
 	ConstantBuffer m_cb;
-	ConstantBuffer m_cb2D;
-
+	ID3D11SamplerState* m_samplerState = nullptr;
 	CVector2 m_size = CVector2::Zero();
+
+	CMatrix m_view;
+	CMatrix m_proj;
+	bool f_update = false;
 };
 

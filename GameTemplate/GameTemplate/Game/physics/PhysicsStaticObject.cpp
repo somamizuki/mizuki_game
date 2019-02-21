@@ -26,6 +26,7 @@ void PhysicsStaticObject::CreateMeshObject(SkinModel& skinModel, CVector3 pos, C
 	rbInfo.pos = pos;
 	rbInfo.rot = rot;
 	m_rigidBody.Create(rbInfo);
+
 	//„‘Ì‚ğ•¨—ƒ[ƒ‹ƒh‚É’Ç‰Á‚·‚éB
 	g_physics.AddRigidBody(m_rigidBody);
 }

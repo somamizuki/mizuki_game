@@ -1,6 +1,6 @@
 #pragma once
 #include "Enemy.h"
-#include "bulletinfo.h"
+#include "ObjectInfo.h"
 
 using namespace BulletInfo;
 class enemybullet:public GameObject

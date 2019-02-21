@@ -16,6 +16,7 @@ public:
 	virtual bool Start() { return true; }//スタート関数(初期化とか)
 	virtual void Update(){}				 //更新処理
 	virtual void Draw(){}				 //描画
+	virtual void EffectDraw(){}			 //エフェクトの描画
 	virtual void PostDraw(){}			 //手前に描画したいものの描画
 	virtual void UIDraw() {}			 //UIとかの描画
 	const char* GetName()				 //クラス名のゲッター
@@ -49,11 +50,22 @@ public:
 	{
 		stop_f = flag;
 	}
+	void AddDeleteGOListeners(std::function<void(GameObject*)> listener)
+	{
+		m_deleteGoListeners.push_back(listener);
+	}
+	//削除を監視しているリスナーに削除をされたことを通知
+	void NotifyDeleteGOListeners()
+	{
+		for (auto listener : m_deleteGoListeners) {
+			listener(this);
+		}
+	}
 private:
 	const char* this_name;				//名前
 	bool m_start = false;				//スタートフラグ
 	bool death_f = false;				//死亡フラグ(この後死ぬ)
 	bool stop_f = false;				//停止フラグ
-
+	std::list<std::function<void(GameObject*)>>	m_deleteGoListeners;		//削除イベントのリスナー。
 };
 

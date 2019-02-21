@@ -6,6 +6,7 @@
 
 #include "physics/MeshCollider.h"
 #include "physics/RigidBody.h"
+#include"CollisionAttr.h"
 
 
 /*!
@@ -28,6 +29,10 @@ public:
 		*@param[in]	rot			回転。
 		*/
 	void CreateMeshObject(SkinModel& skinModel, CVector3 pos, CQuaternion rot);
+	void SetUserIndex(EnCollisionAttr Index)
+	{
+		m_rigidBody.GetBody()->setUserIndex(Index);
+	}
 	
 private:
 	MeshCollider m_meshCollider;		//!<メッシュコライダー。

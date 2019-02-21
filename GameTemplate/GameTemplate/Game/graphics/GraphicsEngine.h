@@ -59,7 +59,18 @@ public:
 	{
 		return &m_bloom;
 	}
-	
+	DirectX::SpriteBatch* GetSpriteBatch()
+	{
+		return m_spritefontBase;
+	}
+	DirectX::SpriteFont* GetSpriteFont()
+	{
+		return m_spritefont;
+	}
+	ID3D11RasterizerState* GetRasterizerState()
+	{
+		return m_rasterizerState;
+	}
 	/*!
 	 *@brief	描画開始。
 	 */
@@ -87,8 +98,8 @@ private:
 	bool backupF = false;
 	ShadowMap*              m_shadowMap = nullptr;		//シャドウマップ
 	Bloom m_bloom;
-
-
+	DirectX::SpriteBatch* m_spritefontBase = nullptr;
+	DirectX::SpriteFont* m_spritefont = nullptr;
 
 };
 

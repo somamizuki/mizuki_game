@@ -1,4 +1,5 @@
 #pragma once
+#include "game_start.h"
 class Class_of_NewGO;
 class Game:public GameObject
 {
@@ -10,7 +11,10 @@ public:
 	void Draw();
 	void UIDraw();								//UI‚Æ‚©‚Ì•`‰æ
 private:
+	
+
 	enum gamestate {
+		title,
 		start,
 		stop,
 		end
@@ -19,12 +23,7 @@ private:
 
 
 	Class_of_NewGO *newObject = nullptr;
-	ShaderResourceView shaderResource;
-	ShaderResourceView startshaderResource;
-	ShaderResourceView OnGameshaderResource;
-	sprite m_sprite;
-	sprite m_startSprite;
-	sprite OnGameSprite;
+	game_start* gamestart = nullptr;
 	ShadowMap shadowMap;
 };
 

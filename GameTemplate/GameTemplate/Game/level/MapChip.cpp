@@ -12,6 +12,7 @@ MapChip::MapChip(const LevelObjectData& objData)
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 	//静的物理オブジェクトをメッシュコライダーから作成する。
 	m_physicsStaticObject.CreateMeshObject(m_model, objData.position, objData.rotation);
+	m_physicsStaticObject.SetUserIndex(enCollisionAttr_Object);
 }
 
 void MapChip::Draw()

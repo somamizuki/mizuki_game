@@ -83,6 +83,15 @@ public:
 		m_isShadowReciever = flag;
 	}
 
+	void SetNormalMap(const wchar_t* filePath)
+	{
+		HRESULT hr = DirectX::CreateDDSTextureFromFileEx(
+			g_graphicsEngine->GetD3DDevice(), filePath, 0,
+			D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0,
+			false, nullptr, &m_normalMapSRV);
+		
+	}
+
 	/*!
 	*@brief	SRVのレジスタ番号。
 	*/
@@ -105,12 +114,14 @@ private:
 	*/
 	void InitSkeleton(const wchar_t* filePath);
 	
+	
 private:
 	//定数バッファ。
 	struct SVSConstantBuffer {
 		CMatrix mWorld;
 		CMatrix mView;
 		CMatrix mProj;
+		int isHasNormalMap;		//法線マップを保持している？
 	};
 
 	struct SShadowConstantBuffer
@@ -122,6 +133,8 @@ private:
 		
 	};
 
+	
+
 	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
 	ConstantBuffer m_cb;
 	ConstantBuffer m_shadowCb;
@@ -131,5 +144,6 @@ private:
 	DirectX::Model*		m_modelDx;						//!<DirectXTKが提供するモデルクラス。
 	ID3D11SamplerState* m_samplerState = nullptr;		//!<サンプラステート。
 	bool m_isShadowReciever = false;						//シャドウレシーバーのフラグ。
+	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;		//方線マップのSRV
 };
 

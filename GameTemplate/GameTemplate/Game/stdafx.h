@@ -12,6 +12,9 @@
 #include <map>
 #include <functional>
 #include <algorithm>
+#include <xaudio2.h>
+#include <x3daudio.h>
+#include <xaudio2fx.h>
 
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"
@@ -22,6 +25,11 @@
 #include "DirectXTK/Inc/CommonStates.h"
 #include "DirectXTK/Inc/SpriteFont.h"
 #include "DirectXTK/Inc/DDSTextureLoader.h"
+
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
+#include "sound/WaveFile.h"
+#include "sound/WaveFileBank.h"
 
 #include "policy/Noncopyable.h"
 #include "physics/Physics.h"
@@ -44,15 +52,17 @@ enum DrawMode {
 
 
 
-#include"Light/Light.h"
-#include"Light/LightBase.h"
-#include"Light/LightManager.h"
+
+#include "Light/Light.h"
+#include "Light/LightBase.h"
+#include "Light/LightManager.h"
 #include "graphics/Skeleton.h"
 #include "graphics/animation/Animation.h"
 #include "graphics/animation/AnimationClip.h"
 #include "graphics/Camera.h"
 #include "GameObject/GameObject.h"
 #include "GameObject/GameObjectManajer.h"
+#include "Font.h"
 
 
 extern GameObjectManajer *game_obj;
@@ -69,5 +79,7 @@ static wchar_t* char_to_wchar_t(char* name)
 
 const float FRAME_BUFFER_W = 1920.0f;				//フレームバッファの幅。
 const float FRAME_BUFFER_H = 1080.0f;				//フレームバッファの高さ。
+
+static float deltaTime = 1.0f / 60.0f;
 
 static const int MAX_BONE = 512;	//!<ボーンの最大数。

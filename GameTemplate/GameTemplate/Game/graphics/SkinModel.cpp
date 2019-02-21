@@ -80,9 +80,9 @@ void SkinModel::InitSamplerState()
 	//テクスチャのサンプリング方法を指定するためのサンプラステートを作成。
 	D3D11_SAMPLER_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
-	desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	g_graphicsEngine->GetD3DDevice()->CreateSamplerState(&desc, &m_samplerState);
 }
@@ -134,9 +134,15 @@ void SkinModel::Draw(DrawMode mode,CMatrix viewMatrix, CMatrix projMatrix)
 		d3dDeviceContext->VSSetConstantBuffers(4, 1, &m_shadowCb.GetBody());
 		d3dDeviceContext->PSSetConstantBuffers(4, 1, &m_shadowCb.GetBody());
 	}
-
+	//todo 法線マップを使用するかどうかのフラグを送る。
 	//定数バッファの内容を更新。
 	SVSConstantBuffer vsCb;
+	if (m_normalMapSRV != nullptr) {
+		vsCb.isHasNormalMap = true;
+	}
+	else {
+		vsCb.isHasNormalMap = false;
+	}
 
 
 	vsCb.mWorld = m_worldMatrix;
@@ -156,6 +162,10 @@ void SkinModel::Draw(DrawMode mode,CMatrix viewMatrix, CMatrix projMatrix)
 		ModelEffect* effect = (ModelEffect*)ef->effect.get();
 		effect->SetMode(mode);
 	});
+	if (m_normalMapSRV != nullptr) {
+		//法線マップが設定されていたらをレジスタt2に設定する。
+		d3dDeviceContext->PSSetShaderResources(3, 1, &m_normalMapSRV);
+	}
 
 	//描画。
 	m_modelDx->Draw(

@@ -46,6 +46,33 @@ public:
 		return m_up;
 	}
 	/*!
+	 * @brief	カメラの前方向を取得。
+	 */
+	CVector3 GetForward()
+	{
+		CVector3 forward = m_target - m_position;
+		forward.Normalize();
+		return forward;
+	}
+	/*!
+	 * @brief	カメラの右方向を取得。
+	 */
+	CVector3 GetRite()
+	{
+		CVector3 rite;
+		rite.Cross(this->GetUp(), this->GetForward());
+		rite.Normalize();
+		return rite;
+	}
+
+	float GetViewAngle()
+	{
+		return CMath::RadToDeg(m_viewAngle);
+	}
+
+
+
+	/*!
 	 * @brief	視点を設定。
 	 */
 	void SetPosition( CVector3 pos )

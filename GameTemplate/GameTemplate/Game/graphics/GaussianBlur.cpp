@@ -15,7 +15,7 @@ void GaussianBlur::Init(ID3D11ShaderResourceView* SRV)
 {
 	m_SRV = SRV;
 	ID3D11Texture2D* tex;
-	SRV->GetResource((ID3D11Resource**)&tex);
+	m_SRV->GetResource((ID3D11Resource**)&tex);
 	D3D11_TEXTURE2D_DESC texDesc;
 	tex->GetDesc(&texDesc);
 	tex->Release();
@@ -46,7 +46,6 @@ void GaussianBlur::UpdateWeights()
 	for (int i = 0; i < NUM_WEIGHTS; i++) {
 		m_blurParam.weights[i] = expf(-0.5f*(float)(i*i) / m_blurIntensity);
 		total += 2.0f*m_blurParam.weights[i];
-
 	}
 	// 規格化。重みのトータルが1.0になるように、全体の重みで除算している。
 	for (int i = 0; i < NUM_WEIGHTS; i++) {
@@ -79,8 +78,8 @@ void GaussianBlur::Draw(sprite* postEffectSprite, ID3D11ShaderResourceView* srv)
 	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	m_downsampleRT[enRenderTarget_XBlur].ClearRenderTarget(clearColor);
 	postEffectSprite->SetTexture(m_SRV);
-	postEffectSprite->SetScreen2DShader(&m_vsXBlur, &m_psBlur);
-	postEffectSprite->Draw(*deviceContext);
+	postEffectSprite->SetShader(&m_vsXBlur, &m_psBlur);
+	postEffectSprite->PostEffectDraw(*deviceContext);
 
 	g_graphicsEngine->ChangeRenderTarget(
 		&m_downsampleRT[enRenderTarget_YBlur],
@@ -89,8 +88,8 @@ void GaussianBlur::Draw(sprite* postEffectSprite, ID3D11ShaderResourceView* srv)
 
 	m_downsampleRT[enRenderTarget_YBlur].ClearRenderTarget(clearColor);
 	postEffectSprite->SetTexture(m_downsampleRT[enRenderTarget_XBlur].GetRenderTargetSRV());
-	postEffectSprite->SetScreen2DShader(&m_vsYBlur, &m_psBlur);
-	postEffectSprite->Draw(*deviceContext);
+	postEffectSprite->SetShader(&m_vsYBlur, &m_psBlur);
+	postEffectSprite->PostEffectDraw(*deviceContext);
 
 
 }

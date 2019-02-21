@@ -13,6 +13,7 @@ TextureCube<float4> skyCubeMap : register(t0);	//スカイキューブマップ。
 StructuredBuffer<float4x4> boneMatrix : register(t1);
 
 Texture2D<float4> shadowMap : register(t2);		//todo シャドウマップ。
+Texture2D<float4> g_normalMap : register(t3);		//todo ノーマルマップ。
 
 /////////////////////////////////////////////////////////////
 // SamplerState
@@ -29,6 +30,7 @@ cbuffer VSPSCb : register(b0){
 	float4x4 mWorld;
 	float4x4 mView;
 	float4x4 mProj;
+	int isHasNormalMap;		//法線マップを保持している？
 };
 
 cbuffer directionSum : register(b1) {
@@ -130,12 +132,12 @@ struct PSInput_ShadowMap {
 ライトの計算
 */
 //ディレクション
-float4 DirectionLightColor(PSInput Input)
+float4 DirectionLightColor(PSInput Input, float3 mapNormal)
 {
 	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
 	
 	float3 toEyeV = normalize(Input.worldPos-eyepos);
-	float3 reflecteyedir = reflect(toEyeV, Input.Normal);//-toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
+	float3 reflecteyedir = reflect(toEyeV, mapNormal);//-toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
 	float t = 0.0f;
 	float4 specLig = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	for (int i = 0; i < dirsum; i++)
@@ -144,7 +146,7 @@ float4 DirectionLightColor(PSInput Input)
 		float3 m_d2 = normalize(DirectionLightSB[i].Dir_direction);
 
 
-		float4 DlightC = max(0, dot(-m_d2, Input.Normal)) * DirectionLightSB[i].Dir_color;
+		float4 DlightC = max(0, dot(-m_d2, mapNormal)) * DirectionLightSB[i].Dir_color;
 
 		t = max(0.0f, dot(m_d2*-1.0f, reflecteyedir));
 		specLig = max(0.0f,pow(t, specPow) * DirectionLightSB[i].Dir_color);
@@ -155,11 +157,11 @@ float4 DirectionLightColor(PSInput Input)
 	return finalcolor;
 }
 //ポイント
-float4 PointLightColor(PSInput Input)
+float4 PointLightColor(PSInput Input,float3 mapNormal)
 {
 	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
 	float3 toEyeV = normalize(Input.worldPos-eyepos);
-	float3 reflecteyedir = reflect(toEyeV, Input.Normal);//-toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
+	float3 reflecteyedir = reflect(toEyeV, mapNormal);//-toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
 	float t = 0.0f;
 	float4 specLig = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	for (int i = 0; i < pointsum; i++)
@@ -167,7 +169,7 @@ float4 PointLightColor(PSInput Input)
 
 		float3 pointLightV = Input.worldPos - PointLightSB[i].Point_position;
 		pointLightV = normalize(pointLightV);
-		float4 pointlightC = max(0.0f, dot(-pointLightV, Input.Normal)) * PointLightSB[i].Point_color;
+		float4 pointlightC = max(0.0f, dot(-pointLightV, mapNormal)) * PointLightSB[i].Point_color;
 		
 		t = max(0.0f, dot(pointLightV*-1.0f, reflecteyedir));
 		specLig = max(0.0f, pow(t, specPow) * PointLightSB[i].Point_color);
@@ -183,15 +185,14 @@ float4 PointLightColor(PSInput Input)
 	return finalcolor;
 }
 
-float4 PostPointLightColor(PSInput Input)
+float4 PostPointLightColor(PSInput Input, float3 mapNormal)
 {
 	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
 	for (int i = 0; i < pointsum; i++)
 	{
-
 		float3 pointLightV = Input.worldPos - PointLightSB[i].Point_position;
 		pointLightV = normalize(pointLightV);
-		float4 pointlightC = max(0.0f, dot(pointLightV, Input.Normal)) * PointLightSB[i].Point_color;
+		float4 pointlightC = max(0.0f, dot(pointLightV, mapNormal)) * PointLightSB[i].Point_color;
 		finalcolor += max(0.0f, pointlightC);
 	}
 
@@ -200,12 +201,12 @@ float4 PostPointLightColor(PSInput Input)
 
 
 //スポット
-float4 SpotLightColor(PSInput Input)
+float4 SpotLightColor(PSInput Input, float3 mapNormal)
 {
 	
 	float4 finalcolor = { 0.0f,0.0f,0.0f,0.0f };
 	float3 toEyeV = normalize(Input.worldPos-eyepos);
-	float3 reflecteyedir = reflect(toEyeV, Input.Normal);//-toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
+	float3 reflecteyedir = reflect(toEyeV, mapNormal);//-toEyeV + 2 * dot(Input.Normal, toEyeV)*Input.Normal;
 	float t = 0.0f;
 	float4 specLig = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	for (int i = 0; i < spotsum; i++)
@@ -213,7 +214,7 @@ float4 SpotLightColor(PSInput Input)
 		
 		float3 spotLightV = Input.worldPos - SpotLightSB[i].Spot_position;
 		spotLightV = normalize(spotLightV);
-		float4 spotlightC = max(0, dot(-spotLightV, Input.Normal))*SpotLightSB[i].Spot_color;
+		float4 spotlightC = max(0, dot(-spotLightV, mapNormal))*SpotLightSB[i].Spot_color;
 
 		float3 outV = Input.worldPos - SpotLightSB[i].Spot_position;
 		float angle = acos(dot(normalize(SpotLightSB[i].Spot_direction), normalize(outV)));
@@ -348,8 +349,29 @@ float4 PSMain( PSInput In ) : SV_Target0
 
 float4 PS2Main(PSInput In):SV_Target0
 {
-	float ligmin = 0.2f;
-	float4 lig = DirectionLightColor(In) + PointLightColor(In);
+	float3 normal;
+	if (isHasNormalMap == 1) {
+		//法線マップがある。
+		//法線と接ベクトルの外積を計算して、従ベクトルを計算する。
+		float3 biNormal = cross(In.Normal, In.Tangent);
+		biNormal = normalize(biNormal);
+		normal = g_normalMap.Sample(Sampler, In.TexCoord);
+		//0.0～1.0の範囲になっているタンジェントスペース法線を
+		//-1.0～1.0の範囲に変換する。
+		normal = (normal * 2.0f) - 1.0f;
+		//法線をタンジェントスペースから、ワールドスペースに変換する。
+		normal = In.Tangent * normal.x + biNormal * normal.y + In.Normal * normal.z;
+		normal = normalize(normal);
+	}
+	else 
+	{
+		//ない。
+		normal =In.Normal;
+	}
+
+
+	float ligmin = 0.4f;
+	float4 lig = DirectionLightColor(In, normal) + PointLightColor(In, normal);
 	lig = max(ligmin, lig);
 
 	float4 texC2 = albedoTexture.Sample(Sampler ,In.TexCoord);
@@ -358,28 +380,32 @@ float4 PS2Main(PSInput In):SV_Target0
 
 	if (isShadowReciever == 1) {	//シャドウレシーバー。
 		//LVP空間から見た時の最も手前の深度値をシャドウマップから取得する。
-		float2 shadowMapUV = In.posInLVP.xy / In.posInLVP.w;
-		shadowMapUV *= float2(0.5f, -0.5f);
-		shadowMapUV += 0.5f;
+		float3 shadowMapUVW = In.posInLVP.xyz / In.posInLVP.w;
+		shadowMapUVW.xy *= float2(0.5f, -0.5f);
+		shadowMapUVW.xy += 0.5f;
 		//シャドウマップの範囲内かどうかを判定する。
-		if (shadowMapUV.x < 1.0f
-			&& shadowMapUV.x > 0.0f
-			&& shadowMapUV.y < 1.0f
-			&& shadowMapUV.y > 0.0f
+		if (shadowMapUVW.x < 1.0f
+			&& shadowMapUVW.x > 0.0f
+			&& shadowMapUVW.y < 1.0f
+			&& shadowMapUVW.y > 0.0f
 			) {
 
 			///LVP空間での深度値を計算。
 			float zInLVP = In.posInLVP.z / In.posInLVP.w;
 			//シャドウマップに書き込まれている深度値を取得。
-			float zInShadowMap = shadowMap.Sample(Sampler, shadowMapUV);
+			float zInShadowMap = shadowMap.Sample(Sampler, shadowMapUVW.xy);
 
-			if (zInLVP > zInShadowMap+0.001f) {
+			if (zInLVP > zInShadowMap+0.0001f) {
 				//影が落ちているので、光を弱くする
-				lig *= ligmin;
+				float shadowMapZ = min(1.0f, shadowMapUVW.z);
+				float shadowHideZ = 0.5f;
+				float t = max(0.0f, shadowMapZ - shadowHideZ) / (1.0f - shadowHideZ);
+				t = pow(t, 10.0f);
+				lig *= lerp( 0.4, 1.0f, t);
 			}
 		}
 	}
-
+	//lig = min(lig, 1.0f);
 	float4 texC = texC2 *lig;
 	texC.w = 1.0f;
 
@@ -388,8 +414,25 @@ float4 PS2Main(PSInput In):SV_Target0
 
 float4 PS3Main(PSInput In) :SV_Target0
 {
+	float3 normal;
+	if (isHasNormalMap == 1) {
+		//法線マップがある。
+		//法線と接ベクトルの外積を計算して、従ベクトルを計算する。
+		float3 biNormal = cross(In.Normal, In.Tangent);
+		normal = g_normalMap.Sample(Sampler, In.TexCoord);
+		//0.0～1.0の範囲になっているタンジェントスペース法線を
+		//-1.0～1.0の範囲に変換する。
+		normal = (normal * 2.0f) - 1.0f;
+		//法線をタンジェントスペースから、ワールドスペースに変換する。
+		normal = In.Tangent * normal.x + biNormal * normal.y + In.Normal * normal.z;
+	}
+	else
+	{
+		//ない。
+		normal = In.Normal;
+	}
 	float4 texC = albedoTexture.Sample(Sampler ,In.TexCoord);
-	float4 lig = PostPointLightColor(In);// +float4(0.1f, 0.1f, 0.1f, 0.0f);
+	float4 lig = PostPointLightColor(In, normal);// +float4(0.1f, 0.1f, 0.1f, 0.0f);
 	texC = texC * lig;
 
 	return texC;

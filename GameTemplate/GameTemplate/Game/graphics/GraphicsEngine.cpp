@@ -168,6 +168,9 @@ void GraphicsEngine::Init(HWND hWnd)
 	m_mainViewport.MaxDepth = 1.0f;
 
 	m_bloom.Init();
+
+	m_spritefontBase = new DirectX::SpriteBatch(m_pd3dDeviceContext);
+	m_spritefont = new DirectX::SpriteFont(m_pd3dDevice, L"Assets/font/myfile.spritefont");
 }
 
 void GraphicsEngine::ChangeRenderTarget(RenderTarget* RT, D3D11_VIEWPORT* VP)
@@ -192,11 +195,7 @@ void GraphicsEngine::ChangeRenderTarget(RenderTarget* RT, D3D11_VIEWPORT* VP)
 	{
 		//メインレンダリングターゲットに描かれた絵を
 		//フレームバッファにコピーするためのスプライトを初期化する。
-		m_copyMainRtToFrameBufferSprite.Init(
-			RT->GetRenderTargetSRV(),
-			2.0f,
-			2.0f
-		);
+		m_copyMainRtToFrameBufferSprite.FullScreenInit();
 		RTspriteInitF = true;
 	}
 	
@@ -217,7 +216,7 @@ void GraphicsEngine::RenderTargetDraw(RenderTarget* RT, ID3D11ShaderResourceView
 	m_pd3dDeviceContext->OMSetRenderTargets(1, rtTbl, RT->GetDepthStensilView());
 	m_pd3dDeviceContext->RSSetViewports(1, VP);
 	m_copyMainRtToFrameBufferSprite.SetTexture(SRV);
-	m_copyMainRtToFrameBufferSprite.Draw(*m_pd3dDeviceContext);
+	m_copyMainRtToFrameBufferSprite.PostEffectDraw(*m_pd3dDeviceContext);
 	m_copyMainRtToFrameBufferSprite.SetTexture(RT->GetRenderTargetSRV());
 	m_pd3dDeviceContext->ClearDepthStencilView(RT->GetDepthStensilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
@@ -230,7 +229,7 @@ void GraphicsEngine::ReSetRenderTarget()
 	//レンダリングターゲットの切り替え。
 	m_pd3dDeviceContext->OMSetRenderTargets(1, rtTbl, m_BackUpDSV);
 	m_pd3dDeviceContext->RSSetViewports(1, &BackUpViewport);
-	
-	m_copyMainRtToFrameBufferSprite.Draw(*m_pd3dDeviceContext);
+	m_copyMainRtToFrameBufferSprite.SetTexture(m_mainRenderTarget.GetRenderTargetSRV());
+	m_copyMainRtToFrameBufferSprite.PostEffectDraw(*m_pd3dDeviceContext);
 	m_pd3dDeviceContext->ClearDepthStencilView(m_BackUpDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }

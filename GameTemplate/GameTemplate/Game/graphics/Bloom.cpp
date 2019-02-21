@@ -27,7 +27,7 @@ void Bloom::Init()
 	auto device = g_graphicsEngine->GetD3DDevice();
 
 	dfblendDesc.RenderTarget[0].BlendEnable = true;
-	dfblendDesc.RenderTarget[0].SrcBlend = dfblendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	dfblendDesc.RenderTarget[0].SrcBlend = dfblendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
 	dfblendDesc.RenderTarget[0].DestBlend = dfblendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 	dfblendDesc.RenderTarget[0].BlendOp = dfblendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 
@@ -66,11 +66,7 @@ void Bloom::Init()
 		SRV = gaussianBlur.GetResultTextureSRV();
 	}
 
-	m_sprite.Init(
-		nullptr,
-		2.0f,
-		2.0f
-	);
+	m_sprite.FullScreenInit();
 }
 
 void Bloom::Update()
@@ -91,8 +87,8 @@ void Bloom::Update()
 		//シーンをテクスチャとする。
 		ID3D11ShaderResourceView* mainRTTexSRV = g_graphicsEngine->GetmainRenderTarget()->GetRenderTargetSRV();
 		m_sprite.SetTexture(mainRTTexSRV);
-		m_sprite.SetScreen2DShader(&m_vs, &m_psLuminance);
-		m_sprite.Draw(*deviceContext);
+		m_sprite.SetShader(&m_vs, &m_psLuminance);
+		m_sprite.PostEffectDraw(*deviceContext);
 	}
 
 	for (auto& gaussianBlur : m_gaussianblur) {
@@ -107,8 +103,8 @@ void Bloom::Update()
 		auto srv = m_gaussianblur[registerNo].GetResultTextureSRV();
 		deviceContext->PSSetShaderResources(registerNo, 1, &srv);
 	}
-	m_sprite.SetScreen2DShader(&m_vs, &m_psCombine);
-	m_sprite.Draw(*deviceContext);
+	m_sprite.SetShader(&m_vs, &m_psCombine);
+	m_sprite.PostEffectDraw(*deviceContext);
 	{
 		auto mainRT = g_graphicsEngine->GetmainRenderTarget();
 		g_graphicsEngine->ChangeRenderTarget(mainRT, mainRT->GetViewport());
@@ -122,8 +118,8 @@ void Bloom::Update()
 		float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		deviceContext->OMSetBlendState(m_finalBlendState, blendFactor, 0xffffffff);
 		//フルスクリーン描画。
-		m_sprite.SetScreen2DShader(&m_vs, &m_psFinal);
-		m_sprite.Draw(*deviceContext);
+		m_sprite.SetShader(&m_vs, &m_psFinal);
+		m_sprite.PostEffectDraw(*deviceContext);
 		//ブレンディングステートを戻す。
 		deviceContext->OMSetBlendState(m_disableBlendState, blendFactor, 0xffffffff);
 

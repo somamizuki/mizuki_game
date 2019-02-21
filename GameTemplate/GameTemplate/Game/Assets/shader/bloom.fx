@@ -1,10 +1,6 @@
 /*!
  *@brief	ブルーム用のシェーダー
  */
-cbuffer cb2D:register(b11) {
-	float4 trans;
-	float4 mulColor2d;
-};
  /*!
   *@brief	頂点シェーダーの入力。
   */
@@ -18,6 +14,11 @@ struct VSInput {
 struct PSInput {
 	float4 pos : SV_POSITION;
 	float2 uv  : TEXCOORD0;
+};
+
+cbuffer cb : register(b0) {
+	float4x4 mvp;		//ワールドビュープロジェクション行列。
+	float4 mulColor;	//乗算カラー。
 };
 
 /*!
@@ -44,10 +45,10 @@ float4 PSSamplingLuminance(PSInput In) : SV_Target0
 {
 	float4 color = sceneTexture.Sample(Sampler, In.uv);
 	float t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
-	//clip(t - 0.2f);			//輝度が1.0以下ならピクセルキル
-	color.xyz *= (t - 0.0f);
+	clip(t - 0.15f);			//輝度が1.0以下ならピクセルキル
+	//color.xyz *= (t - 0.3f);
 	color.a = 1.0f;
-	color.xyz *= 10.0f;
+	//color.xyz *= 3.0f;
 	return color;
 }
 

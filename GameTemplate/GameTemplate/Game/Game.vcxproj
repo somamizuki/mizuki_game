@@ -65,7 +65,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>DirectXTK.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies);xinput.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib</AdditionalDependencies>
+      <AdditionalDependencies>DirectXTK.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies);xinput.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;xaudio2.lib;Winmm.lib</AdditionalDependencies>
     </Link>
     <ImageContentTask>
       <ContentOutput>$(ProjectDir)\Resource\sprite\%(Filename).dds</ContentOutput>
@@ -99,10 +99,13 @@
     </MeshContentTask>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="game_start.cpp" />
     <ClCompile Include="graphics\GaussianBlur.cpp" />
     <ClCompile Include="graphics\Bloom.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="character\HitObject.cpp" />
     <ClCompile Include="Light\CPointLight.cpp" />
     <ClCompile Include="Light\CDirectionLight.cpp" />
     <ClCompile Include="Light\LightBase.cpp" />
@@ -135,6 +138,7 @@
     <ClCompile Include="math\kMath.cpp" />
     <ClCompile Include="math\Matrix.cpp" />
     <ClCompile Include="math\Vector.cpp" />
+    <ClCompile Include="missileRechargeHUD.cpp" />
     <ClCompile Include="m_camera.cpp" />
     <ClCompile Include="physics\MeshCollider.cpp" />
     <ClCompile Include="physics\Physics.cpp" />
@@ -149,6 +153,12 @@
     <ClCompile Include="graphics\ShadowMap.cpp" />
     <ClCompile Include="graphics\sky.cpp" />
     <ClCompile Include="graphics\PostEffect.cpp" />
+    <ClCompile Include="sound\SoundEngine.cpp" />
+    <ClCompile Include="sound\SoundSource.cpp" />
+    <ClCompile Include="sound\WaveFile.cpp" />
+    <ClCompile Include="sound\WaveFileBank.cpp" />
+    <ClCompile Include="SpriteEffect.cpp" />
+    <ClCompile Include="StartCamera.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -157,12 +167,17 @@
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="graphics\UnorderedAccessView.cpp" />
     <ClCompile Include="graphics\VertexBuffer.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="game_start.h" />
     <ClInclude Include="graphics\GaussianBlur.h" />
     <ClInclude Include="graphics\Bloom.h" />
     <ClInclude Include="bullet.h" />
-    <ClInclude Include="bulletinfo.h" />
+    <ClInclude Include="character\HitObject.h" />
+    <ClInclude Include="missileRechargeHUD.h" />
+    <ClInclude Include="ObjectInfo.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Light\CPointLight.h" />
     <ClInclude Include="Light\CDirectionLight.h" />
@@ -214,15 +229,23 @@
     <ClInclude Include="graphics\ShadowMap.h" />
     <ClInclude Include="graphics\sky.h" />
     <ClInclude Include="graphics\PostEffect.h" />
+    <ClInclude Include="sound\SoundEngine.h" />
+    <ClInclude Include="sound\SoundSource.h" />
+    <ClInclude Include="sound\WaveFile.h" />
+    <ClInclude Include="sound\WaveFileBank.h" />
+    <ClInclude Include="SpriteEffect.h" />
+    <ClInclude Include="StartCamera.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="graphics\StructuredBuffer.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="graphics\UnorderedAccessView.h" />
     <ClInclude Include="graphics\VertexBuffer.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\Enemy.FBX" />
     <MeshContentTask Include="Assets\modelData\kyutai.FBX" />
+    <MeshContentTask Include="Assets\modelData\missile.FBX" />
     <MeshContentTask Include="Assets\modelData\obj.fbx" />
     <MeshContentTask Include="Assets\modelData\Planet_B.fbx" />
     <MeshContentTask Include="Assets\modelData\sky.fbx" />
@@ -236,7 +259,9 @@
     <MeshContentTask Include="Assets\modelData\yuka.fbx" />
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\damage.png" />
+    <ImageContentTask Include="Assets\sprite\damage.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Resource\sprite\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\mato.png" />
@@ -252,6 +277,31 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\EnemyPos.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\modelData\StarSparrow_Normal.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\modelData\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\modelData\7_normal.png">
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\modelData\%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\Enemy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\cursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\fog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\missileGauge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\missileGauge_waku.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

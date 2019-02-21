@@ -2,10 +2,6 @@ struct VSInput {
 	float4 pos : SV_Position;
 	float2 uv  : TEXCOORD0;
 };
-cbuffer cb2D:register(b11) {
-	float4 trans;
-	float4 mulColor2d;
-};
 /*!
  *@brief	ピクセルシェーダーへの入力。
  */
@@ -19,14 +15,6 @@ struct PS_BlurInput {
 	float4 tex5 : TEXCOORD5;
 	float4 tex6 : TEXCOORD6;
 	float4 tex7 : TEXCOORD7;
-	float4 tex8	: TEXCOORD8;
-	float4 tex9 : TEXCOORD9;
-	float4 tex10 : TEXCOORD10;
-	float4 tex11 : TEXCOORD11;
-	float4 tex12 : TEXCOORD12;
-	float4 tex13 : TEXCOORD13;
-	float4 tex14 : TEXCOORD14;
-	float4 tex15 : TEXCOORD15;
 };
 
 Texture2D<float4> srcTexture : register(t0);	//ソーステクスチャ。

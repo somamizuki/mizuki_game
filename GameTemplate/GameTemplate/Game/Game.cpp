@@ -15,43 +15,40 @@ Game::~Game()
 
 bool Game::Start()
 {
-	shaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/menue.dds");
-	m_sprite.InitScreen2D(shaderResource, 0.0f, 0.0f, 1.0f);
-	startshaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/start.dds");
-	m_startSprite.InitScreen2D(startshaderResource, 0.0f, 0.0f, 1.0f);
-	OnGameshaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/OnGame.dds");
-	OnGameSprite.InitScreen2D(OnGameshaderResource, 0.0f, 0.0f, 1.0f);
 	g_graphicsEngine->SetShadowMap(&shadowMap);
+	gamestart = new game_start(0, "game_start");
+	
+	
+
 	return true;
 }
 
 void Game::Update()
 {
-	if (state == end && g_pad[0].IsTrigger(enButtonA))
+	
+	
+	if (gamestart != nullptr)
 	{
-		newObject = new Class_of_NewGO(0, "newObject");
-		state = start;
+		if (gamestart->GetGameStartflag())
+		{
+			game_obj->DeleteGO(gamestart);
+			gamestart = nullptr;
+			newObject = new Class_of_NewGO(0, "newObject");
+		}
 	}
-	if (state == start && g_pad[0].IsTrigger(enButtonStart))
+	if (newObject != nullptr)
 	{
-		game_obj->allStop(this);
-		
-		state = stop;
-	}
-	if (state == stop)
-	{
-		if (g_pad[0].IsTrigger(enButtonA))
+		if (newObject->GameClear())
 		{
 			game_obj->DeleteGO(newObject);
-			state = end;
-		}
-		if (g_pad[0].IsTrigger(enButtonB))
-		{
-			game_obj->alltomarunjanee();
-			state = start;
+			newObject = nullptr;
+			gamestart=new game_start(0, "game_start");
+
 		}
 	}
+	
 
+	
 }
 
 void Game::Draw()
@@ -62,22 +59,5 @@ void Game::Draw()
 
 void Game::UIDraw()
 {
-	if (state == start)
-	{
-		OnGameSprite.Draw(
-			*g_graphicsEngine->GetD3DDeviceContext()
-		);
-	}
-	if (state == stop)
-	{
-		m_sprite.Draw(
-			*g_graphicsEngine->GetD3DDeviceContext()
-		);
-	}
-	if (state == end)
-	{
-		m_startSprite.Draw(
-			*g_graphicsEngine->GetD3DDeviceContext()
-		);
-	}
+	
 }
