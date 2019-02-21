@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Class_of_NewGO.h"
-
+#include "bullet.h"
 
 Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_name)
 {
@@ -16,6 +16,10 @@ Class_of_NewGO::~Class_of_NewGO()
 	game_obj->DeleteGO(map);
 	game_obj->DeleteGO(camera);
 	game_obj->DeleteGO(player);
+	game_obj->QueryGOs("bullet", [&](GameObject* go) {
+		bullet* bl = (bullet*)go;
+		bl->NotifyClass_Of_NewGODead();
+	});
 }
 
 bool Class_of_NewGO::Start()

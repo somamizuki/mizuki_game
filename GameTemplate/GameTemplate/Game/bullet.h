@@ -95,7 +95,14 @@ public:
 	{
 		return m_player;
 	}
-
+	void NotifyPlayerDead()
+	{
+		m_player = nullptr;
+	}
+	void NotifyClass_Of_NewGODead()
+	{
+		CoN = nullptr;
+	}
 private:
 	void bulletFire();
 	void UpdateVector();

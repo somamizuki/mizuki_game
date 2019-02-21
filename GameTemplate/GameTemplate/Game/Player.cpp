@@ -33,16 +33,17 @@ Player::~Player()
 	{
 		game_obj->DeleteGO(LeftBullet);
 	}
+	game_obj->QueryGOs("bullet", [&](GameObject* go) {
+		bullet* bl = (bullet*)go;
+		bl->NotifyPlayerDead();
+	});
 }
 
 bool Player::Start()
 {
 	camera = game_obj->FindGO<m_camera>("camera");				//カメラのインスタンスを検索
 	CofNG = game_obj->FindGO<Class_of_NewGO>("newObject");		//エネミーたちのインスタンスを作ったクラスのポインターを検索
-	CofNG->AddDeleteGOListeners([&](GameObject* go)
-	{
-		CofNG = nullptr;
-	});
+	
 	for (const auto& enemy : CofNG->GetEnemy())
 	{
 		Enemys.push_back(enemy);

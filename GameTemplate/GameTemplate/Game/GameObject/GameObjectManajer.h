@@ -61,7 +61,19 @@ public:
 		}
 		return nullptr;
 	}
-
+	void QueryGOs(char* name, std::function<void(GameObject* go)> func)
+	{
+		for (auto& obj_list : GameObject_list)
+		{
+			for (auto& obj : obj_list)
+			{
+				if (!(std::strcmp(name, obj->GetName())))
+				{
+					func(obj);
+				}
+			}
+		}
+	}
 	void allStop(GameObject* object)						//引数で渡されたオブジェクト以外全ての更新をスキップ
 	{
 		for (auto& objlist : GameObject_list)

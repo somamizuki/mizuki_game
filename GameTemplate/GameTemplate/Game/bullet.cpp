@@ -11,9 +11,6 @@ bullet::bullet(int No, const char* obj_name) : GameObject(No, obj_name)
 
 bullet::~bullet()
 {
-	char hogehogehoge[256];
-	sprintf(hogehogehoge, "Delete Address = %llx\n", this);
-	OutputDebugString(hogehogehoge);
 }
 
 bool bullet::Start()
@@ -27,14 +24,9 @@ bool bullet::Start()
 	{
 	case isPlayer: {
 		m_player = game_obj->FindGO<Player>("player");					//プレイヤーの検索
-		m_player->AddDeleteGOListeners([&](GameObject* go) {
-			m_player = nullptr;
-		});
+		
 		CoN = game_obj->FindGO<Class_of_NewGO>("newObject");			//いろんなクラスをnewするクラスを検索
-		CoN->AddDeleteGOListeners([&](GameObject* go)
-		{
-			CoN = nullptr;
-		});
+
 		tamadir = m_player->Getforward();								//玉のディレクションにプレイヤーのフォワードを代入
 
 		switch (LeftRite)		//左右どちらかにミサイルをつける
@@ -57,14 +49,9 @@ bool bullet::Start()
 	case isEnemy: {
 
 		m_player = game_obj->FindGO<Player>("player");					//プレイヤーの検索
-		m_player->AddDeleteGOListeners([&](GameObject* go) {
-			m_player = nullptr;
-		});
+		
 		CoN = game_obj->FindGO<Class_of_NewGO>("newObject");			//いろんなクラスをnewするクラスを検索
-		CoN->AddDeleteGOListeners([&](GameObject* go)
-		{
-			CoN = nullptr;
-		});
+	
 		switch (LeftRite)		//左右どちらかにミサイルをつける
 		{
 		case Left: {
