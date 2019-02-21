@@ -426,7 +426,7 @@ void Player::Update()
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
 
 	m_leftRechargeHUD.Update(MISSILE_RECHARGE_L_GAGE_POS, CQuaternion::Identity(), leftmissileGaugelevel);
-	m_riteRechargeHUD.Update(MISSILE_RECHARGE_R_GAGE_POS, CQuaternion::Identity(), leftmissileGaugelevel);
+	m_riteRechargeHUD.Update(MISSILE_RECHARGE_R_GAGE_POS, CQuaternion::Identity(), ritemissileGaugelevel);
 	spritemanager();
 }
 /*

@@ -390,8 +390,6 @@
     <ImageContentTask Include="Assets\sprite\cursor.png" />
     <ImageContentTask Include="Assets\sprite\fog.png" />
     <ImageContentTask Include="Assets\sprite\missileGauge.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\sprite\missileGauge_waku.png" />
+    <ImageContentTask Include="Assets\sprite\missileGauge_waku.png" />
   </ItemGroup>
 </Project>
