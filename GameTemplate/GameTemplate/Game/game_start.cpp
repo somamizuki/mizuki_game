@@ -144,16 +144,16 @@ void game_start::UIDraw()
 	{
 	case start: {
 		m_font.BeginDraw();
-		m_font.Draw(L"ゲームスタート", { 200.0f,0.0f }, SelectedStringColor,0.0f,2.0f);
-		m_font.Draw(L"操作方法", { 200.0f,-100.0f }, noSelectStringColor, 0.0f, 2.0f);
+		m_font.Draw(L"GAME START", { 130.0f,0.0f }, SelectedStringColor,0.0f, 0.35f);
+		m_font.Draw(L"HOW TO PLAY", { 130.0f,-150.0f }, noSelectStringColor, 0.0f, 0.35f);
 		m_font.EndDraw();
 
 		break;
 	}
 	case howtocontrol: {
 		m_font.BeginDraw();
-		m_font.Draw(L"ゲームスタート", { 200.0f,0.0f }, noSelectStringColor, 0.0f, 2.0f);
-		m_font.Draw(L"操作方法", { 200.0f,-100.0f }, SelectedStringColor, 0.0f, 2.0f);
+		m_font.Draw(L"GAME START", { 130.0f,0.0f }, noSelectStringColor, 0.0f, 0.35f);
+		m_font.Draw(L"HOW TO PLAY", { 130.0f,-150.0f }, SelectedStringColor, 0.0f, 0.35f);
 		m_font.EndDraw();
 		break;
 	}

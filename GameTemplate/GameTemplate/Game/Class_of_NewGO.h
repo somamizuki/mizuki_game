@@ -6,6 +6,7 @@
 #include"Light/CDirectionLight.h"
 #include"Light/CPointLight.h"
 #include"graphics/sky.h"
+#include "Timer.h"
 #include "Game.h"
 class Class_of_NewGO:public GameObject
 {
@@ -15,6 +16,7 @@ public:
 	bool Start();				//スタート関数
 	void Update();								//アップデート関数
 	void Draw();								//描画関数
+	void UIDraw();
 	void OnDestroy();
 	std::vector<Enemy*>& GetEnemy()				//エネミーの配列を渡す
 	{
@@ -70,7 +72,7 @@ private:
 	CVector3 SCamDir = CVector3::Zero();
 	SPointLight spoint;			//ポイントライトの構造体
 	Game* m_game = nullptr;
-
+	Timer m_timer;
 	bool gameClear = false;		//クリアしたかどうかのフラグ
 
 	CVector3 pos;

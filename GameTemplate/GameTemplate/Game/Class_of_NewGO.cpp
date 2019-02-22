@@ -92,10 +92,6 @@ void Class_of_NewGO::Update()
 	{
 		pos = player->Getpos();
 	}
-	else
-	{
-		int a = 0;
-	}
 	if(player==nullptr)
 	{
 		if (g_pad[0].IsTrigger(enButtonA))
@@ -117,6 +113,7 @@ void Class_of_NewGO::Update()
 		Light_obj->DeleteLight(&m_pointlig);
 	}
 	m_soundEngine.Update();
+	m_timer.Update();
 }
 
 void Class_of_NewGO::Draw()
@@ -127,6 +124,11 @@ void Class_of_NewGO::Draw()
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);
+}
+
+void Class_of_NewGO::UIDraw()
+{
+	m_timer.Draw();
 }
 
 void Class_of_NewGO::OnDestroy()

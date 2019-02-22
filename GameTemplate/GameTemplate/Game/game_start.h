@@ -42,8 +42,8 @@ private:
 	CVector3 camerapos = CVector3::Zero();
 	bool gamestart = false;
 	Font m_font;
-	CVector4 SelectedStringColor = CVector4::White();
-	CVector4 noSelectStringColor = {1.0f,1.0f,1.0f,0.3f};
+	CVector4 SelectedStringColor = {0.0f,1.0f,0.0f,1.0f};
+	CVector4 noSelectStringColor = { 0.0f,1.0f,0.0f,0.2 };
 
 };
 
