@@ -19,6 +19,7 @@ public:
 	void Draw();
 	void EffectDraw();
 	void PostDraw();
+	void OnDestroy();
 	void Setpos(CVector3 pos)						//エネミーのポジションをセット
 	{
 		m_position = pos;

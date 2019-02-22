@@ -16,13 +16,22 @@ public:
 	{
 		for (auto& obj_list : GameObject_list)
 		{
+			for (auto& obj : obj_list) 
+			{
+				obj->RemoveHasMyPointerObject<T>(obj_t);
+			}
+		}
+		for (auto& obj_list : GameObject_list)
+		{
 			for (auto& obj : obj_list)
 			{
 				if (obj == obj_t)
 				{
 					obj->SetDeath_f(true);
+					obj->OnDestroy();
 					//リスナーに削除されたことを通知する。
-					obj->NotifyDeleteGOListeners();
+					//obj->NotifyDeleteGOListeners();
+					obj->NotifyDeleteGOtoHasMyPointerObject();
 					deletelist.push_back(obj);
 					break;
 				}

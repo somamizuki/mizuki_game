@@ -21,6 +21,7 @@ public:
 	void EffectDraw();
 	void PostDraw();							//手前に描画したいものの描画
 	void UIDraw();
+	void OnDestroy();
 	void setposition(CVector3 pos)				//ポジションのセッター
 	{
 		m_position = pos;

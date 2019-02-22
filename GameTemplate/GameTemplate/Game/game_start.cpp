@@ -159,3 +159,7 @@ void game_start::UIDraw()
 	}
 	}
 }
+
+void game_start::OnDestroy()
+{
+}

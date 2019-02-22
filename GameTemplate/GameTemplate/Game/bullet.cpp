@@ -24,8 +24,9 @@ bool bullet::Start()
 	{
 	case isPlayer: {
 		m_player = game_obj->FindGO<Player>("player");					//プレイヤーの検索
-		
+		m_player->AddMyPointer<Player, bullet>(&m_player, this);
 		CoN = game_obj->FindGO<Class_of_NewGO>("newObject");			//いろんなクラスをnewするクラスを検索
+		CoN->AddMyPointer<Class_of_NewGO, bullet>(&CoN, this);
 
 		tamadir = m_player->Getforward();								//玉のディレクションにプレイヤーのフォワードを代入
 
@@ -49,8 +50,9 @@ bool bullet::Start()
 	case isEnemy: {
 
 		m_player = game_obj->FindGO<Player>("player");					//プレイヤーの検索
-		
+		m_player->AddMyPointer<Player, bullet>(&m_player, this);
 		CoN = game_obj->FindGO<Class_of_NewGO>("newObject");			//いろんなクラスをnewするクラスを検索
+		CoN->AddMyPointer<Class_of_NewGO,bullet>(&CoN, this);
 	
 		switch (LeftRite)		//左右どちらかにミサイルをつける
 		{
@@ -315,4 +317,8 @@ void bullet::EffectDraw()
 		m_spriteeffect.Draw();
 	}
 	
+}
+
+void bullet::OnDestroy()
+{
 }

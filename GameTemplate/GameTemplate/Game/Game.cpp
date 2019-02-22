@@ -61,3 +61,7 @@ void Game::UIDraw()
 {
 	
 }
+
+void Game::OnDestroy()
+{
+}

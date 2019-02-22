@@ -15,6 +15,7 @@ public:
 	bool Start();				//スタート関数
 	void Update();								//アップデート関数
 	void Draw();								//描画関数
+	void OnDestroy();
 	std::vector<Enemy*>& GetEnemy()				//エネミーの配列を渡す
 	{
 		return *&m_enemy;

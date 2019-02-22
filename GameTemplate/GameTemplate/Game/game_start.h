@@ -13,6 +13,7 @@ public:
 	void Update();
 	void Draw();
 	void UIDraw();
+	void OnDestroy();
 	bool GetGameStartflag()
 	{
 		return gamestart;

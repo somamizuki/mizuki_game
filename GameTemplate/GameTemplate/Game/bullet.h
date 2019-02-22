@@ -16,6 +16,7 @@ public:
 	void Update();									//更新処理
 	void Draw();									//描画
 	void EffectDraw();
+	void OnDestroy();
 
 	/*ポジションをあげる関数*/
 	const CVector3 Getpos() const
@@ -62,10 +63,10 @@ public:
 		LockOnEnemy = enemy;
 		if (LockOnEnemy != nullptr)
 		{
-			LockOnEnemy->AddDeleteGOListeners([&](GameObject* go)
+			/*LockOnEnemy->AddDeleteGOListeners([&](GameObject* go)
 			{
 				LockOnEnemy = nullptr;
-			});
+			});*/
 		}
 	}
 

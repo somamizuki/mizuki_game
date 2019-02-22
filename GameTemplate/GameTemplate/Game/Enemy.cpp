@@ -11,28 +11,17 @@ Enemy::Enemy(int No, const char* obj_name):GameObject(No, obj_name)
 
 Enemy::~Enemy()
 {
-	/*エネミーが削除されたとき一緒に消す*/
-	for (const auto& effct : spriteeffect)
-	{
-		delete effct;
-	}
-	if (RiteBullet != nullptr)
-	{
-		game_obj->DeleteGO(RiteBullet);
-	}
-	if (LeftBullet != nullptr)
-	{
-		game_obj->DeleteGO(LeftBullet);
-	}
+	
 }
 
 bool Enemy::Start()
 {
 	m_player = game_obj->FindGO<Player>("player");			//プレイヤーを検索
-	m_player->AddDeleteGOListeners([&](GameObject* go)
+	m_player->AddMyPointer<Player,Enemy>(&m_player, this);
+	/*m_player->AddDeleteGOListeners([&](GameObject* go)
 	{
 		m_player = nullptr;
-	});
+	});*/
 	m_model.Init(L"Assets/modelData/Enemy.cmo");			//モデルのイニット
 	m_model.SetShadowReciever(true);						//スキンモデルをシャドウレシーバーに登録
 	m_model.SetNormalMap(L"Assets/modelData/StarSparrow_Normal.dds");//スキンモデルに法線マップを適用
@@ -45,6 +34,7 @@ bool Enemy::Start()
 	EnemyMarkerSprite.Init(EnemyMarkerSRV.GetBody(), 512.0f, 512.0f);
 
 	CoN = game_obj->FindGO<Class_of_NewGO>("newObject");
+	CoN->AddMyPointer<Class_of_NewGO,Enemy>(&CoN, this);
 	mathVector();																			//
 	LeftBullet = new bullet(0, "bullet");													//
 	LeftBullet->WitchBullet(isEnemy);														//
@@ -444,4 +434,21 @@ void Enemy::PostDraw()
 	}
 	
 	
+}
+
+void Enemy::OnDestroy()
+{
+	/*エネミーが削除されたとき一緒に消す*/
+	for (const auto& effct : spriteeffect)
+	{
+		delete effct;
+	}
+	if (RiteBullet != nullptr)
+	{
+		game_obj->DeleteGO(RiteBullet);
+	}
+	if (LeftBullet != nullptr)
+	{
+		game_obj->DeleteGO(LeftBullet);
+	}
 }

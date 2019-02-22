@@ -9,17 +9,7 @@ Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_
 
 Class_of_NewGO::~Class_of_NewGO()
 {
-	for (auto& enemy : m_enemy)
-	{
-		game_obj->DeleteGO(enemy);
-	}
-	game_obj->DeleteGO(map);
-	game_obj->DeleteGO(camera);
-	game_obj->DeleteGO(player);
-	game_obj->QueryGOs("bullet", [&](GameObject* go) {
-		bullet* bl = (bullet*)go;
-		bl->NotifyClass_Of_NewGODead();
-	});
+	
 }
 
 bool Class_of_NewGO::Start()
@@ -48,18 +38,21 @@ bool Class_of_NewGO::Start()
 		if (std::wcscmp(Lobjdata.name, L"StarSparrow") == 0)
 		{
 			player = new Player(0, "player");
-			player->AddDeleteGOListeners([&](GameObject* go) {
+			player->AddMyPointer<Player, Class_of_NewGO>(&player,this);
+			/*player->AddDeleteGOListeners([&](GameObject* go) {
 				player = nullptr;
-			});
+			});*/
 			player->setposition(Lobjdata.position);
 			player->setrot(Lobjdata.rotation);
 		}
 		else if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
 		{
 			Enemy*enemy = new Enemy(0, "enemy");
-			enemy->AddDeleteGOListeners([&](GameObject* go) {
+			enemy->AddMyPointer<Enemy, Class_of_NewGO >(&enemy,this);
+
+			/*enemy->AddDeleteGOListeners([&](GameObject* go) {
 				enemy = nullptr;
-			});
+			});*/
 			enemy->Setpos(Lobjdata.position);
 			enemy->Setrot(Lobjdata.rotation);
 			m_enemy.push_back(enemy);
@@ -80,6 +73,8 @@ bool Class_of_NewGO::Start()
 		return true;
 	});
 	camera = new m_camera(1, "camera");
+	camera->AddMyPointer(&camera, this);
+
 	/*ƒTƒEƒ“ƒh‚Ì‰Šú‰»*/
 	m_soundEngine.Init();
 	m_bgm.Init(L"Assets/sound/GameBGM4.wav");
@@ -96,6 +91,10 @@ void Class_of_NewGO::Update()
 	if (player != nullptr)
 	{
 		pos = player->Getpos();
+	}
+	else
+	{
+		int a = 0;
 	}
 	if(player==nullptr)
 	{
@@ -128,4 +127,19 @@ void Class_of_NewGO::Draw()
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);
+}
+
+void Class_of_NewGO::OnDestroy()
+{
+	for (auto& enemy : m_enemy)
+	{
+		game_obj->DeleteGO(enemy);
+	}
+	game_obj->DeleteGO(map);
+	game_obj->DeleteGO(camera);
+	game_obj->DeleteGO(player);
+	/*game_obj->QueryGOs("bullet", [&](GameObject* go) {
+		bullet* bl = (bullet*)go;
+		bl->NotifyClass_Of_NewGODead();
+	});*/
 }

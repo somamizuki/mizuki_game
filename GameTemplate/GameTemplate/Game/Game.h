@@ -10,6 +10,7 @@ public:
 	void Update();
 	void Draw();
 	void UIDraw();								//UI‚Æ‚©‚Ì•`‰æ
+	void OnDestroy();
 private:
 	
 

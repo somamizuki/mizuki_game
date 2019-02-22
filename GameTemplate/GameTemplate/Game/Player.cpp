@@ -21,33 +21,16 @@ Player::Player(int No, const char* obj_name):GameObject(No, obj_name)
 
 Player::~Player()
 {
-	for (const auto& effct : spriteeffect)
-	{
-		delete effct;
-	}
-	if (RiteBullet != nullptr)
-	{
-		game_obj->DeleteGO(RiteBullet);
-	}
-	if (LeftBullet != nullptr)
-	{
-		game_obj->DeleteGO(LeftBullet);
-	}
-	game_obj->QueryGOs("bullet", [&](GameObject* go) {
-		bullet* bl = (bullet*)go;
-		bl->NotifyPlayerDead();
-	});
+	
 }
 
 bool Player::Start()
 {
 	camera = game_obj->FindGO<m_camera>("camera");				//カメラのインスタンスを検索
+	camera->AddMyPointer<m_camera,Player>(&camera, this);
 	CofNG = game_obj->FindGO<Class_of_NewGO>("newObject");		//エネミーたちのインスタンスを作ったクラスのポインターを検索
-	
-	for (const auto& enemy : CofNG->GetEnemy())
-	{
-		Enemys.push_back(enemy);
-	}
+	CofNG->AddMyPointer<Class_of_NewGO, Player>(&CofNG, this);
+
 	m_model.Init(L"Assets/modelData/StarSparrow.cmo");			//cmoファイルの読み込み。
 	m_model.SetShadowReciever(true);							//影を受けるようにする。(セルフシャドウのため)
 
@@ -118,7 +101,7 @@ Enemy* Player::LockOnManager()
 			dotresult = m_forward.Dot(toEnemy);
 			float angle = CMath::RadToDeg(Acos(dotresult));
 			float toEnemyLen = CVector3(enemy->Getpos() - m_position).Length();
-			if (angle < 10.0f&&dotresult > dotresultMax&&toEnemyLen<30000.0f)
+			if (angle < 10.0f&&dotresult > dotresultMax&&toEnemyLen < 30000.0f)
 			{
 				dotresultMax = dotresult;
 				LockOn_enemy = enemy;
@@ -479,4 +462,24 @@ void Player::UIDraw()
 {
 	m_leftRechargeHUD.Draw();
 	m_riteRechargeHUD.Draw();
+}
+
+void Player::OnDestroy()
+{
+	for (const auto& effct : spriteeffect)
+	{
+		delete effct;
+	}
+	if (RiteBullet != nullptr)
+	{
+		game_obj->DeleteGO(RiteBullet);
+	}
+	if (LeftBullet != nullptr)
+	{
+		game_obj->DeleteGO(LeftBullet);
+	}
+	game_obj->QueryGOs("bullet", [&](GameObject* go) {
+		bullet* bl = (bullet*)go;
+		bl->NotifyPlayerDead();
+	});
 }

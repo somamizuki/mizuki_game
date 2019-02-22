@@ -18,8 +18,10 @@ bool Timer::Start()
 
 void Timer::Update()
 {
+
 }
 
 void Timer::UIDraw()
 {
+
 }

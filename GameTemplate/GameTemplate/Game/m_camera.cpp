@@ -15,6 +15,8 @@ m_camera::~m_camera()
 bool m_camera::Start()
 {
 	player = game_obj->FindGO<Player>("player");
+	player->AddMyPointer<Player,m_camera>(&player, this);
+
 	camera_rite = player->Getrite();
 	g_camera3D.SetFar(4500000.0f);
 	g_camera3D.SetNear(0.1f);

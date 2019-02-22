@@ -79,7 +79,7 @@ void GameObjectManajer::Execute()
 		{
 			if (obj != nullptr) 
 			{
-				if (obj->Get_isStart() == true)
+				if (!obj->GetDeath_f() && obj->Get_isStart() == true)
 				{
 					if (!obj->GetDeath_f()) obj->Draw();
 				}
@@ -92,7 +92,7 @@ void GameObjectManajer::Execute()
 		{
 			if (obj != nullptr)
 			{
-				if (obj->Get_isStart() == true)
+				if (!obj->GetDeath_f() && obj->Get_isStart() == true)
 				{
 					if (!obj->GetDeath_f()) obj->EffectDraw();
 				}
@@ -109,7 +109,7 @@ void GameObjectManajer::Execute()
 		{
 			if (obj != nullptr)
 			{
-				if (obj->Get_isStart() == true)
+				if (!obj->GetDeath_f() && obj->Get_isStart() == true)
 				{
 					if (!obj->GetDeath_f()) obj->PostDraw();
 				}
@@ -124,7 +124,7 @@ void GameObjectManajer::Execute()
 		{
 			if (obj != nullptr)
 			{
-				if (obj->Get_isStart() == true)
+				if (!obj->GetDeath_f() && obj->Get_isStart() == true)
 				{
 					if (!obj->GetDeath_f()) obj->UIDraw();
 				}
