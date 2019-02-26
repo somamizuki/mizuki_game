@@ -97,7 +97,7 @@ void sprite::Init(ID3D11ShaderResourceView* tex, float w, float h)
 void sprite::FullScreenInit()
 {
 	//デフォルトのシェーダー
-	m_ps.Load("Assets/shader/sprite.fx", "PSMain", Shader::EnType::PS);
+	m_ps.Load("Assets/shader/sprite.fx", "PSPostEffectMain", Shader::EnType::PS);
 	m_vs.Load("Assets/shader/sprite.fx", "PEVSMain", Shader::EnType::VS);
 
 	SSinpleVertex vertices[] =

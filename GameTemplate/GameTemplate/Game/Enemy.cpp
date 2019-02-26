@@ -57,6 +57,7 @@ bool Enemy::Start()
 		{
 			Engin* engin = new Engin;
 			engin->toEngin = Lobjdata.position - pos;
+			/*‚Ì‚¿‚Ém_forward,m_rite*/
 			engin->toEngin = { CVector3::AxisX().Dot(engin->toEngin),CVector3::AxisY().Dot(engin->toEngin),CVector3::AxisZ().Dot(engin->toEngin) };
 			spriteeffect.push_back(engin);
 		}
@@ -70,9 +71,6 @@ bool Enemy::Start()
 		effct->spriteeffect.Init(m_srv.GetBody(), 0.033f, 0);
 	}
 
-
-	/*m_spriteeffect[0].Init(m_srv.GetBody(), 0.033f, 0);
-	m_spriteeffect[1].Init(m_srv.GetBody(), 0.033f, 0);*/
 	return true;
 }
 
@@ -366,7 +364,7 @@ void Enemy::Update()
 		m_position += movespeed * deltaTime;
 		for (const auto& enemy : CoN->GetEnemy())
 		{
-			if (this == enemy || enemy == NULL)
+			if (this == enemy || enemy == nullptr)
 			{
 				continue;
 			}

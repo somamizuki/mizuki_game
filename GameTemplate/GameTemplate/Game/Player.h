@@ -5,6 +5,7 @@
 #include"SpriteEffect.h"
 #include"level/Level.h"
 #include "missileRechargeHUD.h"
+#include"HPGaugeHUD.h"
 
 class m_camera;
 class bullet;
@@ -73,7 +74,9 @@ private:
 		int HP = 50;
 	};
 
+
 	playerParam m_playerParam;
+	const float HPMAX = m_playerParam.HP;
 
 	SkinModel m_model;									//スキンモデル。
 	CVector3 m_position = CVector3::Zero();				//プレイヤーのポジション
@@ -149,5 +152,7 @@ private:
 
 	missileRechargeHUD m_leftRechargeHUD;
 	missileRechargeHUD m_riteRechargeHUD;
+	HPGaugeHUD m_hpHUD;
+
 };
 

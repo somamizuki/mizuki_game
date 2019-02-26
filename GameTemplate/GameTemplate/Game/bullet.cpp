@@ -97,7 +97,7 @@ void bullet::BulletHoming(CVector3& target)
 	CVector3 BtoT;					//弾からターゲットに向かうベクトル
 	BtoT = target - bulletpos;
 	BtoT.Normalize();
-	tamadir = m_forward * 20.0f + BtoT;		//弾の進行方向を設定	30は調整
+	tamadir = m_forward * 10.0f + BtoT;		//弾の進行方向を設定	30は調整
 	tamadir.Normalize();					//正規化
 
 
@@ -192,6 +192,14 @@ void bullet::bulletFire()
 			if (HitPlayer)
 			{
 				m_player->SetHP(1);
+				if (CoN != nullptr)
+				{
+					if (CoN->GetHitSE()->IsPlaying())
+					{
+						CoN->GetHitSE()->Stop();
+					}
+					CoN->GetHitSE()->Play(false);
+				}
 				game_obj->DeleteGO(this);
 			}
 		}

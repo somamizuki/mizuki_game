@@ -58,12 +58,11 @@ void GameObjectManajer::Execute()
 		{
 			if (obj != nullptr)
 			{
-				if (!obj->GetDeath_f() && !obj->Getstop_f()&& obj->Get_isStart())
-					obj->Update();
+				if (!obj->GetDeath_f() && !obj->Getstop_f()&& obj->Get_isStart()) obj->Update();
 			}
 		}
 	}
-
+	/*シャドウキャスターに登録されたモデルをシャドウマップ用のレンダリングターゲットに描画*/
 	if (g_graphicsEngine->GetShadowMap() != nullptr)
 	{
 		ShadowMap* shadowMap = g_graphicsEngine->GetShadowMap();

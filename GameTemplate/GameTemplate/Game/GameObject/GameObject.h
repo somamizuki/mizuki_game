@@ -62,6 +62,7 @@ public:
 			listener(this);
 		}
 	}*/
+	/*自分をさすポインタへのポインタとそれを持ったオブジェクトへのポインタを登録*/
 	template<class T,class C>
 	void AddMyPointer(T** myPointer,C* hasobject)
 	{
@@ -71,6 +72,7 @@ public:
 
 		m_hasMyPointerlist.push_back(s_hasMyPointerObject);
 	}
+	/*引数で渡されたオブジェクトがリストにあれば削除する*/
 	template<class T>
 	void RemoveHasMyPointerObject(T* obj)
 	{
@@ -83,6 +85,8 @@ public:
 			}
 		}
 	}
+	/*自分をさすポインタへのポインタの中身にnullptrを代入*/
+	/*DeleteGO時に呼ばれる*/
 	void NotifyDeleteGOtoHasMyPointerObject()
 	{
 		for (auto& mypointer : m_hasMyPointerlist)
@@ -96,11 +100,13 @@ private:
 	bool death_f = false;				//死亡フラグ(この後死ぬ)
 	bool stop_f = false;				//停止フラグ
 	//std::list<std::function<void(GameObject*)>>	m_deleteGoListeners;		//削除イベントのリスナー。
+	/*自分をさすポインタへのポインタとそれを持ったオブジェクトへのポインタを持つ構造体*/
 	struct hasMyPointerObject
 	{
 		GameObject* object;
 		GameObject** m_MyPointer;
 	};
+	/*自分をさすポインタへのポインタとそれを持ったオブジェクトへのポインタを持つ構造体のリスト*/
 	std::list<hasMyPointerObject*> m_hasMyPointerlist;
 };
 

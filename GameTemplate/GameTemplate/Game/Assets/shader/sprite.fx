@@ -35,5 +35,10 @@ PSInput PEVSMain(VSInput In)
 }
 float4 PSMain(PSInput In) : SV_Target0
 {
+	return colorTexture.Sample(Sampler, In.uv)*mulColor;
+}
+
+float4 PSPostEffectMain(PSInput In) : SV_Target0
+{
 	return colorTexture.Sample(Sampler, In.uv);
 }

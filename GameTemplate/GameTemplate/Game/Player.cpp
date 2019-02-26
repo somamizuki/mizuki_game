@@ -9,8 +9,11 @@
 namespace {
 	const float MISSILE_RECHARGE_GAUGE_WIDTH = 170.0f;
 	const float MISSILE_RECHARGE_GAUGE_HEIGHT = 15.0f;
+	const float HP_GAUGE_WIDTH = 400.0f;
+	const float HP_GAUGE_HEIGHT = 30.0f;
 	const CVector3 MISSILE_RECHARGE_L_GAGE_POS = { -370.0f,-340.0f,0.0f };
 	const CVector3 MISSILE_RECHARGE_R_GAGE_POS = { 370.0f- MISSILE_RECHARGE_GAUGE_WIDTH,-340.0f,0.0f };
+	const CVector3 HP_GAUGE_POS = { 520.0f,470.0f,0.0f };
 	
 }
 Player::Player(int No, const char* obj_name):GameObject(No, obj_name)
@@ -72,15 +75,13 @@ bool Player::Start()
 
 	m_leftRechargeHUD.Init(L"Resource/sprite/missileGauge_waku.dds", L"Resource/sprite/missileGauge.dds", MISSILE_RECHARGE_GAUGE_WIDTH, MISSILE_RECHARGE_GAUGE_HEIGHT);
 	m_riteRechargeHUD.Init(L"Resource/sprite/missileGauge_waku.dds", L"Resource/sprite/missileGauge.dds", MISSILE_RECHARGE_GAUGE_WIDTH, MISSILE_RECHARGE_GAUGE_HEIGHT);
+	m_hpHUD.Init(L"Resource/sprite/missileGauge_waku.dds", L"Resource/sprite/missileGauge.dds", HP_GAUGE_WIDTH, HP_GAUGE_HEIGHT);
 	m_srv.CreateFromDDSTextureFromFile(L"Resource/sprite/fog.dds");
 
 	for (const auto& effct : spriteeffect)
 	{
 		effct->spriteeffect.Init(m_srv.GetBody(), 0.034f, 0);
 	}
-
-	/*m_spriteeffect[0].Init(m_srv.GetBody(), 0.033f, 0);
-	m_spriteeffect[1].Init(m_srv.GetBody(), 0.033f, 0);*/
 
 	return true;
 }
@@ -353,7 +354,6 @@ void Player::spritemanager()
 	}
 	/*ロックオンスプライトのポジションを計算*/
 	{
-		//LockOnSprite.SetViewProj(g_camera3D.GetViewMatrix(),g_camera3D.GetProjectionMatrix());
 		CMatrix wvp;
 		wvp.MakeTranslation(LockOnEnemyPos);
 		wvp.Mul(wvp, g_camera3D.GetViewMatrix());
@@ -411,6 +411,9 @@ void Player::Update()
 
 	m_leftRechargeHUD.Update(MISSILE_RECHARGE_L_GAGE_POS, CQuaternion::Identity(), leftmissileGaugelevel);
 	m_riteRechargeHUD.Update(MISSILE_RECHARGE_R_GAGE_POS, CQuaternion::Identity(), ritemissileGaugelevel);
+	float HPGauge = m_playerParam.HP / HPMAX;
+	m_hpHUD.Update(HP_GAUGE_POS, CQuaternion::Identity(), HPGauge);
+
 	spritemanager();
 }
 /*
@@ -435,10 +438,6 @@ void Player::EffectDraw()
 		effct->spriteeffect.Update(m_position + pos);
 		effct->spriteeffect.Draw();
 	}
-	/*m_spriteeffect[0].Update(m_position + m_rite * 105.0f + m_forward * -130.0f);
-	m_spriteeffect[1].Update(m_position + m_rite * -105.0f + m_forward * -130.0f);
-	m_spriteeffect[0].Draw();
-	m_spriteeffect[1].Draw();*/
 }
 
 
@@ -462,6 +461,7 @@ void Player::UIDraw()
 {
 	m_leftRechargeHUD.Draw();
 	m_riteRechargeHUD.Draw();
+	m_hpHUD.Draw();
 }
 
 void Player::OnDestroy()
@@ -478,8 +478,8 @@ void Player::OnDestroy()
 	{
 		game_obj->DeleteGO(LeftBullet);
 	}
-	game_obj->QueryGOs("bullet", [&](GameObject* go) {
+	/*game_obj->QueryGOs("bullet", [&](GameObject* go) {
 		bullet* bl = (bullet*)go;
 		bl->NotifyPlayerDead();
-	});
+	});*/
 }
