@@ -74,6 +74,7 @@ private:
 	Game* m_game = nullptr;
 	Timer m_timer;
 	bool gameClear = false;		//クリアしたかどうかのフラグ
+	int WaveCounter = 1;
 
 	CVector3 pos;
 };

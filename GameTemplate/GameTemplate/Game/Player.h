@@ -71,7 +71,7 @@ private:
 	//プレイヤーのパラメーター
 	struct playerParam
 	{
-		int HP = 50;
+		int HP = 10;
 	};
 
 

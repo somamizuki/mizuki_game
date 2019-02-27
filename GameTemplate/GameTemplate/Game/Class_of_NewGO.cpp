@@ -31,9 +31,9 @@ bool Class_of_NewGO::Start()
 	spoint.range = 8000000.0f;
 
 	map = new sky(0, "map");
-	map->Init(L"Assets/modelData/skyCubeMap.dds", L"Assets/modelData/sky.cmo", CVector3{ 2000000.0f,2000000.0f,2000000.0f });
+	map->Init(L"Assets/modelData/skyCubeMap.dds", L"Assets/modelData/sky.cmo", CVector3{ 1000000.0f,1000000.0f,1000000.0f });
 	
-	level.Init(L"Assets/level/stage_02.tkl", [&](LevelObjectData Lobjdata) {
+	level.Init(L"Assets/level/stage.tkl", [&](LevelObjectData Lobjdata) {
 
 		if (std::wcscmp(Lobjdata.name, L"StarSparrow") == 0)
 		{
@@ -88,6 +88,73 @@ bool Class_of_NewGO::Start()
 
 void Class_of_NewGO::Update()
 {
+	if (m_enemy.size() == 0)
+	{
+		switch (WaveCounter)
+		{
+		case 1:
+		{
+			level.Init(L"Assets/level/Wave1_EnemyPos.tkl", [&](LevelObjectData Lobjdata) {
+
+				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
+				{
+					Enemy*enemy = new Enemy(0, "enemy");
+					enemy->AddMyPointer<Enemy, Class_of_NewGO >(&enemy, this);
+					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
+
+					enemy->Setpos(enemypos);
+					enemy->Setrot(Lobjdata.rotation);
+					m_enemy.push_back(enemy);
+
+				}
+				return true;
+			});
+			WaveCounter++;
+			break;
+		}
+		case 2:
+		{
+			level.Init(L"Assets/level/Wave2_EnemyPos.tkl", [&](LevelObjectData Lobjdata) {
+
+				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
+				{
+					Enemy*enemy = new Enemy(0, "enemy");
+					enemy->AddMyPointer<Enemy, Class_of_NewGO >(&enemy, this);
+					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
+
+					enemy->Setpos(enemypos);
+					enemy->Setrot(Lobjdata.rotation);
+					m_enemy.push_back(enemy);
+
+				}
+				return true;
+			});
+			WaveCounter++;
+			break;
+		}
+		case 3:
+		{
+			level.Init(L"Assets/level/Wave3_EnemyPos.tkl", [&](LevelObjectData Lobjdata) {
+
+				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
+				{
+					Enemy*enemy = new Enemy(0, "enemy");
+					enemy->AddMyPointer<Enemy, Class_of_NewGO >(&enemy, this);
+					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
+
+					enemy->Setpos(enemypos);
+					enemy->Setrot(Lobjdata.rotation);
+					m_enemy.push_back(enemy);
+
+				}
+				return true;
+			});
+			WaveCounter++;
+			break;
+		}
+		default:break;
+		}
+	}
 	if (player != nullptr)
 	{
 		pos = player->Getpos();
@@ -107,11 +174,11 @@ void Class_of_NewGO::Update()
 		pos+(SCamDir*500.0f),
 		pos
 	);
-	if (m_enemy.size() == 0)
+	/*if (m_enemy.size() == 0)
 	{
 		gameClear = true;
 		Light_obj->DeleteLight(&m_pointlig);
-	}
+	}*/
 	m_soundEngine.Update();
 	m_timer.Update();
 }

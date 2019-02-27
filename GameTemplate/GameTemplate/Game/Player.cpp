@@ -388,7 +388,7 @@ void Player::Update()
 	}
 	vector();
 	
-	if (CVector3(m_position - CVector3::Zero()).Length() > 200000.0f)
+	if (CVector3(m_position - CVector3::Zero()).Length() > 100000.0f)
 	{
 		pState = Return;
 	}
@@ -400,7 +400,7 @@ void Player::Update()
 	bulletManager();
 	
 
-	if (m_playerParam.HP <= 10)
+	if (m_playerParam.HP <= 0)
 	{
 		game_obj->DeleteGO(this);
 	}

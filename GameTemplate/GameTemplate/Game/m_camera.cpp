@@ -18,8 +18,8 @@ bool m_camera::Start()
 	player->AddMyPointer<Player,m_camera>(&player, this);
 
 	camera_rite = player->Getrite();
-	g_camera3D.SetFar(4500000.0f);
-	g_camera3D.SetNear(0.1f);
+	g_camera3D.SetFar(2000000.0f);
+	g_camera3D.SetNear(1.0f);
 	player_pos = player->Getpos();
 	camera_Target = player_pos + player->Getup()*100.0f;
 	camera_Pos = camera_Target - player->Getforward()*500.0f;
