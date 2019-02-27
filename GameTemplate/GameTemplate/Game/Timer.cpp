@@ -22,6 +22,10 @@ void Timer::Update()
 		m_seconds = 60.0f;
 		m_minits -= 1;
 	}
+	if (m_minits == 0 && m_seconds == 0.0f)
+	{
+		TimeUP = true;
+	}
 }
 
 void Timer::Draw()

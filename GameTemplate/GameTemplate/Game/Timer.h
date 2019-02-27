@@ -23,10 +23,15 @@ public:
 	{
 		return m_seconds;
 	}
+	bool IsTIMEUP()
+	{
+		return TimeUP;
+	}
 
 private:
 	Font m_font;
 	bool StopTimer = false;
+	bool TimeUP = false;
 	float m_seconds = 60.0f;
 	int m_minits = 2;
 };

@@ -62,7 +62,8 @@ public:
 private:
 	CSoundEngine m_soundEngine;				//サウンドエンジン。
 	CSoundSource m_bgm;						//BGM
-	CSoundSource m_HitSE;						//BGM
+	CSoundSource m_bgmendwave;
+	CSoundSource m_HitSE;					
 	CSoundSource m_lockonSE;
 	CSoundSource m_fireSE;
 

@@ -65,6 +65,7 @@ bool Class_of_NewGO::Start()
 	/*ƒTƒEƒ“ƒh‚Ì‰Šú‰»*/
 	m_soundEngine.Init();
 	m_bgm.Init(L"Assets/sound/GameBGM4.wav");
+	m_bgmendwave.Init(L"Assets/sound/GameBGM2.wav");
 	m_HitSE.Init(L"Assets/sound/HitSE.wav");
 	m_lockonSE.Init(L"Assets/sound/lockonSE.wav");
 	m_fireSE.Init(L"Assets/sound/fireSE.wav");
@@ -134,6 +135,11 @@ void Class_of_NewGO::Update()
 				return true;
 			});
 			WaveCounter++;
+			if (m_bgm.IsPlaying())
+			{
+				m_bgm.Stop();
+			}
+			m_bgmendwave.Play(true);
 			break;
 		}
 		default:break;
@@ -149,7 +155,7 @@ void Class_of_NewGO::Update()
 		m_result.SetRemMIN(m_timer.GetMIN());
 		m_result.SetRemSEC(m_timer.GetSEC());
 		ResultDrawFlag = true;
-		if (g_pad[0].IsTrigger(enButtonA))
+		if (g_pad[0].IsTrigger(enButtonB))
 		{
 			gameClear = true;
 			Light_obj->DeleteLight(&m_pointlig);
@@ -165,6 +171,17 @@ void Class_of_NewGO::Update()
 	
 	m_soundEngine.Update();
 	m_timer.Update();
+	if (m_timer.IsTIMEUP())
+	{
+		game_obj->DeleteGO(player);
+		m_result.SetTimeUP(true);
+		ResultDrawFlag = true;
+		if (g_pad[0].IsTrigger(enButtonB))
+		{
+			gameClear = true;
+			Light_obj->DeleteLight(&m_pointlig);
+		}
+	}
 	if (WaveCounter > 3 && m_enemy.size() <= 0)
 	{
 		m_timer.Stop();
@@ -172,7 +189,7 @@ void Class_of_NewGO::Update()
 		m_result.SetRemSEC(m_timer.GetSEC());
 		m_result.SetGameClear(true);
 		ResultDrawFlag = true;
-		if (g_pad[0].IsTrigger(enButtonA))
+		if (g_pad[0].IsTrigger(enButtonB))
 		{
 			gameClear = true;
 			Light_obj->DeleteLight(&m_pointlig);

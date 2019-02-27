@@ -64,7 +64,7 @@ public:
 
 	void SetHP(int damage)
 	{
-		m_playerParam.HP -= damage;
+		m_playerParam.HP = max(0, m_playerParam.HP - damage);
 	}
 	
 private:
