@@ -38,7 +38,7 @@ bool Player::Start()
 	m_model.SetShadowReciever(true);							//影を受けるようにする。(セルフシャドウのため)
 
 	
-	m_model.SetNormalMap(L"Assets/modelData/StarSparrow_Normal.dds");//法線マップを適用
+	m_model.SetNormalMap(L"Resource/sprite/StarSparrow_Normal.dds");//法線マップを適用
 
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);	//シャドウキャスターに登録
 	vector();				//プレイヤーの前右上のベクトルを計算する
@@ -80,7 +80,7 @@ bool Player::Start()
 
 	for (const auto& effct : spriteeffect)
 	{
-		effct->spriteeffect.Init(m_srv.GetBody(), 0.034f, 0);
+		effct->spriteeffect.Init(m_srv.GetBody(), 0.06f, 0);
 	}
 
 	return true;
@@ -123,6 +123,11 @@ Enemy* Player::LockOnManager()
 
 			prevLockOnEnemy = LockOn_enemy;
 			LockOnflag = true;
+			if (prevLockOnEnemy->GetDeath_f())
+			{
+				prevLockOnEnemy = nullptr;
+				LockOnflag = false;
+			}
 
 		}
 		else
@@ -276,7 +281,7 @@ void Player::bulletManager()
 		ritemissileGaugelevel = min(1.0f, ritebulletTime / bulletspan);
 	}
 
-	if (ritebulletTime >= 3.0f&&RiteBullet==nullptr)
+	if (ritebulletTime >= bulletspan &&RiteBullet==nullptr)
 	{
 		RiteBullet = new bullet(0, "bullet");				//右のミサイルをセット
 		RiteBullet->WitchBullet(isPlayer);
@@ -290,7 +295,7 @@ void Player::bulletManager()
 		leftbulletTime += 1.0f*deltaTime;					//ミサイルがセットされていなければタイマーを進める
 		leftmissileGaugelevel = min(1.0f,leftbulletTime / bulletspan);
 	}
-	if (leftbulletTime >= 3.0f&&LeftBullet==nullptr)
+	if (leftbulletTime >= bulletspan &&LeftBullet==nullptr)
 	{
 		LeftBullet = new bullet(0, "bullet");				//左のミサイルをセット
 		LeftBullet->WitchBullet(isPlayer);
@@ -413,7 +418,7 @@ void Player::Update()
 	m_riteRechargeHUD.Update(MISSILE_RECHARGE_R_GAGE_POS, CQuaternion::Identity(), ritemissileGaugelevel);
 	float HPGauge = m_playerParam.HP / HPMAX;
 	m_hpHUD.Update(HP_GAUGE_POS, CQuaternion::Identity(), HPGauge);
-
+	CofNG->GetResult()->SetRemHP(m_playerParam.HP);
 	spritemanager();
 }
 /*

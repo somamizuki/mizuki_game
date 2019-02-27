@@ -7,7 +7,9 @@
 #include"Light/CPointLight.h"
 #include"graphics/sky.h"
 #include "Timer.h"
+#include "Result.h"
 #include "Game.h"
+
 class Class_of_NewGO:public GameObject
 {
 public:
@@ -51,6 +53,10 @@ public:
 	{
 		m_game = game;
 	}
+	Result* GetResult()
+	{
+		return &m_result;
+	}
 
 
 private:
@@ -75,7 +81,8 @@ private:
 	Timer m_timer;
 	bool gameClear = false;		//クリアしたかどうかのフラグ
 	int WaveCounter = 1;
-
+	Result m_result;
+	bool ResultDrawFlag = false;
 	CVector3 pos;
 };
 

@@ -2,7 +2,7 @@
 
 namespace BulletInfo 
 {
-	const float bulletspeed = 5000.0f;
+	const float bulletspeed = 6000.0f;
 	const float eraselength = 40000.0f;
 	const float firelength = 3000.0f;
 	enum witchBullet

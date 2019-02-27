@@ -187,6 +187,7 @@
     <ClCompile Include="sound\WaveFileBank.cpp" />
     <ClCompile Include="missileRechargeHUD.cpp" />
     <ClCompile Include="HPGaugeHUD.cpp" />
+    <ClCompile Include="Result.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -349,6 +350,7 @@
     <ClInclude Include="sound\WaveFileBank.h" />
     <ClInclude Include="missileRechargeHUD.h" />
     <ClInclude Include="HPGaugeHUD.h" />
+    <ClInclude Include="Result.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">

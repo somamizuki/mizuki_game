@@ -154,6 +154,7 @@
     <ClCompile Include="graphics\ShadowMap.cpp" />
     <ClCompile Include="graphics\sky.cpp" />
     <ClCompile Include="graphics\PostEffect.cpp" />
+    <ClCompile Include="Result.cpp" />
     <ClCompile Include="sound\SoundEngine.cpp" />
     <ClCompile Include="sound\SoundSource.cpp" />
     <ClCompile Include="sound\WaveFile.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="graphics\ShadowMap.h" />
     <ClInclude Include="graphics\sky.h" />
     <ClInclude Include="graphics\PostEffect.h" />
+    <ClInclude Include="Result.h" />
     <ClInclude Include="sound\SoundEngine.h" />
     <ClInclude Include="sound\SoundSource.h" />
     <ClInclude Include="sound\WaveFile.h" />
@@ -282,12 +284,12 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\modelData\StarSparrow_Normal.png">
-      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\modelData\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Resource\sprite\%(Filename).dds</ContentOutput>
     </ImageContentTask>
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\modelData\7_normal.png">
-      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\modelData\%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Resource\sprite\%(Filename).dds</ContentOutput>
     </ImageContentTask>
   </ItemGroup>
   <ItemGroup>

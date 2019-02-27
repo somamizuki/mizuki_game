@@ -14,6 +14,14 @@ public:
 	template<class T>
 	void DeleteGO(T* obj_t)									//オブジェクトをポインターで削除するクラス
 	{
+		for (const auto& deleteobj : deletelist)
+		{
+			if (obj_t == deleteobj)
+			{
+				return;
+			}
+		}
+
 		for (auto& obj_list : GameObject_list)
 		{
 			for (auto& obj : obj_list) 
@@ -21,6 +29,7 @@ public:
 				obj->RemoveHasMyPointerObject<T>(obj_t);
 			}
 		}
+		
 		for (auto& obj_list : GameObject_list)
 		{
 			for (auto& obj : obj_list)

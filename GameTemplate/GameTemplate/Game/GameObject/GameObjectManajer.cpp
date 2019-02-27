@@ -100,7 +100,7 @@ void GameObjectManajer::Execute()
 	}
 	g_graphicsEngine->GetBloom()->Update();
 
-	g_graphicsEngine->ReSetRenderTarget();
+	
 	/*ƒ|ƒXƒg•`‰æ*/
 	for (auto& obj_list : GameObject_list)
 	{
@@ -130,7 +130,7 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
-
+	g_graphicsEngine->ReSetRenderTarget();
 	
 }
 

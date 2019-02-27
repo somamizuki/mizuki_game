@@ -13,7 +13,7 @@ Timer::~Timer()
 
 void Timer::Update()
 {
-	if (StopTimer)
+	if (!StopTimer)
 	{
 		m_seconds = max(0.0f, m_seconds-1.0f*deltaTime);
 	}

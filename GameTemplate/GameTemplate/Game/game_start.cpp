@@ -44,7 +44,7 @@ bool game_start::Start()
 
 	m_sikinmodel.SetShadowReciever(true);
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_sikinmodel);
-	m_sikinmodel.SetNormalMap(L"Assets/modelData/StarSparrow_Normal.dds");
+	m_sikinmodel.SetNormalMap(L"Resource/sprite/StarSparrow_Normal.dds");
 	camerapos = CVector3::Zero() + CVector3::AxisZ()*400.0f;
 	g_camera3D.SetPosition(camerapos);
 	g_camera3D.SetTarget(CVector3::Zero());

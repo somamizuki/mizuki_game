@@ -45,19 +45,6 @@ bool Class_of_NewGO::Start()
 			player->setposition(Lobjdata.position);
 			player->setrot(Lobjdata.rotation);
 		}
-		else if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
-		{
-			Enemy*enemy = new Enemy(0, "enemy");
-			enemy->AddMyPointer<Enemy, Class_of_NewGO >(&enemy,this);
-
-			/*enemy->AddDeleteGOListeners([&](GameObject* go) {
-				enemy = nullptr;
-			});*/
-			enemy->Setpos(Lobjdata.position);
-			enemy->Setrot(Lobjdata.rotation);
-			m_enemy.push_back(enemy);
-
-		}
 		else if (std::wcscmp(Lobjdata.name, L"Sun") == 0)
 		{
 			Sun.Init(L"Assets/modelData/Sun.cmo");
@@ -99,7 +86,6 @@ void Class_of_NewGO::Update()
 				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
 				{
 					Enemy*enemy = new Enemy(0, "enemy");
-					enemy->AddMyPointer<Enemy, Class_of_NewGO >(&enemy, this);
 					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
 
 					enemy->Setpos(enemypos);
@@ -119,7 +105,6 @@ void Class_of_NewGO::Update()
 				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
 				{
 					Enemy*enemy = new Enemy(0, "enemy");
-					enemy->AddMyPointer<Enemy, Class_of_NewGO >(&enemy, this);
 					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
 
 					enemy->Setpos(enemypos);
@@ -139,7 +124,6 @@ void Class_of_NewGO::Update()
 				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
 				{
 					Enemy*enemy = new Enemy(0, "enemy");
-					enemy->AddMyPointer<Enemy, Class_of_NewGO >(&enemy, this);
 					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
 
 					enemy->Setpos(enemypos);
@@ -161,6 +145,10 @@ void Class_of_NewGO::Update()
 	}
 	if(player==nullptr)
 	{
+		m_timer.Stop();
+		m_result.SetRemMIN(m_timer.GetMIN());
+		m_result.SetRemSEC(m_timer.GetSEC());
+		ResultDrawFlag = true;
 		if (g_pad[0].IsTrigger(enButtonA))
 		{
 			gameClear = true;
@@ -174,13 +162,22 @@ void Class_of_NewGO::Update()
 		pos+(SCamDir*500.0f),
 		pos
 	);
-	/*if (m_enemy.size() == 0)
-	{
-		gameClear = true;
-		Light_obj->DeleteLight(&m_pointlig);
-	}*/
+	
 	m_soundEngine.Update();
 	m_timer.Update();
+	if (WaveCounter > 3 && m_enemy.size() <= 0)
+	{
+		m_timer.Stop();
+		m_result.SetRemMIN(m_timer.GetMIN());
+		m_result.SetRemSEC(m_timer.GetSEC());
+		m_result.SetGameClear(true);
+		ResultDrawFlag = true;
+		if (g_pad[0].IsTrigger(enButtonA))
+		{
+			gameClear = true;
+			Light_obj->DeleteLight(&m_pointlig);
+		}
+	}
 }
 
 void Class_of_NewGO::Draw()
@@ -196,6 +193,8 @@ void Class_of_NewGO::Draw()
 void Class_of_NewGO::UIDraw()
 {
 	m_timer.Draw();
+	if(ResultDrawFlag) m_result.Draw();
+	
 }
 
 void Class_of_NewGO::OnDestroy()

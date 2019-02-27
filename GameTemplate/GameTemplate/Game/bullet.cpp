@@ -18,7 +18,7 @@ bool bullet::Start()
 	
 	m_tama.Init(L"Assets/modelData/missile.cmo");					//玉のモデルイニット
 	
-	m_tama.SetNormalMap(L"Assets/modelData/7_normal.dds");				//ノーマルマップをセット
+	m_tama.SetNormalMap(L"Resource/sprite/7_normal.dds");				//ノーマルマップをセット
 	
 	switch (witchbullet)
 	{

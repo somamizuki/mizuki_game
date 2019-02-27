@@ -24,7 +24,7 @@ bool Enemy::Start()
 	});*/
 	m_model.Init(L"Assets/modelData/Enemy.cmo");			//モデルのイニット
 	m_model.SetShadowReciever(true);						//スキンモデルをシャドウレシーバーに登録
-	m_model.SetNormalMap(L"Assets/modelData/StarSparrow_Normal.dds");//スキンモデルに法線マップを適用
+	m_model.SetNormalMap(L"Resource/sprite/StarSparrow_Normal.dds");//スキンモデルに法線マップを適用
 	mathVector();											//前右上を計算
 	/*スプライトのシェーダーリソースの作成*/
 	shaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/EnemyPos.dds");
@@ -68,7 +68,7 @@ bool Enemy::Start()
 
 	for (const auto& effct : spriteeffect)
 	{
-		effct->spriteeffect.Init(m_srv.GetBody(), 0.033f, 0);
+		effct->spriteeffect.Init(m_srv.GetBody(), 0.06f, 0);
 	}
 
 	return true;
@@ -207,13 +207,17 @@ void Enemy::enemyMove()
 	float ritedrotangle = 0.0f;							//右軸周りに何度回転させるか
 	float frotspeed = 0.0f;								//前軸周りの回転速度
 	float rrotspeed = 0.0f;								//右軸周りの回転速度
-	const float rrotspeed_max = 0.5f;					//右軸周りの回転速度の最大値
-	const float frotspeed_max = 3.0f;					//前軸周りの回転速度の最大値
-	const float BoostSpeed = 4000.0f;
+	float rrotspeed_max = 0.8f;					//右軸周りの回転速度の最大値
+	float frotspeed_max = 3.0f;					//前軸周りの回転速度の最大値
+	const float BoostSpeed = 4500.0f;
 	const float DefaultSpeed = 3000.0f;
 	float acos_f = 0.0f;
 	float angle = 0.0f;
 	CVector3 p_to_e = CVector3::Zero();
+	if (p_angle(m_forward) < 45.0f)
+	{
+		rrotspeed_max *= 2.0f;
+	}
 	/*回転*/
 	forwardrotangle = CMath::RadToDeg(acosf(Acos(m_up.Dot(side_vec(m_forward)))));
 	frotspeed = min(frotspeed_max, forwardrotangle);
@@ -223,7 +227,7 @@ void Enemy::enemyMove()
 	mathVector();
 
 	forwardrotangle = CMath::RadToDeg(acosf(Acos(m_up.Dot(side_vec(m_forward)))));
-	if (forwardrotangle < 0.1f)
+	if (forwardrotangle < 0.5f)
 	{
 		ritedrotangle = CMath::RadToDeg(acosf(Acos(m_forward.Dot(side_vec(m_rite)))));
 		rrotspeed = min(rrotspeed_max, ritedrotangle);
@@ -258,22 +262,23 @@ void Enemy::enemyMove()
 	acos_f = m_player->Getforward().Dot(p_to_e);
 	angle = CMath::RadToDeg(acosf(Acos(acos_f)));
 
-	if (p_angle(m_forward) > 120.0f/*&&angle<30.0f*/)
+
+	if (p_angle(m_forward) > 160.0f||angle<20.0f)
 	{
 		if (speed < BoostSpeed)
 		{
-			speed += 50.0f;
+			speed += 200.0f;
 		}
 	}
 	else
 	{
 		if (speed > DefaultSpeed)
 		{
-			speed -= 50.0f;
+			speed -= 100.0f;
 		}
 		else
 		{
-			speed += 50.0f;
+			speed += 100.0f;
 		}
 	}
 	movespeed = m_forward * speed;
@@ -436,6 +441,7 @@ void Enemy::PostDraw()
 
 void Enemy::OnDestroy()
 {
+	CoN->GetResult()->SetKnockDownEnemySUM();
 	/*エネミーが削除されたとき一緒に消す*/
 	for (const auto& effct : spriteeffect)
 	{

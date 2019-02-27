@@ -15,9 +15,18 @@ public:
 	{
 		StopTimer = false;
 	}
+	int GetMIN()
+	{
+		return m_minits;
+	}
+	float GetSEC()
+	{
+		return m_seconds;
+	}
+
 private:
 	Font m_font;
-	bool StopTimer = true;
+	bool StopTimer = false;
 	float m_seconds = 60.0f;
 	int m_minits = 2;
 };
