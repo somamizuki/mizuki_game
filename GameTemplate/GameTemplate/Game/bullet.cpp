@@ -129,7 +129,6 @@ void bullet::bulletFire()
 			
 			if (isHoming)
 			{
-				
 				BulletHoming(target);
 			}
 			else
@@ -142,14 +141,6 @@ void bullet::bulletFire()
 
 			if (toTarget.Length() < 300.0f)
 			{
-				for (const auto& enemy : CoN->GetEnemy())
-				{
-					if (enemy == LockOnEnemy)
-					{
-						CoN->GetEnemy().erase(remove(CoN->GetEnemy().begin(), CoN->GetEnemy().end(), enemy),
-							CoN->GetEnemy().end());
-					}
-				}
 				game_obj->DeleteGO(LockOnEnemy);
 				if (CoN != nullptr)
 				{

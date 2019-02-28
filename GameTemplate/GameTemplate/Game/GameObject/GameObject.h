@@ -76,7 +76,7 @@ public:
 	template<class T>
 	void RemoveHasMyPointerObject(T* obj)
 	{
-		for (auto& mypointer : m_hasMyPointerlist)
+		for (const auto& mypointer : m_hasMyPointerlist)
 		{
 			if (obj == mypointer->object)
 			{
@@ -89,7 +89,7 @@ public:
 	/*DeleteGOŽž‚ÉŒÄ‚Î‚ê‚é*/
 	void NotifyDeleteGOtoHasMyPointerObject()
 	{
-		for (auto& mypointer : m_hasMyPointerlist)
+		for (const auto& mypointer : m_hasMyPointerlist)
 		{
 			*mypointer->m_MyPointer = nullptr;
 		}

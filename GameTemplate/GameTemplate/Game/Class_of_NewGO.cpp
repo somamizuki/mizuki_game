@@ -71,11 +71,13 @@ bool Class_of_NewGO::Start()
 	m_fireSE.Init(L"Assets/sound/fireSE.wav");
 	m_bgm.SetVolume(0.5f);
 	m_bgm.Play(true);
+	m_effect.Init(L"Assets/effect/CosmicMist.efk");
 	return true;
 }
 
 void Class_of_NewGO::Update()
 {
+	
 	if (m_enemy.size() == 0)
 	{
 		switch (WaveCounter)
@@ -122,7 +124,7 @@ void Class_of_NewGO::Update()
 		{
 			level.Init(L"Assets/level/Wave3_EnemyPos.tkl", [&](LevelObjectData Lobjdata) {
 
-				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
+				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0&&m_enemy.size()<12)
 				{
 					Enemy*enemy = new Enemy(0, "enemy");
 					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
@@ -139,12 +141,50 @@ void Class_of_NewGO::Update()
 			{
 				m_bgm.Stop();
 			}
+
 			m_bgmendwave.Play(true);
 			break;
 		}
 		default:break;
 		}
+		for (auto& enemy : m_enemy)
+		{
+			enemy->AddMyPointer<Enemy, Class_of_NewGO>(&enemy, this);
+		}
 	}
+	std::list<Enemy*> enemyDletelist;
+	for (const auto& enemy : m_enemy)
+	{
+		if (enemy == nullptr)
+		{
+			enemyDletelist.push_back(enemy);
+		}
+	}
+	bool deleteflag = false;
+	for (const auto& deleteenemy : enemyDletelist)
+	{
+		for (const auto& enemy : m_enemy)
+		{
+			if (deleteenemy == enemy)
+			{
+				m_enemy.erase(std::remove(m_enemy.begin(), m_enemy.end(), enemy), m_enemy.end());
+				
+				break;
+			}
+		}
+		deleteflag = true;
+	}
+	if (deleteflag == true)
+	{
+		/*コピー先のポインタをaddしなおす*/
+		for (auto& nextenemyit : m_enemy)
+		{
+			nextenemyit->RemoveHasMyPointerObject(this);
+			nextenemyit->AddMyPointer<Enemy, Class_of_NewGO>(&nextenemyit, this);
+		}
+	}
+	
+
 	if (player != nullptr)
 	{
 		pos = player->Getpos();
@@ -161,6 +201,7 @@ void Class_of_NewGO::Update()
 			Light_obj->DeleteLight(&m_pointlig);
 		}
 	}
+
 	SCamDir = CVector3(spoint.position.x, spoint.position.y, spoint.position.z) - pos;
 	SCamDir.Normalize();
 	map->SetPositon(CVector3::Zero());
@@ -195,6 +236,8 @@ void Class_of_NewGO::Update()
 			Light_obj->DeleteLight(&m_pointlig);
 		}
 	}
+
+	m_effect.Update();
 }
 
 void Class_of_NewGO::Draw()
@@ -205,6 +248,11 @@ void Class_of_NewGO::Draw()
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);
+}
+
+void Class_of_NewGO::EffectDraw()
+{
+	m_effect.Draw();
 }
 
 void Class_of_NewGO::UIDraw()

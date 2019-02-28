@@ -95,14 +95,14 @@ private:
 
 	float pad_X;									//パッドXの入力量
 	float pad_Y;									//パッドYの入力量
-	const float DefaultSpeed = 1500.0f;					//デフォルトの速度
+	const float DefaultSpeed = 1800.0f;					//デフォルトの速度
 	const float BoostSpeed = 3000.0f;					//ブースト時の速度
 	const float RotSpeed_X = 3.0f;						//Z軸周りの回転スピード
 	const float RotSpeed_Y = 2.0f;						//X軸周りの回転スピード
 	const float RotSpeed_Tw = 0.3f;						//エイムを微調整する変数
 
 	
-	const float bulletspan = 2.0f;
+	const float bulletspan = 1.0f;
 	float ritebulletTime = 0.0f;
 	float leftbulletTime = 0.0f;
 	float leftmissileGaugelevel = 1.0f;

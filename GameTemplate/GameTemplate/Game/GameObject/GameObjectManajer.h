@@ -22,7 +22,7 @@ public:
 			}
 		}
 
-		for (auto& obj_list : GameObject_list)
+		for (const auto& obj_list : GameObject_list)
 		{
 			for (auto& obj : obj_list) 
 			{
@@ -30,7 +30,7 @@ public:
 			}
 		}
 		
-		for (auto& obj_list : GameObject_list)
+		for (const auto& obj_list : GameObject_list)
 		{
 			for (auto& obj : obj_list)
 			{

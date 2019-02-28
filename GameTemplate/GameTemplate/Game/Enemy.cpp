@@ -442,6 +442,7 @@ void Enemy::PostDraw()
 void Enemy::OnDestroy()
 {
 	CoN->GetResult()->SetKnockDownEnemySUM();
+	CoN->GetEffect()->Play(m_position, CVector3::One()*100.0f);
 	/*エネミーが削除されたとき一緒に消す*/
 	for (const auto& effct : spriteeffect)
 	{

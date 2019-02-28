@@ -100,10 +100,6 @@ void m_camera::CameraMove()
 	
 
 	camera_Pos = camera_Target - vec;
-	if (g_pad[0].IsPress(enButtonLB2))
-	{
-		camera_Pos = camera_Target + player->Getforward()*500.0f + player->Getup()*-pad_Y;
-	}
 }
 
 void m_camera::Update()

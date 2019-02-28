@@ -9,6 +9,7 @@
 #include "Timer.h"
 #include "Result.h"
 #include "Game.h"
+#include "Effect.h"
 
 class Class_of_NewGO:public GameObject
 {
@@ -18,6 +19,7 @@ public:
 	bool Start();				//スタート関数
 	void Update();								//アップデート関数
 	void Draw();								//描画関数
+	void EffectDraw();			 //エフェクトの描画
 	void UIDraw();
 	void OnDestroy();
 	std::vector<Enemy*>& GetEnemy()				//エネミーの配列を渡す
@@ -58,6 +60,10 @@ public:
 		return &m_result;
 	}
 
+	Effect* GetEffect()
+	{
+		return &m_effect;
+	}
 
 private:
 	CSoundEngine m_soundEngine;				//サウンドエンジン。
@@ -85,5 +91,6 @@ private:
 	Result m_result;
 	bool ResultDrawFlag = false;
 	CVector3 pos;
+	Effect m_effect;
 };
 

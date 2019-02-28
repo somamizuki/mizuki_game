@@ -407,6 +407,7 @@ void Player::Update()
 
 	if (m_playerParam.HP <= 0)
 	{
+		CofNG->GetEffect()->Play(m_position, CVector3::One()*100.0f);
 		game_obj->DeleteGO(this);
 	}
 	

@@ -188,6 +188,7 @@
     <ClCompile Include="missileRechargeHUD.cpp" />
     <ClCompile Include="HPGaugeHUD.cpp" />
     <ClCompile Include="Result.cpp" />
+    <ClCompile Include="Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -351,6 +352,7 @@
     <ClInclude Include="missileRechargeHUD.h" />
     <ClInclude Include="HPGaugeHUD.h" />
     <ClInclude Include="Result.h" />
+    <ClInclude Include="Effect.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">

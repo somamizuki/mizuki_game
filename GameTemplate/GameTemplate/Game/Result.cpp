@@ -65,10 +65,10 @@ void Result::Draw()
 			m_font[2].Draw(font, { -300.0f,500.0f }, { 0.0f,1.0f,0.0f,0.5f }, 0.0f, 0.5f);
 			m_font[2].EndDraw();
 			m_font[1].BeginDraw();
-			swprintf(font, L"HP_BONUS                 %d", RemHP * 10);
+			swprintf(font, L"SURVIV_BONUS      %d", 100);
 			m_font[1].Draw(font, { -700.0f,200.0f }, { 0.0f,1.0f,0.0f,0.5f }, 0.0f, 0.4f);
 			m_font[1].EndDraw();
-			totalpoint += RemHP * 10;
+			totalpoint += 100;
 		}
 		
 		m_font[6].BeginDraw();
