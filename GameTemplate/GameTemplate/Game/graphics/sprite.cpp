@@ -32,7 +32,9 @@ sprite::~sprite()
 void sprite::Release()
 {
 	m_primitive.Release();
-	m_textureSRV->Release();
+	if (m_textureSRV != NULL) {
+		m_textureSRV->Release();
+	}
 	m_cb.Release();
 	m_ps.Release();
 	m_vs.Release();

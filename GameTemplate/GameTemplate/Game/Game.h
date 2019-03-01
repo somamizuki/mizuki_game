@@ -12,8 +12,6 @@ public:
 	void UIDraw();								//UIとかの描画
 	void OnDestroy();
 private:
-	
-
 	enum gamestate {
 		title,
 		start,
@@ -21,8 +19,7 @@ private:
 		end
 	};
 	gamestate state = end;
-
-
+	CSoundEngine m_soundEngine;				//サウンドエンジン。
 	Class_of_NewGO *newObject = nullptr;
 	game_start* gamestart = nullptr;
 	ShadowMap shadowMap;

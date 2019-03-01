@@ -24,7 +24,7 @@ Player::Player(int No, const char* obj_name):GameObject(No, obj_name)
 
 Player::~Player()
 {
-	
+	m_characon.RemoveRigidBoby();
 }
 
 bool Player::Start()

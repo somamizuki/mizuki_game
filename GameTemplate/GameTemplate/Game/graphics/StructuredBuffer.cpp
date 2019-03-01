@@ -9,6 +9,7 @@ StructuredBuffer::StructuredBuffer()
 
 StructuredBuffer::~StructuredBuffer()
 {
+	Release();
 }
 
 void StructuredBuffer::Release()

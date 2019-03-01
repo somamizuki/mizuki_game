@@ -13,6 +13,8 @@ missileRechargeHUD::missileRechargeHUD()
 
 missileRechargeHUD::~missileRechargeHUD()
 {
+	m_SRV.Release();
+	m_waku_SRV.Release();
 }
 
 void missileRechargeHUD::Init(const wchar_t* waku_filepath,const wchar_t* filepath, float W, float H)

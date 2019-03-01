@@ -9,7 +9,7 @@ game_start::game_start(int No, const char* obj_name) :GameObject(No, obj_name)
 
 game_start::~game_start()
 {
-	
+
 }
 
 bool game_start::Start()
@@ -55,7 +55,7 @@ bool game_start::Start()
 
 
 	/*ƒTƒEƒ“ƒh‚Ì‰Šú‰»*/
-	m_soundEngine.Init();
+	
 	m_bgm.Init(L"Assets/sound/TitleBGM1.wav");
 	m_selectSE.Init(L"Assets/sound/selectSE.wav");
 	m_decisionSE.Init(L"Assets/sound/decisionSE.wav");
@@ -126,7 +126,7 @@ void game_start::Update()
 	Light_obj->SetLightParam(ligp);
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_sikinmodel);
 	g_camera3D.Update();
-	m_soundEngine.Update();
+	
 }
 
 void game_start::Draw()

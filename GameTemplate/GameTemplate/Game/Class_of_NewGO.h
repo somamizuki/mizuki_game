@@ -31,10 +31,7 @@ public:
 	{
 		return &m_HitSE;
 	}
-	CSoundEngine* GetSoundEngine()
-	{
-		return &m_soundEngine;
-	}
+	
 
 	CSoundSource* GetlockonSE()
 	{
@@ -66,7 +63,7 @@ public:
 	}
 
 private:
-	CSoundEngine m_soundEngine;				//サウンドエンジン。
+
 	CSoundSource m_bgm;						//BGM
 	CSoundSource m_bgmendwave;
 	CSoundSource m_HitSE;					

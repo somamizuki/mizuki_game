@@ -10,6 +10,7 @@ ShaderResourceView::ShaderResourceView()
 
 ShaderResourceView::~ShaderResourceView()
 {
+	Release();
 }
 
 void ShaderResourceView::Release()

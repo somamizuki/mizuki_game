@@ -112,7 +112,7 @@ private:
 	};
 	std::vector<Engin*> spriteeffect;	//Enginをlevelに登録された数だけ積むリスト(vector)
 	ShaderResourceView m_srv;			//スプライトエフェクトに使うSRV
-	std::function<void()> m_rightBulletDeleteGoListener;
-	std::function<void()> m_leftBulletDeleteGoListener;
+	/*std::function<void()> m_rightBulletDeleteGoListener;
+	std::function<void()> m_leftBulletDeleteGoListener;*/
 };
 

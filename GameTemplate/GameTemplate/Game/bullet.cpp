@@ -11,6 +11,7 @@ bullet::bullet(int No, const char* obj_name) : GameObject(No, obj_name)
 
 bullet::~bullet()
 {
+
 }
 
 bool bullet::Start()

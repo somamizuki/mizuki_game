@@ -14,7 +14,7 @@ Class_of_NewGO::~Class_of_NewGO()
 
 bool Class_of_NewGO::Start()
 {
-	SDirectionLight sdir;		//ディレクションライトの構造体
+	//SDirectionLight sdir;		//ディレクションライトの構造体
 
 	/*ディレクションライトをセット*/
 	/*sdir.color = { 1.0f,0.95f,0.9f,1.0f };
@@ -62,8 +62,8 @@ bool Class_of_NewGO::Start()
 	camera = new m_camera(1, "camera");
 	camera->AddMyPointer(&camera, this);
 
-	/*サウンドの初期化*/
-	m_soundEngine.Init();
+	///*サウンドの初期化*/
+	
 	m_bgm.Init(L"Assets/sound/GameBGM4.wav");
 	m_bgmendwave.Init(L"Assets/sound/GameBGM2.wav");
 	m_HitSE.Init(L"Assets/sound/HitSE.wav");
@@ -77,7 +77,6 @@ bool Class_of_NewGO::Start()
 
 void Class_of_NewGO::Update()
 {
-	
 	if (m_enemy.size() == 0)
 	{
 		switch (WaveCounter)
@@ -88,12 +87,13 @@ void Class_of_NewGO::Update()
 
 				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
 				{
-					Enemy*enemy = new Enemy(0, "enemy");
-					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
+						Enemy*enemy = new Enemy(0, "enemy");
+						CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
 
-					enemy->Setpos(enemypos);
-					enemy->Setrot(Lobjdata.rotation);
-					m_enemy.push_back(enemy);
+						enemy->Setpos(enemypos);
+						enemy->Setrot(Lobjdata.rotation);
+						m_enemy.push_back(enemy);
+					
 
 				}
 				return true;
@@ -124,7 +124,7 @@ void Class_of_NewGO::Update()
 		{
 			level.Init(L"Assets/level/Wave3_EnemyPos.tkl", [&](LevelObjectData Lobjdata) {
 
-				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0&&m_enemy.size()<12)
+				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0&&m_enemy.size()<13)
 				{
 					Enemy*enemy = new Enemy(0, "enemy");
 					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
@@ -210,7 +210,6 @@ void Class_of_NewGO::Update()
 		pos
 	);
 	
-	m_soundEngine.Update();
 	m_timer.Update();
 	if (m_timer.IsTIMEUP())
 	{
@@ -236,7 +235,6 @@ void Class_of_NewGO::Update()
 			Light_obj->DeleteLight(&m_pointlig);
 		}
 	}
-
 	m_effect.Update();
 }
 
@@ -268,6 +266,7 @@ void Class_of_NewGO::OnDestroy()
 	{
 		game_obj->DeleteGO(enemy);
 	}
+	m_enemy.clear();
 	game_obj->DeleteGO(map);
 	game_obj->DeleteGO(camera);
 	game_obj->DeleteGO(player);

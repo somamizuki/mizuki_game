@@ -11,7 +11,10 @@ public:
 	//}
 	virtual ~GameObject()
 	{
-
+		for (const auto& hasmypointobj : m_hasMyPointerlist)
+		{
+			delete hasmypointobj;
+		}
 	}
 	virtual bool Start() { return true; }//スタート関数(初期化とか)
 	virtual void Update(){}				 //更新処理
@@ -80,6 +83,7 @@ public:
 		{
 			if (obj == mypointer->object)
 			{
+				delete mypointer;
 				m_hasMyPointerlist.erase(std::remove(m_hasMyPointerlist.begin(), m_hasMyPointerlist.end(), mypointer), m_hasMyPointerlist.end());
 				break;
 			}

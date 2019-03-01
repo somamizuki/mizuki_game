@@ -10,6 +10,17 @@ GameObjectManajer::GameObjectManajer()
 
 GameObjectManajer::~GameObjectManajer()
 {
+	for (const auto& obj_list : GameObject_list)
+	{
+		for (const auto& obj : obj_list)
+		{
+			if (obj->GetName() != "game")
+			{
+				delete obj;
+			}
+			
+		}
+	}
 }
 
 void GameObjectManajer::Execute()

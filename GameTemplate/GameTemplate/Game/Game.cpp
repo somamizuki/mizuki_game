@@ -11,15 +11,14 @@ Game::Game(int No, char* obj_name) :GameObject(No, obj_name)
 
 Game::~Game()
 {
+	m_soundEngine.Release();
 }
 
 bool Game::Start()
 {
 	g_graphicsEngine->SetShadowMap(&shadowMap);
 	gamestart = new game_start(0, "game_start");
-	
-	
-
+	m_soundEngine.Init();
 	return true;
 }
 
@@ -46,7 +45,7 @@ void Game::Update()
 
 		}
 	}
-	
+	m_soundEngine.Update();
 }
 
 void Game::Draw()

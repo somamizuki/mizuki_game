@@ -12,6 +12,8 @@ HPGaugeHUD::HPGaugeHUD()
 
 HPGaugeHUD::~HPGaugeHUD()
 {
+	m_SRV.Release();
+	m_waku_SRV.Release();
 }
 
 

@@ -57,6 +57,18 @@ void GraphicsEngine::Release()
 		m_pd3dDevice->Release();
 		m_pd3dDevice = NULL;
 	}
+	if (m_BackUpRT != NULL)
+	{
+		m_BackUpRT->Release();
+		m_BackUpRT = NULL;
+	}
+	if (m_BackUpDSV != NULL)
+	{
+		m_BackUpDSV->Release();
+		m_BackUpDSV = NULL;
+	}
+	delete m_spritefontBase;
+	delete m_spritefont;
 }
 void GraphicsEngine::Init(HWND hWnd)
 {
@@ -168,7 +180,6 @@ void GraphicsEngine::Init(HWND hWnd)
 	m_mainViewport.MaxDepth = 1.0f;
 
 	m_bloom.Init();
-
 	m_spritefontBase = new DirectX::SpriteBatch(m_pd3dDeviceContext);
 	m_spritefont = new DirectX::SpriteFont(m_pd3dDevice, L"Assets/font/myfile.spritefont");
 }

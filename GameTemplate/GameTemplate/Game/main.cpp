@@ -5,6 +5,7 @@
 #include "Player.h"
 #include"Game.h"
 
+
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
 ///////////////////////////////////////////////////////////////////
@@ -17,13 +18,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	game_obj = new GameObjectManajer;
 	Light_obj = new LightManager;
-
-	
-
 	Game game(0,"game");
 
 	
 	//::_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
+	//::_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 	//ゲームループ。
 	while (DispatchWindowMessage() == true)
 	{
@@ -45,4 +45,5 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	}
 	delete game_obj;
 	delete Light_obj;
+	delete g_graphicsEngine;
 }

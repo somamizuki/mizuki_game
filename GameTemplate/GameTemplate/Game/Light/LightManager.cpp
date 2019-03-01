@@ -8,6 +8,10 @@ LightManager::LightManager()
 
 LightManager::~LightManager()
 {
+	for (auto& light_it : anyLight)
+	{
+		delete light_it;
+	}
 }
 
 void LightManager::SetLightParam(ligParam& ligparam)

@@ -24,7 +24,7 @@ private:
 	struct SBlurParam {
 		float weights[NUM_WEIGHTS];
 	};
-	ID3D11ShaderResourceView* m_SRV;
+	ID3D11ShaderResourceView* m_SRV = nullptr;
 	static const int NumDownSampling = 1;					//ダウンサンプリング回数
 	RenderTarget m_downsampleRT[enRenderTarget_Num];		//ダウンサンプリング用のレンダリングターゲット
 	//D3D11_VIEWPORT m_downsampleVP[NumDownSampling];		//ダウンサンプリング用のビューポート

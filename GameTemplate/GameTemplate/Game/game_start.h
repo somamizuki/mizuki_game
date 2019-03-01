@@ -18,9 +18,7 @@ public:
 	{
 		return gamestart;
 	}
-
 private:
-	CSoundEngine m_soundEngine;				//サウンドエンジン。
 	CSoundSource m_bgm;						//BGM
 	CSoundSource m_selectSE;				//セレクトSE
 	CSoundSource m_decisionSE;				//決定SE
