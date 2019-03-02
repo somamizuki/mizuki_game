@@ -13,6 +13,10 @@ SpriteEffect::~SpriteEffect()
 	{
 		delete EffectSprite;
 	}
+	/*if (m_SRV != nullptr)
+	{
+		m_SRV->Release();
+	}*/
 }
 
 void SpriteEffect::Init(ID3D11ShaderResourceView* SRV, float time, int span)
@@ -76,6 +80,7 @@ void SpriteEffect::Update(CVector3& position)
 			{
 				delete EffectSprite;
 				EffectSpriteList.erase(std::remove(EffectSpriteList.begin(), EffectSpriteList.end(), EffectSprite), EffectSpriteList.end());
+				break;
 			}
 		}
 	}

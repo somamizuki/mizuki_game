@@ -88,7 +88,7 @@ void Class_of_NewGO::Update()
 				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
 				{
 						Enemy*enemy = new Enemy(0, "enemy");
-						CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
+						CVector3 enemypos = player->Getpos()+(player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z);
 
 						enemy->Setpos(enemypos);
 						enemy->Setrot(Lobjdata.rotation);
@@ -108,7 +108,7 @@ void Class_of_NewGO::Update()
 				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
 				{
 					Enemy*enemy = new Enemy(0, "enemy");
-					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
+					CVector3 enemypos = player->Getpos() + (player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z);
 
 					enemy->Setpos(enemypos);
 					enemy->Setrot(Lobjdata.rotation);
@@ -124,10 +124,10 @@ void Class_of_NewGO::Update()
 		{
 			level.Init(L"Assets/level/Wave3_EnemyPos.tkl", [&](LevelObjectData Lobjdata) {
 
-				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0&&m_enemy.size()<13)
+				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0&&m_enemy.size()<10)
 				{
 					Enemy*enemy = new Enemy(0, "enemy");
-					CVector3 enemypos = player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z;
+					CVector3 enemypos = player->Getpos() + (player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z);
 
 					enemy->Setpos(enemypos);
 					enemy->Setrot(Lobjdata.rotation);

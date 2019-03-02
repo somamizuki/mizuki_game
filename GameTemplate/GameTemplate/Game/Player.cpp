@@ -97,6 +97,14 @@ Enemy* Player::LockOnManager()
 	{
 		for (const auto& enemy : CofNG->GetEnemy())
 		{
+			if (RiteBullet != nullptr)
+			{
+				enemy->RemoveHasMyPointerObject(RiteBullet);
+			}
+			if (LeftBullet != nullptr)
+			{
+				enemy->RemoveHasMyPointerObject(LeftBullet);
+			}
 			toEnemy = enemy->Getpos() - m_position;
 			toEnemy.Normalize();
 			dotresult = m_forward.Dot(toEnemy);
@@ -268,10 +276,18 @@ void Player::bulletManager()
 	Enemy* LockOnEnemy = LockOnManager();					//ロックオン
 	if (RiteBullet != nullptr)
 	{
+		if (LockOnEnemy != nullptr)
+		{
+			LockOnEnemy->RemoveHasMyPointerObject(RiteBullet);
+		}
 		RiteBullet->SetTarget(LockOnEnemy);					//右側のミサイルをセット
 	}
 	if (LeftBullet != nullptr)
 	{
+		if (LockOnEnemy != nullptr)
+		{
+			LockOnEnemy->RemoveHasMyPointerObject(LeftBullet);
+		}
 		LeftBullet->SetTarget(LockOnEnemy);					//左側のミサイルをセット
 	}
 
@@ -476,6 +492,7 @@ void Player::OnDestroy()
 	{
 		delete effct;
 	}
+	spriteeffect.clear();
 	if (RiteBullet != nullptr)
 	{
 		game_obj->DeleteGO(RiteBullet);

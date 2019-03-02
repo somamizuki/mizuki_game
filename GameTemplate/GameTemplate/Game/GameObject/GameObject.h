@@ -15,6 +15,7 @@ public:
 		{
 			delete hasmypointobj;
 		}
+		m_hasMyPointerlist.clear();
 	}
 	virtual bool Start() { return true; }//スタート関数(初期化とか)
 	virtual void Update(){}				 //更新処理
@@ -93,10 +94,26 @@ public:
 	/*DeleteGO時に呼ばれる*/
 	void NotifyDeleteGOtoHasMyPointerObject()
 	{
+		/*std::list<hasMyPointerObject*> deletelist;*/
 		for (const auto& mypointer : m_hasMyPointerlist)
 		{
 			*mypointer->m_MyPointer = nullptr;
+			delete mypointer;
+			/*deletelist.push_back(mypointer);*/
 		}
+		m_hasMyPointerlist.clear();
+		/*for (const auto& deleteIT : deletelist)
+		{
+			for (const auto& hasmypointobj : m_hasMyPointerlist)
+			{
+				if (hasmypointobj == deleteIT)
+				{
+					delete hasmypointobj;
+					m_hasMyPointerlist.erase(std::remove(m_hasMyPointerlist.begin(), m_hasMyPointerlist.end(), hasmypointobj), m_hasMyPointerlist.end());
+					break;
+				}
+			}
+		}*/
 	}
 private:
 	const char* this_name;				//名前

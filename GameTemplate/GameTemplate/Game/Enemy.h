@@ -92,7 +92,7 @@ private:
 	//std::vector<enemybullet*> m_bullet;			//エネミーの弾の配列
 	ShaderResourceView shaderResource;				//エネミーの位置表示スプライトのシェーダーリソース
 	ShaderResourceView EnemyMarkerSRV;				//まとのシェーダーリソース
-	std::vector<bullet*> m_bullet;					//弾の配列
+	
 	sprite sprite_ins;					//エネミーの位置表示スプライト
 	sprite EnemyMarkerSprite;			//マーカー
 	Class_of_NewGO* CoN = nullptr;		//クラスオブニューゴーのポインター

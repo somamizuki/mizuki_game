@@ -158,8 +158,6 @@ void bullet::bulletFire()
 		{
 			bulletpos += m_forward * speed * deltaTime;
 		}
-
-		
 		
 		break;
 	}

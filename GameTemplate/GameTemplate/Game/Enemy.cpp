@@ -448,6 +448,7 @@ void Enemy::OnDestroy()
 	{
 		delete effct;
 	}
+	spriteeffect.clear();
 	if (RiteBullet != nullptr)
 	{
 		game_obj->DeleteGO(RiteBullet);

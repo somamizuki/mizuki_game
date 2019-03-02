@@ -63,10 +63,8 @@ public:
 		LockOnEnemy = enemy;
 		if (LockOnEnemy != nullptr)
 		{
-			/*LockOnEnemy->AddDeleteGOListeners([&](GameObject* go)
-			{
-				LockOnEnemy = nullptr;
-			});*/
+			LockOnEnemy->RemoveHasMyPointerObject(this);
+			LockOnEnemy->AddMyPointer<Enemy, bullet>(&LockOnEnemy, this);
 		}
 	}
 
@@ -78,6 +76,7 @@ public:
 	void SetEnemy(Enemy* enemy)
 	{
 		m_enemy = enemy;
+
 		
 	}
 
@@ -126,7 +125,6 @@ private:
 	Enemy* LockOnEnemy = nullptr;					//ロックオンされたEnemyをさすポインター
 	Enemy* m_enemy = nullptr;						//Enemyの弾のときEnemy自身をさすポインター
 	Class_of_NewGO* CoN = nullptr;					//いろんなクラスをnewするクラスのポインター
-	ID3D11ShaderResourceView* g_normalMapSRV = nullptr;//法線マップ用のSRV
 	bool fire = false;								//ミサイル発射のフラグ
 	bool PlayersBullet = false;						//trueならPlayerの弾
 	bool EnemysBullet = false;						//trueならEnemyの弾

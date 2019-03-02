@@ -58,9 +58,6 @@ private:
 	float m_angleX = 0.0f;
 	float rot_f = 0.0f;										//回転を徐々にさせるための変数
 	float CamLen = 0.0f;
-	void Math_Vector();										//いくつかのベクトルの計算
-	void Various_Getter();									//様々なゲッター
-	void PadInput();										//パッドの入力
 
 };
 

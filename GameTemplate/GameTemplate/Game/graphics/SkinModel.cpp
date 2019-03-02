@@ -16,6 +16,10 @@ SkinModel::~SkinModel()
 		//サンプラステートを解放。
 		m_samplerState->Release();
 	}
+	if (m_normalMapSRV != nullptr)
+	{
+		m_normalMapSRV->Release();
+	}
 }
 void SkinModel::Init(const wchar_t* filePath, EnFbxUpAxis enFbxUpAxis)
 {

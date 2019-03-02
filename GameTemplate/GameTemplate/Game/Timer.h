@@ -32,7 +32,7 @@ private:
 	Font m_font;
 	bool StopTimer = false;
 	bool TimeUP = false;
-	float m_seconds = 60.0f;
-	int m_minits = 2;
+	float m_seconds = 30.0f;
+	int m_minits = 1;
 };
 

@@ -10,6 +10,7 @@ GameObjectManajer::GameObjectManajer()
 
 GameObjectManajer::~GameObjectManajer()
 {
+
 	for (const auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
@@ -18,7 +19,6 @@ GameObjectManajer::~GameObjectManajer()
 			{
 				delete obj;
 			}
-			
 		}
 	}
 }
@@ -26,16 +26,16 @@ GameObjectManajer::~GameObjectManajer()
 void GameObjectManajer::Execute()
 {
 	/*deletelistに登録されたオブジェクトを削除*/
-	for (auto& deleteobj : deletelist)
+	for (const auto& deleteobj : deletelist)
 	{
 		for (auto& obj_list : GameObject_list)
 		{
-			for (auto& obj : obj_list)
+			for (const auto& obj : obj_list)
 			{
 				if (deleteobj == obj)
 				{
 					delete obj;
-					obj_list.erase(std::find(obj_list.begin(), obj_list.end(),obj));
+					obj_list.erase(std::remove(obj_list.begin(), obj_list.end(), obj), obj_list.end());
 					break;
 				}
 			}
@@ -45,9 +45,9 @@ void GameObjectManajer::Execute()
 	deletelist.clear();
 	
 	//更新処理。ついでにスタート関数も呼んでいる
-	for (auto& obj_list : GameObject_list)				
+	for (const auto& obj_list : GameObject_list)				
 	{
-		for (auto& obj : obj_list)
+		for (const auto& obj : obj_list)
 		{
 			if (obj != nullptr)
 			{
@@ -63,9 +63,9 @@ void GameObjectManajer::Execute()
 		}
 	}
 
-	for (auto& obj_list : GameObject_list)
+	for (const auto& obj_list : GameObject_list)
 	{
-		for (auto& obj : obj_list)
+		for (const auto& obj : obj_list)
 		{
 			if (obj != nullptr)
 			{
@@ -83,7 +83,7 @@ void GameObjectManajer::Execute()
 	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	g_graphicsEngine->GetmainRenderTarget()->ClearRenderTarget(clearColor);
 	/*通常描画*/
-	for (auto& obj_list : GameObject_list)
+	for (const auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
 		{
@@ -96,7 +96,7 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
-	for (auto& obj_list : GameObject_list)
+	for (const auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
 		{
@@ -113,7 +113,7 @@ void GameObjectManajer::Execute()
 
 	
 	/*ポスト描画*/
-	for (auto& obj_list : GameObject_list)
+	for (const auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
 		{
@@ -128,7 +128,7 @@ void GameObjectManajer::Execute()
 	}
 
 	/*UIなど、一番前に描画したいものの描画*/
-	for (auto& obj_list : GameObject_list)
+	for (const auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
 		{
@@ -147,9 +147,9 @@ void GameObjectManajer::Execute()
 
 void GameObjectManajer::DeleteGO(char *name)
 {
-	for (auto& obj_list : GameObject_list)
+	for (const auto& obj_list : GameObject_list)
 	{
-		for (auto& obj : obj_list)
+		for (const auto& obj : obj_list)
 		{
 			if (std::strcmp(name, obj->GetName()))
 			{

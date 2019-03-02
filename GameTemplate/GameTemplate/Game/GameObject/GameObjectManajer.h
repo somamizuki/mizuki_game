@@ -24,7 +24,7 @@ public:
 
 		for (const auto& obj_list : GameObject_list)
 		{
-			for (auto& obj : obj_list) 
+			for (const auto& obj : obj_list) 
 			{
 				obj->RemoveHasMyPointerObject<T>(obj_t);
 			}
@@ -32,7 +32,7 @@ public:
 		
 		for (const auto& obj_list : GameObject_list)
 		{
-			for (auto& obj : obj_list)
+			for (const auto& obj : obj_list)
 			{
 				if (obj == obj_t)
 				{
@@ -50,9 +50,9 @@ public:
 	template<class T>
 	T* FindGO(char *name)									//オブジェクトを名前で見つけるクラス
 	{
-		for (auto& obj_list : GameObject_list)
+		for (const auto& obj_list : GameObject_list)
 		{
-			for (auto& obj : obj_list)
+			for (const auto& obj : obj_list)
 			{
 				if (!(std::strcmp(name, obj->GetName())))
 				{
@@ -67,9 +67,9 @@ public:
 	T* FindGO(T* obj_t)										//オブジェクトをポインターで見つけるクラス
 	{
 
-		for (auto& obj_list : GameObject_list)
+		for (const auto& obj_list : GameObject_list)
 		{
-			for (auto& obj : obj_list)
+			for (const auto& obj : obj_list)
 			{
 				if (obj== obj_t)
 				{
@@ -79,7 +79,7 @@ public:
 		}
 		return nullptr;
 	}
-	void QueryGOs(char* name, std::function<void(GameObject* go)> func)
+	/*void QueryGOs(char* name, std::function<void(GameObject* go)> func)
 	{
 		for (auto& obj_list : GameObject_list)
 		{
@@ -91,12 +91,12 @@ public:
 				}
 			}
 		}
-	}
+	}*/
 	void allStop(GameObject* object)						//引数で渡されたオブジェクト以外全ての更新をスキップ
 	{
-		for (auto& objlist : GameObject_list)
+		for (const auto& objlist : GameObject_list)
 		{
-			for (auto& obj : objlist)
+			for (const auto& obj : objlist)
 			{
 				if (obj != object)
 				{
@@ -107,9 +107,9 @@ public:
 	}
 	void alltomarunjanee()								//全ての更新を再開
 	{
-		for (auto& objlist : GameObject_list)
+		for (const auto& objlist : GameObject_list)
 		{
-			for (auto& obj : objlist)
+			for (const auto& obj : objlist)
 			{
 				obj->Setstop_f(false);
 			}
