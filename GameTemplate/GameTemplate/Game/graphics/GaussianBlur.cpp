@@ -22,7 +22,7 @@ void GaussianBlur::Init(ID3D11ShaderResourceView* SRV)
 	resoluteW = texDesc.Width;
 	resoluteH = texDesc.Height;
 	m_downsampleRT[enRenderTarget_XBlur].Create(
-		resoluteW/2.0f,
+		resoluteW / 2.0f,
 		resoluteH,
 		texDesc.Format
 	);

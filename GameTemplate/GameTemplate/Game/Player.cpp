@@ -4,6 +4,7 @@
 #include"math/kMath.h"
 #include "m_camera.h"
 #include"bullet.h"
+#include "BossEnemy.h"
 
 
 namespace {
@@ -12,34 +13,29 @@ namespace {
 	const float HP_GAUGE_WIDTH = 400.0f;
 	const float HP_GAUGE_HEIGHT = 30.0f;
 	const CVector3 MISSILE_RECHARGE_L_GAGE_POS = { -370.0f,-340.0f,0.0f };
-	const CVector3 MISSILE_RECHARGE_R_GAGE_POS = { 370.0f- MISSILE_RECHARGE_GAUGE_WIDTH,-340.0f,0.0f };
+	const CVector3 MISSILE_RECHARGE_R_GAGE_POS = { 370.0f - MISSILE_RECHARGE_GAUGE_WIDTH,-340.0f,0.0f };
 	const CVector3 HP_GAUGE_POS = { 520.0f,470.0f,0.0f };
-	
+
 }
-Player::Player(int No, const char* obj_name):GameObject(No, obj_name)
-{	
+Player::Player(int No, const char* obj_name) :GameObject(No, obj_name)
+{
 
 }
 
 
 Player::~Player()
 {
-	m_characon.RemoveRigidBoby();
 }
 
 bool Player::Start()
 {
 	camera = game_obj->FindGO<m_camera>("camera");				//カメラのインスタンスを検索
-	camera->AddMyPointer<m_camera,Player>(&camera, this);
+	camera->AddMyPointer<m_camera, Player>(&camera, this);
 	CofNG = game_obj->FindGO<Class_of_NewGO>("newObject");		//エネミーたちのインスタンスを作ったクラスのポインターを検索
 	CofNG->AddMyPointer<Class_of_NewGO, Player>(&CofNG, this);
-
 	m_model.Init(L"Assets/modelData/StarSparrow.cmo");			//cmoファイルの読み込み。
 	m_model.SetShadowReciever(true);							//影を受けるようにする。(セルフシャドウのため)
-
-	
 	m_model.SetNormalMap(L"Resource/sprite/StarSparrow_Normal.dds");//法線マップを適用
-
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);	//シャドウキャスターに登録
 	vector();				//プレイヤーの前右上のベクトルを計算する
 	aimSRV.CreateFromDDSTextureFromFile(L"Resource/sprite/cursor.dds");	//aim用のシェーダーリソースを作成
@@ -72,16 +68,17 @@ bool Player::Start()
 		}
 		return true;
 	});
-
-	m_leftRechargeHUD.Init(L"Resource/sprite/missileGauge_waku.dds", L"Resource/sprite/missileGauge.dds", MISSILE_RECHARGE_GAUGE_WIDTH, MISSILE_RECHARGE_GAUGE_HEIGHT);
-	m_riteRechargeHUD.Init(L"Resource/sprite/missileGauge_waku.dds", L"Resource/sprite/missileGauge.dds", MISSILE_RECHARGE_GAUGE_WIDTH, MISSILE_RECHARGE_GAUGE_HEIGHT);
-	m_hpHUD.Init(L"Resource/sprite/missileGauge_waku.dds", L"Resource/sprite/missileGauge.dds", HP_GAUGE_WIDTH, HP_GAUGE_HEIGHT);
 	m_srv.CreateFromDDSTextureFromFile(L"Resource/sprite/fog.dds");
 
 	for (const auto& effct : spriteeffect)
 	{
 		effct->spriteeffect.Init(m_srv.GetBody(), 0.06f, 0);
 	}
+
+	m_leftRechargeHUD.Init(L"Resource/sprite/missileGauge_waku.dds", L"Resource/sprite/missileGauge.dds", MISSILE_RECHARGE_GAUGE_WIDTH, MISSILE_RECHARGE_GAUGE_HEIGHT);
+	m_riteRechargeHUD.Init(L"Resource/sprite/missileGauge_waku.dds", L"Resource/sprite/missileGauge.dds", MISSILE_RECHARGE_GAUGE_WIDTH, MISSILE_RECHARGE_GAUGE_HEIGHT);
+	m_hpHUD.Init(L"Resource/sprite/missileGauge_waku.dds", L"Resource/sprite/missileGauge.dds", HP_GAUGE_WIDTH, HP_GAUGE_HEIGHT);
+
 
 	return true;
 }
@@ -116,12 +113,14 @@ Enemy* Player::LockOnManager()
 				LockOn_enemy = enemy;
 				LockOnEnemyPos = enemy->Getpos();
 			}
+
 		}
 		LockOnflag = false;
 		if (LockOn_enemy != nullptr)
 		{
 			if (LockOn_enemy != prevLockOnEnemy)
 			{
+				/*前回のロックオンエネミーと同じでなければ音を鳴らす*/
 				if (CofNG->GetlockonSE()->IsPlaying())
 				{
 					CofNG->GetlockonSE()->Stop();
@@ -143,7 +142,7 @@ Enemy* Player::LockOnManager()
 			prevLockOnEnemy = nullptr;
 		}
 	}
-	
+
 	return LockOn_enemy;
 }
 
@@ -151,12 +150,12 @@ void Player::playermove()
 {
 	CQuaternion rotX = CQuaternion::Identity();
 	CQuaternion rotY = CQuaternion::Identity();
-	
+
 	pad_X = g_pad[0].GetLStickXF();						//パッドの入力量を取得
 	pad_Y = g_pad[0].GetLStickYF();
 
-	
-	
+
+
 	if (g_pad[0].IsPress(enButtonRB2))					//Bボタンが押されたら
 	{
 		if (Speed < BoostSpeed)
@@ -164,7 +163,7 @@ void Player::playermove()
 			Speed += 50.0f;			//移動速度をブーストにする
 		}
 	}
-	else 
+	else
 	{
 		if (Speed > DefaultSpeed)
 		{
@@ -213,14 +212,14 @@ void Player::playerreturn()
 	CVector3 fsidevec = mpos_to_zero - (m_forward * flen);
 	fsidevec.Normalize();
 	float fangle = CMath::RadToDeg(Acos(m_up.Dot(fsidevec)));
-	if (m_rite.Dot(fsidevec)>0.0f)
+	if (m_rite.Dot(fsidevec) > 0.0f)
 	{
 		rotX.SetRotationDeg(CVector3::AxisZ(), max(-RotSpeed_X, -fangle));		//マルチプライするので回転軸はワールドの軸でよい
 		m_rotation.Multiply(rotX);
 	}
 	else if (m_rite.Dot(fsidevec) <= 0.0f)
 	{
-		rotX.SetRotationDeg(CVector3::AxisZ(), min(RotSpeed_X,fangle));		//マルチプライするので回転軸はワールドの軸でよい
+		rotX.SetRotationDeg(CVector3::AxisZ(), min(RotSpeed_X, fangle));		//マルチプライするので回転軸はワールドの軸でよい
 		m_rotation.Multiply(rotX);
 	}
 	vector();
@@ -243,10 +242,56 @@ void Player::playerreturn()
 		}
 		else if (m_up.Dot(rsidevec) <= 0.0f)
 		{
-			rotY.SetRotationDeg(CVector3::AxisX(), min(RotSpeed_Y,rangle));		//マルチプライするので回転軸はワールドの軸でよい
+			rotY.SetRotationDeg(CVector3::AxisX(), min(RotSpeed_Y, rangle));		//マルチプライするので回転軸はワールドの軸でよい
 			m_rotation.Multiply(rotY);
 		}
 	}
+	vector();
+}
+
+void Player::bossfightInit()
+{
+	movespeed = CVector3::Zero();
+	if (CofNG != nullptr)
+	{
+		m_bossenemy = CofNG->GetBossEnemy();
+		m_bossenemy->AddMyPointer<BossEnemy, Player>(&m_bossenemy, this);
+		CVector3 bosspos = m_position + ((m_forward*tobosslen) + (m_up*-bosshight));
+		m_bossenemy->SetPos(bosspos);
+		m_BosstoPlayer = m_position - (bosspos + m_up * bosshight);
+
+	}
+
+
+	bossfightInitflag = true;
+}
+
+void Player::bossfightmove()
+{
+	pad_X = g_pad[0].GetLStickXF()*-1.0f;						//パッドの入力量を取得
+	CQuaternion rot = CQuaternion::Identity();
+	if (m_bossenemy != nullptr)m_bosspos = m_bossenemy->GetPos() + (m_up * bosshight);
+	m_BosstoPlayer = m_position - m_bosspos;
+	CVector3 oldvector = m_BosstoPlayer;
+	rot.SetRotationDeg(m_up, pad_X);
+	rot.Multiply(m_BosstoPlayer);
+	CVector3 newvector = m_BosstoPlayer;
+	movespeed = (newvector - oldvector)*(1.0f / deltaTime);
+	CVector3 toBoss = m_bosspos - (m_position + movespeed * deltaTime);
+	float flen = m_forward.Dot(toBoss);
+	float rlen = m_rite.Dot(toBoss);
+	toBoss = m_forward * flen + m_rite * rlen;
+	toBoss.Normalize();
+	float dotresult = m_forward.Dot(toBoss);
+	float angle = Acos(dotresult);
+	CVector3 axis;
+	axis.Cross(m_forward, toBoss);
+	axis.Normalize();
+	if (m_up.Dot(axis) < -0.9f)angle *= -1.0f;
+
+	rot.SetRotation(CVector3::AxisY(), angle);
+	m_rotation.Multiply(rot);
+
 	vector();
 }
 
@@ -297,7 +342,7 @@ void Player::bulletManager()
 		ritemissileGaugelevel = min(1.0f, ritebulletTime / bulletspan);
 	}
 
-	if (ritebulletTime >= bulletspan &&RiteBullet==nullptr)
+	if (ritebulletTime >= bulletspan && RiteBullet == nullptr)
 	{
 		RiteBullet = new bullet(0, "bullet");				//右のミサイルをセット
 		RiteBullet->WitchBullet(isPlayer);
@@ -309,9 +354,9 @@ void Player::bulletManager()
 	if (LeftBullet == nullptr)
 	{
 		leftbulletTime += 1.0f*deltaTime;					//ミサイルがセットされていなければタイマーを進める
-		leftmissileGaugelevel = min(1.0f,leftbulletTime / bulletspan);
+		leftmissileGaugelevel = min(1.0f, leftbulletTime / bulletspan);
 	}
-	if (leftbulletTime >= bulletspan &&LeftBullet==nullptr)
+	if (leftbulletTime >= bulletspan && LeftBullet == nullptr)
 	{
 		LeftBullet = new bullet(0, "bullet");				//左のミサイルをセット
 		LeftBullet->WitchBullet(isPlayer);
@@ -322,7 +367,7 @@ void Player::bulletManager()
 	if (g_pad[0].IsTrigger(enButtonA))
 	{
 		//ミサイルがセットされていれば撃つ
-		if (RiteBullet!=nullptr)
+		if (RiteBullet != nullptr)
 		{
 			if (CofNG != nullptr)
 			{
@@ -336,7 +381,7 @@ void Player::bulletManager()
 			RiteBullet = nullptr;
 			ritemissileGaugelevel = 0.0f;
 		}
-		else if (LeftBullet!=nullptr)
+		else if (LeftBullet != nullptr)
 		{
 			if (CofNG != nullptr)
 			{
@@ -394,6 +439,10 @@ void Player::spritemanager()
 
 void Player::Update()
 {
+	if (CofNG->GetWaveCounter() == 5)
+	{
+		pState = Boss;
+	}
 	switch (pState)
 	{
 	case Nomal:					//通常のプレイヤーの動き
@@ -406,9 +455,18 @@ void Player::Update()
 		playerreturn();
 		break;
 	}
+	case Boss:
+	{
+		if (!bossfightInitflag)
+		{
+			bossfightInit();
+		}
+		bossfightmove();
+		break;
+	}
 	}
 	vector();
-	
+
 	if (CVector3(m_position - CVector3::Zero()).Length() > 100000.0f)
 	{
 		pState = Return;
@@ -417,16 +475,16 @@ void Player::Update()
 	{
 		pState = Nomal;
 	}
-	m_position = m_characon.Execute(deltaTime, movespeed, m_rotation);		
+	m_position = m_characon.Execute(deltaTime, movespeed, m_rotation);
 	bulletManager();
-	
+
 
 	if (m_playerParam.HP <= 0)
 	{
 		CofNG->GetEffect()->Play(m_position, CVector3::One()*100.0f);
 		game_obj->DeleteGO(this);
 	}
-	
+
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);
@@ -446,10 +504,10 @@ void Player::Draw()
 	//プレイヤーの描画
 	m_model.Draw(
 		LightOn,
-		g_camera3D.GetViewMatrix(), 
+		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);
-	
+
 }
 
 void Player::EffectDraw()
@@ -476,7 +534,7 @@ void Player::PostDraw()
 			*g_graphicsEngine->GetD3DDeviceContext()
 		);
 	}
-	
+
 }
 
 void Player::UIDraw()

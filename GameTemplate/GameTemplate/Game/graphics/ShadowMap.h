@@ -10,7 +10,7 @@ public:
 	{
 		return m_lightViewMatrix;
 	}
-	
+
 	CMatrix GetLightProjMatrix() const
 	{
 		return m_lightProjMatrix;

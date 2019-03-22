@@ -23,5 +23,6 @@ private:
 	Class_of_NewGO *newObject = nullptr;
 	game_start* gamestart = nullptr;
 	ShadowMap shadowMap;
+	bool stopflag = false;
 };
 

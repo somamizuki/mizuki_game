@@ -16,19 +16,16 @@ bullet::~bullet()
 
 bool bullet::Start()
 {
-	
+
 	m_tama.Init(L"Assets/modelData/missile.cmo");					//玉のモデルイニット
-	
 	m_tama.SetNormalMap(L"Resource/sprite/7_normal.dds");				//ノーマルマップをセット
-	
+	m_player = game_obj->FindGO<Player>("player");					//プレイヤーの検索
+	m_player->AddMyPointer<Player, bullet>(&m_player, this);
+	CoN = game_obj->FindGO<Class_of_NewGO>("newObject");			//いろんなクラスをnewするクラスを検索
+	CoN->AddMyPointer<Class_of_NewGO, bullet>(&CoN, this);
 	switch (witchbullet)
 	{
 	case isPlayer: {
-		m_player = game_obj->FindGO<Player>("player");					//プレイヤーの検索
-		m_player->AddMyPointer<Player, bullet>(&m_player, this);
-		CoN = game_obj->FindGO<Class_of_NewGO>("newObject");			//いろんなクラスをnewするクラスを検索
-		CoN->AddMyPointer<Class_of_NewGO, bullet>(&CoN, this);
-
 		tamadir = m_player->Getforward();								//玉のディレクションにプレイヤーのフォワードを代入
 
 		switch (LeftRite)		//左右どちらかにミサイルをつける
@@ -49,12 +46,6 @@ bool bullet::Start()
 		break;
 	}
 	case isEnemy: {
-
-		m_player = game_obj->FindGO<Player>("player");					//プレイヤーの検索
-		m_player->AddMyPointer<Player, bullet>(&m_player, this);
-		CoN = game_obj->FindGO<Class_of_NewGO>("newObject");			//いろんなクラスをnewするクラスを検索
-		CoN->AddMyPointer<Class_of_NewGO,bullet>(&CoN, this);
-	
 		switch (LeftRite)		//左右どちらかにミサイルをつける
 		{
 		case Left: {
@@ -104,7 +95,7 @@ void bullet::BulletHoming(CVector3& target)
 
 	if (abs(bulletmodellocal.Dot(tamadir)) <= 0.9999999999999f)//同軸の外積をとらないように除外
 	{
-		CVector3 forwardModelLocal = bulletmodellocal;		
+		CVector3 forwardModelLocal = bulletmodellocal;
 		float dotresult = forwardModelLocal.Dot(tamadir);	//無回転状態のモデルの前方向と、弾の進行方向との内積
 		CVector3 Axis;
 		Axis.Cross(tamadir, forwardModelLocal);				//外積で回転の軸を作る
@@ -127,7 +118,7 @@ void bullet::bulletFire()
 			CVector3 toTarget = target - bulletpos;
 			toTarget.Normalize();
 			isHoming = m_forward.Dot(toTarget) > 0.0f &&CVector3(m_player->Getpos() - bulletpos).Length() > 1000.0f;
-			
+
 			if (isHoming)
 			{
 				BulletHoming(target);
@@ -158,7 +149,7 @@ void bullet::bulletFire()
 		{
 			bulletpos += m_forward * speed * deltaTime;
 		}
-		
+
 		break;
 	}
 	case isEnemy: {
@@ -174,8 +165,8 @@ void bullet::bulletFire()
 		{
 			bulletpos += m_forward * speed * deltaTime;
 		}
-		
-		if (m_player != nullptr&&!this->GetDeath_f())
+
+		if (m_player != nullptr && !this->GetDeath_f())
 		{
 			CVector3 toPlayer = m_player->Getpos() - bulletpos;
 			bool HitPlayer = toPlayer.Length() < 200.0f;
@@ -193,7 +184,7 @@ void bullet::bulletFire()
 				game_obj->DeleteGO(this);
 			}
 		}
-		
+
 		break;
 	}
 	default:
@@ -207,7 +198,7 @@ void bullet::Update()
 	{
 		m_playerPos = m_player->Getpos();
 	}
-	
+
 	UpdateVector();
 	if (fire)
 	{
@@ -219,7 +210,7 @@ void bullet::Update()
 		{
 			bulletpos += m_forward * speed * deltaTime;
 		}
-		
+
 
 		if (speed < bulletspeed)
 		{
@@ -231,7 +222,7 @@ void bullet::Update()
 		{
 			game_obj->DeleteGO(this);
 		}
-		
+
 	}
 	else
 	{
@@ -281,7 +272,7 @@ void bullet::Update()
 					break;
 				}
 			}
-			
+
 
 			break;
 		}
@@ -293,7 +284,7 @@ void bullet::Update()
 	{
 		game_obj->DeleteGO(this);
 	}
-	
+
 	m_tama.UpdateWorldMatrix(bulletpos, m_rotation, CVector3::One()*2.0f);		//ワールドマトリクスの更新
 }
 
@@ -304,7 +295,7 @@ void bullet::Draw()
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);
-	
+
 }
 
 void bullet::EffectDraw()
@@ -314,7 +305,7 @@ void bullet::EffectDraw()
 		m_spriteeffect.Update(bulletpos + m_forward * -170.0f);
 		m_spriteeffect.Draw();
 	}
-	
+
 }
 
 void bullet::OnDestroy()

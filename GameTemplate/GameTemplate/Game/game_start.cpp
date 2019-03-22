@@ -55,12 +55,13 @@ bool game_start::Start()
 
 
 	/*ƒTƒEƒ“ƒh‚Ì‰Šú‰»*/
-	
+
 	m_bgm.Init(L"Assets/sound/TitleBGM1.wav");
 	m_selectSE.Init(L"Assets/sound/selectSE.wav");
 	m_decisionSE.Init(L"Assets/sound/decisionSE.wav");
 	m_bgm.SetVolume(0.5f);
 	m_bgm.Play(true);
+
 	return true;
 }
 
@@ -87,7 +88,6 @@ void game_start::Update()
 			}
 			}
 		}
-
 		if (g_pad->IsTrigger(enButtonA))
 		{
 			m_decisionSE.Play(false);
@@ -103,6 +103,7 @@ void game_start::Update()
 			}
 
 		}
+
 	}
 	if (startTimer == true && !m_decisionSE.IsPlaying())
 	{
@@ -111,7 +112,7 @@ void game_start::Update()
 		gamestart = true;
 	}
 
-	
+
 	SCamDir = CVector3(spoint.position.x, spoint.position.y, spoint.position.z) - m_position;
 	SCamDir.Normalize();
 	map->SetPositon(CVector3::Zero());
@@ -126,7 +127,7 @@ void game_start::Update()
 	Light_obj->SetLightParam(ligp);
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_sikinmodel);
 	g_camera3D.Update();
-	
+
 }
 
 void game_start::Draw()
@@ -144,7 +145,7 @@ void game_start::UIDraw()
 	{
 	case start: {
 		m_font.BeginDraw();
-		m_font.Draw(L"GAME START", { 130.0f,0.0f }, SelectedStringColor,0.0f, 0.35f);
+		m_font.Draw(L"GAME START", { 130.0f,0.0f }, SelectedStringColor, 0.0f, 0.35f);
 		m_font.Draw(L"HOW TO PLAY", { 130.0f,-150.0f }, noSelectStringColor, 0.0f, 0.35f);
 		m_font.EndDraw();
 

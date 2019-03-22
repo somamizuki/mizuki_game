@@ -64,10 +64,10 @@ void SpriteEffect::Update(CVector3& position)
 			EffectSprite->m_forward.Normalize();
 			EffectSprite->m_rite.Normalize();
 			EffectSprite->m_up.Normalize();
-			
+
 			EffectSprite->m_sprite.Update(EffectSprite->m_position, qRot, CVector3::One()*EffectSprite->size);
-			
-			
+
+
 			EffectSprite->size = max(0.0001f, EffectSprite->size - (EffectSprite->size / changesize));
 			EffectSprite->m_sprite.SetViewProj(g_camera3D.GetViewMatrix(), g_camera3D.GetProjectionMatrix());
 		}

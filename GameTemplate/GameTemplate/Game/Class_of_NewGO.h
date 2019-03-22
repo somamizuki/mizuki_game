@@ -10,8 +10,9 @@
 #include "Result.h"
 #include "Game.h"
 #include "Effect.h"
+#include "BossEnemy.h"
 
-class Class_of_NewGO:public GameObject
+class Class_of_NewGO :public GameObject
 {
 public:
 	Class_of_NewGO(int No, const char* obj_name);
@@ -31,7 +32,7 @@ public:
 	{
 		return &m_HitSE;
 	}
-	
+
 
 	CSoundSource* GetlockonSE()
 	{
@@ -61,12 +62,20 @@ public:
 	{
 		return &m_effect;
 	}
-
+	/*ボスのゲッター*/
+	BossEnemy* GetBossEnemy()
+	{
+		return m_bossenemy;
+	}
+	int GetWaveCounter()
+	{
+		return WaveCounter;
+	}
 private:
 
 	CSoundSource m_bgm;						//BGM
 	CSoundSource m_bgmendwave;
-	CSoundSource m_HitSE;					
+	CSoundSource m_HitSE;
 	CSoundSource m_lockonSE;
 	CSoundSource m_fireSE;
 
@@ -89,5 +98,6 @@ private:
 	bool ResultDrawFlag = false;
 	CVector3 pos;
 	Effect m_effect;
+	BossEnemy* m_bossenemy = nullptr;
 };
 

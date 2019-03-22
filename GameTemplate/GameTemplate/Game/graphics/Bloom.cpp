@@ -9,6 +9,14 @@ Bloom::Bloom()
 
 Bloom::~Bloom()
 {
+	if (m_samplerState != nullptr)
+	{
+		m_samplerState->Release();
+	}
+	if (m_disableBlendState != nullptr)
+	{
+		m_disableBlendState->Release();
+	}
 }
 
 void Bloom::Init()
@@ -48,7 +56,7 @@ void Bloom::Init()
 	desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 	desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	g_graphicsEngine->GetD3DDevice()->CreateSamplerState(&desc, &m_samplerState);
-	
+
 	m_luminanceRT.Create(
 		FRAME_BUFFER_W,
 		FRAME_BUFFER_H,

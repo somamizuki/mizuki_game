@@ -18,9 +18,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	game_obj = new GameObjectManajer;
 	Light_obj = new LightManager;
-	Game game(0,"game");
+	Game game(0, "game");
 
-	
+
 	//::_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 	//::_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
@@ -39,7 +39,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		game_obj->Execute();
 
 
-		
+
 		//•`‰æI—¹B
 		g_graphicsEngine->EndRender();
 	}

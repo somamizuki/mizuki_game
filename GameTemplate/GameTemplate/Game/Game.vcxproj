@@ -99,6 +99,8 @@
     </MeshContentTask>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BossEnemy.cpp" />
+    <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="game_start.cpp" />
@@ -173,6 +175,8 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BossEnemy.h" />
+    <ClInclude Include="CollisionDetection.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="game_start.h" />
@@ -249,6 +253,8 @@
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <MeshContentTask Include="Assets\modelData\BossEnemy.FBX" />
+    <MeshContentTask Include="Assets\modelData\BossEnemy2.FBX" />
     <MeshContentTask Include="Assets\modelData\Enemy.FBX" />
     <MeshContentTask Include="Assets\modelData\kyutai.FBX" />
     <MeshContentTask Include="Assets\modelData\missile.FBX" />
@@ -308,6 +314,12 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\missileGauge_waku.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\modelData\assault_mech_DDN.tga" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\modelData\SGNormal.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

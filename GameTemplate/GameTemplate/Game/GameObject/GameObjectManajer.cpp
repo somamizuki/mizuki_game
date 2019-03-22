@@ -4,7 +4,7 @@
 
 GameObjectManajer::GameObjectManajer()
 {
-	GameObject_list.resize(10);
+	GameObject_list.resize(3);
 }
 
 
@@ -21,6 +21,7 @@ GameObjectManajer::~GameObjectManajer()
 			}
 		}
 	}
+
 }
 
 void GameObjectManajer::Execute()
@@ -43,9 +44,9 @@ void GameObjectManajer::Execute()
 	}
 	//deletelistの要素を削除
 	deletelist.clear();
-	
+
 	//更新処理。ついでにスタート関数も呼んでいる
-	for (const auto& obj_list : GameObject_list)				
+	for (const auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
 		{
@@ -69,7 +70,7 @@ void GameObjectManajer::Execute()
 		{
 			if (obj != nullptr)
 			{
-				if (!obj->GetDeath_f() && !obj->Getstop_f()&& obj->Get_isStart()) obj->Update();
+				if (!obj->GetDeath_f() && !obj->Getstop_f() && obj->Get_isStart()) obj->Update();
 			}
 		}
 	}
@@ -87,11 +88,11 @@ void GameObjectManajer::Execute()
 	{
 		for (const auto& obj : obj_list)
 		{
-			if (obj != nullptr) 
+			if (obj != nullptr)
 			{
 				if (!obj->GetDeath_f() && obj->Get_isStart() == true)
 				{
-					if (!obj->GetDeath_f()) obj->Draw();
+					obj->Draw();
 				}
 			}
 		}
@@ -104,14 +105,14 @@ void GameObjectManajer::Execute()
 			{
 				if (!obj->GetDeath_f() && obj->Get_isStart() == true)
 				{
-					if (!obj->GetDeath_f()) obj->EffectDraw();
+					obj->EffectDraw();
 				}
 			}
 		}
 	}
 	g_graphicsEngine->GetBloom()->Update();
 
-	
+
 	/*ポスト描画*/
 	for (const auto& obj_list : GameObject_list)
 	{
@@ -121,7 +122,7 @@ void GameObjectManajer::Execute()
 			{
 				if (!obj->GetDeath_f() && obj->Get_isStart() == true)
 				{
-					if (!obj->GetDeath_f()) obj->PostDraw();
+					obj->PostDraw();
 				}
 			}
 		}
@@ -136,13 +137,13 @@ void GameObjectManajer::Execute()
 			{
 				if (!obj->GetDeath_f() && obj->Get_isStart() == true)
 				{
-					if (!obj->GetDeath_f()) obj->UIDraw();
+					obj->UIDraw();
 				}
 			}
 		}
 	}
 	g_graphicsEngine->ReSetRenderTarget();
-	
+
 }
 
 void GameObjectManajer::DeleteGO(char *name)

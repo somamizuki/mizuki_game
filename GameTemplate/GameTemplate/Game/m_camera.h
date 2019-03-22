@@ -28,7 +28,7 @@ public:
 	
 private:
 	void CameraMove();										//カメラの動きを管理する関数
-
+	void bossfightCameraMove();
 
 
 
@@ -47,7 +47,7 @@ private:
 
 
 
-
+	Class_of_NewGO* CoN = nullptr;
 	Player* player = nullptr;								//プレイヤーのポインター
 	float pad_X = 0.0f;										//パッドの入力量
 	float pad_Y = 0.0f;

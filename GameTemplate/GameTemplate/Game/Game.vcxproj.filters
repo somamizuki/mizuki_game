@@ -189,6 +189,8 @@
     <ClCompile Include="HPGaugeHUD.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="BossEnemy.cpp" />
+    <ClCompile Include="CollisionDetection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -353,6 +355,8 @@
     <ClInclude Include="HPGaugeHUD.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="BossEnemy.h" />
+    <ClInclude Include="CollisionDetection.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -380,6 +384,8 @@
     <MeshContentTask Include="Assets\modelData\Sun.FBX" />
     <MeshContentTask Include="Assets\modelData\Planet_B.fbx" />
     <MeshContentTask Include="Assets\modelData\missile.FBX" />
+    <MeshContentTask Include="Assets\modelData\BossEnemy.FBX" />
+    <MeshContentTask Include="Assets\modelData\BossEnemy2.FBX" />
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\damage.png">
@@ -397,5 +403,9 @@
     <ImageContentTask Include="Assets\sprite\fog.png" />
     <ImageContentTask Include="Assets\sprite\missileGauge.png" />
     <ImageContentTask Include="Assets\sprite\missileGauge_waku.png" />
+    <ImageContentTask Include="Assets\modelData\assault_mech_DDN.tga" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\modelData\SGNormal.png" />
   </ItemGroup>
 </Project>

@@ -103,14 +103,12 @@ const CVector3& HitObject::Execute(float deltaTime, CVector3& moveSpeed, CQuater
 		}
 		//カプセルコライダーの中心座標 + 高さ*0.1の座標をposTmpに求める。
 		CVector3 posTmp = m_position;
-		posTmp.y += m_height * 0.5f + m_radius + m_height * 0.1f;
 		//レイを作成。
 		btTransform start, end;
 		start.setIdentity();
 		end.setIdentity();
 		//始点はカプセルコライダーの中心座標 + 0.2の座標をposTmpに求める。
 		start.setOrigin(btVector3(posTmp.x, posTmp.y, posTmp.z));
-		//終点は次の移動先。XZ平面での衝突を調べるので、yはposTmp.yを設定する。
 		end.setOrigin(btVector3(nextPosition.x, posTmp.y, nextPosition.z));
 
 		SweepResultWall callback;

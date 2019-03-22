@@ -44,14 +44,19 @@ public:
 	{
 		m_materialName = matName;
 	}
-	
+
 	bool EqualMaterialName(const wchar_t* name) const
 	{
 		return wcscmp(name, m_materialName.c_str()) == 0;
 	}
+	void setskinari(bool flag)
+	{
+		skinari = flag;
+	}
 public:
 	DrawMode m;
-	
+	bool skinari = false;
+
 };
 /*!
 *@brief
@@ -77,7 +82,7 @@ public:
 		wchar_t hoge[256];
 		GetCurrentDirectoryW(256, hoge);
 		m_vsShader.Load("Assets/shader/model.fx", "VSMainSkin", Shader::EnType::VS);
-		
+
 		m_pVSShader = &m_vsShader;
 		isSkining = true;
 	}
@@ -98,6 +103,7 @@ public:
 		if (info.enableSkinning) {
 			//スキニングあり。
 			effect = std::make_shared<SkinModelEffect>();
+			effect->setskinari(true);
 		}
 		else {
 			//スキニングなし。

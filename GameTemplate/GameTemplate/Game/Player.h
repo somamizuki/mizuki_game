@@ -7,9 +7,11 @@
 #include "missileRechargeHUD.h"
 #include"HPGaugeHUD.h"
 
+
 class m_camera;
 class bullet;
 class Class_of_NewGO;
+class BossEnemy;
 using namespace PlayerInfo;
 class Player:public GameObject
 {
@@ -114,6 +116,14 @@ private:
 
 	void playermove();								//プレイヤーの移動関数
 	void playerreturn();							//ミッションエリア外に出ないようにする
+	void bossfightmove();							//ボス戦の移動
+	void bossfightInit();
+	bool bossfightInitflag = false;
+	BossEnemy* m_bossenemy = nullptr;
+	CVector3 m_bosspos = CVector3::Zero();
+	const float tobosslen = 8000.0f;
+	const float bosshight = 8000.0f;
+	CVector3 m_BosstoPlayer = CVector3::Zero();
 	void vector();									//プレイヤーの前右上のベクトルを計算する関数
 	void bulletManager();
 	Enemy* LockOnManager();
@@ -129,17 +139,17 @@ private:
 	Class_of_NewGO* CofNG = nullptr;
 	bullet* RiteBullet = nullptr;
 	bullet* LeftBullet = nullptr;
-	std::vector<Enemy*> Enemys;
 	enum PlayerState								//プレイヤーのステート
 	{
 		Nomal,		//通常
-		Return		//原点に戻る(ミッション範囲を超えた時)
+		Return,		//原点に戻る(ミッション範囲を超えた時)
+		Boss,
 	};
 	PlayerState pState = Nomal;
 	HitObject m_characon;
 	//ID3D11ShaderResourceView* g_nomalMapSRV = nullptr;
 
-
+	/*ジェットエンジンの構造体*/
 	struct Engin
 	{
 		SpriteEffect spriteeffect;
@@ -153,6 +163,5 @@ private:
 	missileRechargeHUD m_leftRechargeHUD;
 	missileRechargeHUD m_riteRechargeHUD;
 	HPGaugeHUD m_hpHUD;
-
 };
 

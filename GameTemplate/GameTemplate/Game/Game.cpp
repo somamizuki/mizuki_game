@@ -24,8 +24,23 @@ bool Game::Start()
 
 void Game::Update()
 {
-	
-	
+	//デバッグコード
+	if (g_pad[0].IsTrigger(enButtonStart))
+	{
+		if (stopflag)
+		{
+			game_obj->alltomarunjanee();
+			stopflag = false;
+		}
+		else
+		{
+			game_obj->allStop(this);
+			stopflag = true;
+			
+		}
+	}
+
+
 	if (gamestart != nullptr)
 	{
 		if (gamestart->GetGameStartflag())
@@ -41,7 +56,7 @@ void Game::Update()
 		{
 			game_obj->DeleteGO(newObject);
 			newObject = nullptr;
-			gamestart=new game_start(0, "game_start");
+			gamestart = new game_start(0, "game_start");
 
 		}
 	}
@@ -50,13 +65,13 @@ void Game::Update()
 
 void Game::Draw()
 {
-	
-	
+
+
 }
 
 void Game::UIDraw()
 {
-	
+
 }
 
 

@@ -78,15 +78,15 @@ void ShadowMap::RenderToShadowMap()
 	m_shadowMapRT.ClearRenderTarget(clearColor);
 
 	//シャドウキャスターをシャドウマップにレンダリング。
-	 int count = 0;
+	int count = 0;
 	//if (count++ >= 1000) {
-		for (auto& caster : m_shadowCasters) {
-			caster->Draw(
-				Shadow,
-				m_lightViewMatrix,
-				m_lightProjMatrix
-			);
-		}
+	for (auto& caster : m_shadowCasters) {
+		caster->Draw(
+			Shadow,
+			m_lightViewMatrix,
+			m_lightProjMatrix
+		);
+	}
 	//}
 	//キャスターをクリア。
 	m_shadowCasters.clear();

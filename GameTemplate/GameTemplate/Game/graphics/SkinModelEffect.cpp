@@ -14,7 +14,15 @@ void __cdecl ModelEffect::Apply(ID3D11DeviceContext* deviceContext)
 	case LightOn: {
 		m_psShader.Load("Assets/shader/model.fx", "PS2Main", Shader::EnType::PS);
 		m_pPSShader = &m_psShader;
-		m_vsShader.Load("Assets/shader/model.fx", "VSMain", Shader::EnType::VS);
+		if (skinari)
+		{
+			m_vsShader.Load("Assets/shader/model.fx", "VSMainSkin", Shader::EnType::VS);
+		}
+		else
+		{
+			m_vsShader.Load("Assets/shader/model.fx", "VSMain", Shader::EnType::VS);
+		}
+		
 		m_pVSShader = &m_vsShader;
 		/*ID3D11ShaderResourceView* srvArray[] = {
 			g_graphicsEngine->GetShadowMap()->GetShadowMapSRV()

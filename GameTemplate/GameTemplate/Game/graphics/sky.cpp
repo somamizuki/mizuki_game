@@ -9,7 +9,6 @@ sky::sky(int No, const char* obj_name) :GameObject(No, obj_name)
 
 sky::~sky()
 {
-
 }
 bool sky::Start()
 {

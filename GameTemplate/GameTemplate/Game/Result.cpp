@@ -22,7 +22,7 @@ void Result::Draw()
 {
 	wchar_t font[256];
 	m_font[0].BeginDraw();
-	swprintf(font, L"KILL_POINT             %d", KnockDownEnemySUM*10);
+	swprintf(font, L"KILL_POINT             %d", KnockDownEnemySUM * 10);
 	m_font[0].Draw(font, { -700.0f,300.0f }, { 0.0f,1.0f,0.0f,0.5f }, 0.0f, 0.4f);
 	m_font[0].EndDraw();
 	if (GameClear)
@@ -48,7 +48,7 @@ void Result::Draw()
 		swprintf(font, L"CLEARBONUS           %d", ClearBonus);
 		m_font[5].Draw(font, { -700.0f,-200.0f }, { 0.0f,1.0f,0.0f,0.5f }, 0.0f, 0.4f);
 		m_font[5].EndDraw();
-		
+
 		int totalpoint = KnockDownEnemySUM * 10 + RemHP * 10 + (RemMIN * 60) + RemSEC + ClearBonus;
 		m_font[6].BeginDraw();
 		swprintf(font, L"TOTALPOINT            %d", totalpoint);
@@ -70,14 +70,10 @@ void Result::Draw()
 			m_font[1].EndDraw();
 			totalpoint += 100;
 		}
-		
+
 		m_font[6].BeginDraw();
 		swprintf(font, L"TOTALPOINT            %d", totalpoint);
 		m_font[6].Draw(font, { -700.0f,-400.0f }, { 0.0f,1.0f,0.0f,0.5f }, 0.0f, 0.4f);
 		m_font[6].EndDraw();
 	}
-
-	
-
-	
 }

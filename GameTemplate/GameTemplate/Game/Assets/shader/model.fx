@@ -374,9 +374,7 @@ float4 PS2Main(PSInput In):SV_Target0
 	float4 lig = DirectionLightColor(In, normal) + PointLightColor(In, normal);
 	lig = max(ligmin, lig);
 
-	float4 texC2 = albedoTexture.Sample(Sampler ,In.TexCoord);
-
-
+	float4 texC2 = albedoTexture.Sample(Sampler , In.TexCoord);
 
 	if (isShadowReciever == 1) {	//シャドウレシーバー。
 		//LVP空間から見た時の最も手前の深度値をシャドウマップから取得する。

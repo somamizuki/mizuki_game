@@ -45,7 +45,7 @@ void Effect::Play(CVector3 position, CVector3 scale)
 	//再生中のエフェクトを止める。
 	//m_effekseerManager->StopEffect(m_playEffectHandle);
 	//エフェクトのサイズを変更
-	
+
 	//再生。
 	m_playEffectHandle = m_effekseerManager->Play(m_sampleEffect, position.x, position.y, position.z);
 	m_effekseerManager->SetScale(m_playEffectHandle, scale.x, scale.y, scale.z);
@@ -53,6 +53,7 @@ void Effect::Play(CVector3 position, CVector3 scale)
 
 void Effect::Update()
 {
+	
 	//Effekseerカメラ行列を設定。
 	//まずはEffeseerの行列型の変数に、カメラ行列とプロジェクション行列をコピー。
 	Effekseer::Matrix44 efCameraMat;

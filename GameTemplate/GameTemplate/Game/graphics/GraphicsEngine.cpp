@@ -4,7 +4,7 @@
 
 GraphicsEngine::GraphicsEngine()
 {
-	
+
 }
 
 
@@ -200,7 +200,7 @@ void GraphicsEngine::ChangeRenderTarget(RenderTarget* RT, D3D11_VIEWPORT* VP)
 		);
 		backupF = true;
 	}
-	
+
 	//メインとなるレンダリングターゲットを作成する。
 	if (!RTspriteInitF)
 	{
@@ -209,7 +209,7 @@ void GraphicsEngine::ChangeRenderTarget(RenderTarget* RT, D3D11_VIEWPORT* VP)
 		m_copyMainRtToFrameBufferSprite.FullScreenInit();
 		RTspriteInitF = true;
 	}
-	
+
 	ID3D11RenderTargetView* rtTbl[] = {
 		RT->GetRenderTargetView(),
 	};

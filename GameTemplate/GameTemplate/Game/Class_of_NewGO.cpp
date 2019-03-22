@@ -2,14 +2,14 @@
 #include "Class_of_NewGO.h"
 #include "bullet.h"
 
-Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name):GameObject(No, obj_name)
+Class_of_NewGO::Class_of_NewGO(int No, const char* obj_name) :GameObject(No, obj_name)
 {
-	
+
 }
 
 Class_of_NewGO::~Class_of_NewGO()
 {
-	
+
 }
 
 bool Class_of_NewGO::Start()
@@ -32,13 +32,13 @@ bool Class_of_NewGO::Start()
 
 	map = new sky(0, "map");
 	map->Init(L"Assets/modelData/skyCubeMap.dds", L"Assets/modelData/sky.cmo", CVector3{ 1000000.0f,1000000.0f,1000000.0f });
-	
+
 	level.Init(L"Assets/level/stage.tkl", [&](LevelObjectData Lobjdata) {
 
 		if (std::wcscmp(Lobjdata.name, L"StarSparrow") == 0)
 		{
 			player = new Player(0, "player");
-			player->AddMyPointer<Player, Class_of_NewGO>(&player,this);
+			player->AddMyPointer<Player, Class_of_NewGO>(&player, this);
 			/*player->AddDeleteGOListeners([&](GameObject* go) {
 				player = nullptr;
 			});*/
@@ -61,9 +61,7 @@ bool Class_of_NewGO::Start()
 	});
 	camera = new m_camera(1, "camera");
 	camera->AddMyPointer(&camera, this);
-
 	///*サウンドの初期化*/
-	
 	m_bgm.Init(L"Assets/sound/GameBGM4.wav");
 	m_bgmendwave.Init(L"Assets/sound/GameBGM2.wav");
 	m_HitSE.Init(L"Assets/sound/HitSE.wav");
@@ -87,18 +85,18 @@ void Class_of_NewGO::Update()
 
 				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
 				{
-						Enemy*enemy = new Enemy(0, "enemy");
-						CVector3 enemypos = player->Getpos()+(player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z);
+					Enemy*enemy = new Enemy(0, "enemy");
+					CVector3 enemypos = player->Getpos() + (player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z);
 
-						enemy->Setpos(enemypos);
-						enemy->Setrot(Lobjdata.rotation);
-						m_enemy.push_back(enemy);
-					
+					enemy->Setpos(enemypos);
+					enemy->Setrot(Lobjdata.rotation);
+					m_enemy.push_back(enemy);
+
 
 				}
 				return true;
 			});
-			WaveCounter++;
+			WaveCounter = 4;
 			break;
 		}
 		case 2:
@@ -124,7 +122,7 @@ void Class_of_NewGO::Update()
 		{
 			level.Init(L"Assets/level/Wave3_EnemyPos.tkl", [&](LevelObjectData Lobjdata) {
 
-				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0&&m_enemy.size()<10)
+				if (std::wcscmp(Lobjdata.name, L"Enemy") == 0 && m_enemy.size() < 5)
 				{
 					Enemy*enemy = new Enemy(0, "enemy");
 					CVector3 enemypos = player->Getpos() + (player->Getrite()*Lobjdata.position.x + player->Getup()*Lobjdata.position.y + player->Getforward()*Lobjdata.position.z);
@@ -143,6 +141,17 @@ void Class_of_NewGO::Update()
 			}
 
 			m_bgmendwave.Play(true);
+			break;
+		}
+		case 4: {
+			if (m_bossenemy == nullptr)
+			{
+				m_bossenemy = new BossEnemy(0, "bossenemy");
+				m_bossenemy->AddMyPointer<BossEnemy, Class_of_NewGO>(&m_bossenemy, this);
+			}
+				
+
+			WaveCounter++;
 			break;
 		}
 		default:break;
@@ -168,7 +177,7 @@ void Class_of_NewGO::Update()
 			if (deleteenemy == enemy)
 			{
 				m_enemy.erase(std::remove(m_enemy.begin(), m_enemy.end(), enemy), m_enemy.end());
-				
+
 				break;
 			}
 		}
@@ -183,13 +192,13 @@ void Class_of_NewGO::Update()
 			nextenemyit->AddMyPointer<Enemy, Class_of_NewGO>(&nextenemyit, this);
 		}
 	}
-	
+
 
 	if (player != nullptr)
 	{
 		pos = player->Getpos();
 	}
-	if(player==nullptr)
+	if (player == nullptr)
 	{
 		m_timer.Stop();
 		m_result.SetRemMIN(m_timer.GetMIN());
@@ -206,10 +215,10 @@ void Class_of_NewGO::Update()
 	SCamDir.Normalize();
 	map->SetPositon(CVector3::Zero());
 	g_graphicsEngine->GetShadowMap()->UpdateFromLightTarget(
-		pos+(SCamDir*500.0f),
+		pos + (SCamDir*500.0f),
 		pos
 	);
-	
+
 	m_timer.Update();
 	if (m_timer.IsTIMEUP())
 	{
@@ -222,7 +231,8 @@ void Class_of_NewGO::Update()
 			Light_obj->DeleteLight(&m_pointlig);
 		}
 	}
-	if (WaveCounter > 3 && m_enemy.size() <= 0)
+	/*リザルトを出す条件*/
+	if (WaveCounter > 4 && m_enemy.size() <= 0 && m_bossenemy == nullptr)
 	{
 		m_timer.Stop();
 		m_result.SetRemMIN(m_timer.GetMIN());
@@ -256,12 +266,13 @@ void Class_of_NewGO::EffectDraw()
 void Class_of_NewGO::UIDraw()
 {
 	m_timer.Draw();
-	if(ResultDrawFlag) m_result.Draw();
-	
+	if (ResultDrawFlag) m_result.Draw();
+
 }
 
 void Class_of_NewGO::OnDestroy()
 {
+	game_obj->DeleteGO(m_bossenemy);
 	for (auto& enemy : m_enemy)
 	{
 		game_obj->DeleteGO(enemy);

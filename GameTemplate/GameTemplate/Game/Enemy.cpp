@@ -4,20 +4,20 @@
 #include"Class_of_NewGO.h"
 #include"bullet.h"
 
-Enemy::Enemy(int No, const char* obj_name):GameObject(No, obj_name)
+Enemy::Enemy(int No, const char* obj_name) :GameObject(No, obj_name)
 {
 }
 
 
 Enemy::~Enemy()
 {
-	
+
 }
 
 bool Enemy::Start()
 {
 	m_player = game_obj->FindGO<Player>("player");			//プレイヤーを検索
-	m_player->AddMyPointer<Player,Enemy>(&m_player, this);
+	m_player->AddMyPointer<Player, Enemy>(&m_player, this);
 	/*m_player->AddDeleteGOListeners([&](GameObject* go)
 	{
 		m_player = nullptr;
@@ -34,7 +34,7 @@ bool Enemy::Start()
 	EnemyMarkerSprite.Init(EnemyMarkerSRV.GetBody(), 512.0f, 512.0f);
 
 	CoN = game_obj->FindGO<Class_of_NewGO>("newObject");
-	CoN->AddMyPointer<Class_of_NewGO,Enemy>(&CoN, this);
+	CoN->AddMyPointer<Class_of_NewGO, Enemy>(&CoN, this);
 	mathVector();																			//
 	LeftBullet = new bullet(0, "bullet");													//
 	LeftBullet->WitchBullet(isEnemy);														//
@@ -92,12 +92,12 @@ void Enemy::mathVector()
 
 void Enemy::bulletManager()
 {
-	
+
 	CVector3 toPlayerVec = m_player->Getpos() - m_position; //プレイヤーに向かうベクトルを計算
 	toPlayerVec.Normalize();								//ノーマライズ
-	bool LockOnflag = m_forward.Dot(toPlayerVec)>cosf(CMath::DegToRad(10.0f));		//角度でロックオンするかどうか決める
+	bool LockOnflag = m_forward.Dot(toPlayerVec) > cosf(CMath::DegToRad(10.0f));		//角度でロックオンするかどうか決める
 	/*右ミサイルがセットっされていなければタイマーを進める*/
-	if (RiteBullet!=nullptr)
+	if (RiteBullet != nullptr)
 	{
 		ritebulletTime += 1.0f*(1.0f / 60.0f);
 	}
@@ -134,7 +134,7 @@ void Enemy::bulletManager()
 			LeftBullet = nullptr;
 		}
 	}
-	
+
 }
 
 CVector3 Enemy::side_vec(CVector3 forward_or_rite)
@@ -157,14 +157,14 @@ float Enemy::p_angle(CVector3 forward_or_rite)
 	e_to_p.Normalize();
 	float acos_f = forward_or_rite.Dot(e_to_p);				//引数で受け取った軸とe_to_pのcosθを求める
 	float angle = CMath::RadToDeg(acosf(Acos(acos_f)));		//アークcosして、θを求めてデグリーになおす(分りやすいから)
-	
+
 	return angle;
 }
 
 float Enemy::rot_dir(CVector3 forward_or_rite)
 {
 	CVector3 SV = side_vec(forward_or_rite);			//プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトル
-	
+
 
 	float dir = 1.0f;		//回転方向
 	/*受け取った軸が何なのかを判定している*/
@@ -191,7 +191,7 @@ float Enemy::rot_dir(CVector3 forward_or_rite)
 			dir = -1.0f;
 		}
 	}
-	
+
 
 	return dir;
 }
@@ -252,7 +252,7 @@ void Enemy::enemyMove()
 			m_rotation.Multiply(rot);
 			mathVector();
 		}
-		
+
 	}
 
 
@@ -263,7 +263,7 @@ void Enemy::enemyMove()
 	angle = CMath::RadToDeg(acosf(Acos(acos_f)));
 
 
-	if (p_angle(m_forward) > 160.0f||angle<20.0f)
+	if (p_angle(m_forward) > 160.0f || angle < 20.0f)
 	{
 		if (speed < BoostSpeed)
 		{
@@ -285,13 +285,13 @@ void Enemy::enemyMove()
 	m_position += movespeed * deltaTime;
 	for (const auto& enemy : CoN->GetEnemy())
 	{
-		if (this == enemy || enemy==NULL)
+		if (this == enemy || enemy == NULL)
 		{
 			continue;
 		}
 		CVector3 E_to_E = enemy->Getpos() - m_position;
 		float length = E_to_E.Length();
-		
+
 		if (length < 500.0f)
 		{
 			E_to_E.Normalize();
@@ -300,7 +300,7 @@ void Enemy::enemyMove()
 			m_position += (E_to_E* length);
 		}
 	}
-	
+
 }
 
 void Enemy::SpriteManager()
@@ -335,7 +335,7 @@ void Enemy::SpriteManager()
 		posinScreen = true;
 		CVector3 camtoMypos = m_position - g_camera3D.GetPosition();
 		CVector3 spritepos = { g_camera3D.GetRite().Dot(camtoMypos),g_camera3D.GetUp().Dot(camtoMypos),0.0f };
-		
+
 		camtoMypos.Normalize();
 		if (g_camera3D.GetForward().Dot(camtoMypos) > cosf(g_camera3D.GetViewAngle()*2.0f))
 		{
@@ -356,7 +356,7 @@ void Enemy::Update()
 {
 	if (m_player != nullptr)
 	{
-		
+
 		enemyMove();
 		bulletManager();
 		SpriteManager();
@@ -385,9 +385,9 @@ void Enemy::Update()
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
 }
 
@@ -395,12 +395,12 @@ void Enemy::Draw()
 {
 	m_model.Draw(
 		LightOn,
-		g_camera3D.GetViewMatrix(), 
+		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
 	);
-	
-	
-	
+
+
+
 }
 
 void Enemy::EffectDraw()
@@ -435,8 +435,8 @@ void Enemy::PostDraw()
 			*g_graphicsEngine->GetD3DDeviceContext()
 		);
 	}
-	
-	
+
+
 }
 
 void Enemy::OnDestroy()

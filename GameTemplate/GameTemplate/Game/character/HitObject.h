@@ -8,6 +8,10 @@ public:
 	~HitObject();
 	void Init(CVector3& position, CQuaternion rotation, float radius,float height);			//èâä˙âª
 	const CVector3& Execute(float deltaTime, CVector3& moveSpeed, CQuaternion& rotation);
+	RigidBody* GetRigidBody()
+	{
+		return &m_rigidBody;
+	}
 	void RemoveRigidBoby();
 private:
 	RigidBody m_rigidBody;

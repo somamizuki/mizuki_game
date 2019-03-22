@@ -8,7 +8,7 @@ class Player;
 class Class_of_NewGO;
 class bullet;
 using namespace BulletInfo;
-class Enemy:public GameObject
+class Enemy :public GameObject
 {
 public:
 	Enemy(int No, const char* obj_name);
@@ -67,13 +67,13 @@ private:
 	float rot_dir(CVector3 forward_or_rite);		//回転方向を求める関数
 	float Acos(float t)					//acosf()で、1.0fよりも大きい数を
 	{									//渡さないようにするためのラップ関数。
-		t = min(1.0f, max(-1.0f,t));
+		t = min(1.0f, max(-1.0f, t));
 		return t;
 	}
 
 	bool posinScreen = false;			//スプライトを描画するかどうかのフラグ
 	bool EnemyMarkerDraw = false;		//エネミーのマーカーを描画するかのフラグ
-	
+
 
 	/*エネミーのデータ（モデル、ポジション、回転など）。*/
 	SkinModel m_model;										//スキンモデル
@@ -92,7 +92,7 @@ private:
 	//std::vector<enemybullet*> m_bullet;			//エネミーの弾の配列
 	ShaderResourceView shaderResource;				//エネミーの位置表示スプライトのシェーダーリソース
 	ShaderResourceView EnemyMarkerSRV;				//まとのシェーダーリソース
-	
+
 	sprite sprite_ins;					//エネミーの位置表示スプライト
 	sprite EnemyMarkerSprite;			//マーカー
 	Class_of_NewGO* CoN = nullptr;		//クラスオブニューゴーのポインター
