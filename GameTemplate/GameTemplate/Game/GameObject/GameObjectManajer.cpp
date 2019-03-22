@@ -45,7 +45,7 @@ void GameObjectManajer::Execute()
 	//deletelistの要素を削除
 	deletelist.clear();
 
-	//更新処理。ついでにスタート関数も呼んでいる
+	//スタート関数を呼ぶ
 	for (const auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
@@ -63,7 +63,7 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
-
+	/*アップデート関数を呼ぶ*/
 	for (const auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
@@ -80,6 +80,7 @@ void GameObjectManajer::Execute()
 		ShadowMap* shadowMap = g_graphicsEngine->GetShadowMap();
 		shadowMap->ShadowMapDraw();
 	}
+	/*レンダリングターゲットをメインに戻す*/
 	g_graphicsEngine->ChangeRenderTarget(g_graphicsEngine->GetmainRenderTarget(), g_graphicsEngine->GetmainViewport());
 	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	g_graphicsEngine->GetmainRenderTarget()->ClearRenderTarget(clearColor);
@@ -97,6 +98,7 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
+	/*エフェクトを描画*/
 	for (const auto& obj_list : GameObject_list)
 	{
 		for (const auto& obj : obj_list)
@@ -142,6 +144,7 @@ void GameObjectManajer::Execute()
 			}
 		}
 	}
+	/*レンダリングターゲットを戻す*/
 	g_graphicsEngine->ReSetRenderTarget();
 
 }

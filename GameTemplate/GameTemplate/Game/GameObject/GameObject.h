@@ -1,14 +1,16 @@
 #pragma once
-//#include "GameObjectManajer.h"
-class GameObject:Noncopyable
+class GameObject :Noncopyable
 {
 public:
-	//優先度,オブジェクトの名前
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="No">優先度</param>
+	/// <param name="obj_name">オブジェクトの名前</param>
 	GameObject(int No, const char* obj_name);
-	//{
-	//	game_obj.Set_push_list(this, No);
-	//	this_name = obj_name;
-	//}
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	virtual ~GameObject()
 	{
 		for (const auto& hasmypointobj : m_hasMyPointerlist)
@@ -17,58 +19,98 @@ public:
 		}
 		m_hasMyPointerlist.clear();
 	}
-	virtual bool Start() { return true; }//スタート関数(初期化とか)
-	virtual void Update(){}				 //更新処理
-	virtual void Draw(){}				 //描画
-	virtual void EffectDraw(){}			 //エフェクトの描画
-	virtual void PostDraw(){}			 //手前に描画したいものの描画
-	virtual void UIDraw() {}			 //UIとかの描画
-	virtual void OnDestroy(){}			 //オンデストロイ
-	const char* GetName()				 //クラス名のゲッター
+	/// <summary>
+	/// スタート関数
+	/// </summary>
+	virtual bool Start() { return true; }
+	/// <summary>
+	/// アップデート関数
+	/// </summary>
+	virtual void Update() {}
+	/// <summary>
+	/// 描画関数
+	/// </summary>
+	virtual void Draw() {}
+	/// <summary>
+	/// エフェクト描画
+	/// </summary>
+	virtual void EffectDraw() {}
+	/// <summary>
+	/// 手前に描画したいものの描画
+	/// </summary>
+	virtual void PostDraw() {}
+	/// <summary>
+	/// UI描画
+	/// </summary>
+	virtual void UIDraw() {}
+	/// <summary>
+	/// DeleteGO時に呼ばれる関数
+	/// </summary>
+	virtual void OnDestroy() {}
+	/// <summary>
+	/// クラス名のゲッター
+	/// </summary>
+	/// <returns>名前(const char*)</returns>
+	const char* GetName()
 	{
 		return this_name;
 	}
-	bool Get_isStart()					 //スタートフラグをゲットする関数
+	/// <summary>
+	/// スタートフラグをゲットする関数
+	/// </summary>
+	/// <returns>スタートフラグ(bool)</returns>
+	bool Get_isStart()
 	{
 		return m_start;
 	}
-	void Set_isStart(bool start_f)		 //スタートフラグをセットする関数
+	/// <summary>
+	/// スタートフラグをセットする関数
+	/// </summary>
+	/// <param name="start_f">スタートフラグ(bool)</param>
+	void Set_isStart(bool start_f)
 	{
 		m_start = start_f;
 	}
-	bool GetDeath_f()					 //自分が死んだかどうかのフラグをゲットする関数
+	/// <summary>
+	/// 自分が死んだかどうかのフラグをゲットする関数
+	/// </summary>
+	/// <returns>死亡フラグ(bool)</returns>
+	bool GetDeath_f()
 	{
 		return death_f;
 	}
-
-	void SetDeath_f(bool flag)			 //自分が死んだかどうかのフラグをセットする関数
+	/// <summary>
+	/// 自分が死んだかどうかのフラグをセットする関数
+	/// </summary>
+	/// <param name="flag">死亡フラグ(bool)</param>
+	void SetDeath_f(bool flag)
 	{
 		death_f = flag;
 	}
-
-	bool Getstop_f()					 //停止フラグをゲットする関数
+	/// <summary>
+	/// 停止フラグをゲットする関数
+	/// </summary>
+	/// <returns>停止フラグ(bool)</returns>
+	bool Getstop_f()
 	{
 		return stop_f;
 	}
-
-	void Setstop_f(bool flag)			 //停止フラグをセットする関数
+	/// <summary>
+	/// 停止フラグをセットする関数
+	/// </summary>
+	/// <param name="flag">停止フラグ(bool)</param>
+	void Setstop_f(bool flag)
 	{
 		stop_f = flag;
 	}
-	/*void AddDeleteGOListeners(std::function<void(GameObject*)> listener)
-	{
-		m_deleteGoListeners.push_back(listener);
-	}*/
-	//削除を監視しているリスナーに削除をされたことを通知
-	/*void NotifyDeleteGOListeners()
-	{
-		for (auto listener : m_deleteGoListeners) {
-			listener(this);
-		}
-	}*/
-	/*自分をさすポインタへのポインタとそれを持ったオブジェクトへのポインタを登録*/
-	template<class T,class C>
-	void AddMyPointer(T** myPointer,C* hasobject)
+
+	template<class T, class C>
+	/// <summary>
+	/// 自分をさすポインタへのポインタとそれを持ったオブジェクトへのポインタを登録
+	/// </summary>
+	/// <param name="myPointer">&Delete時にNULLを入れてほしいポインタ</param>
+	/// <param name="hasobject">this</param>
+	void AddMyPointer(T** myPointer, C* hasobject)		//addするとDelete時にNULLを入れてくれる
 	{
 		hasMyPointerObject* s_hasMyPointerObject = new hasMyPointerObject;
 		s_hasMyPointerObject->object = hasobject;
@@ -76,8 +118,12 @@ public:
 
 		m_hasMyPointerlist.push_back(s_hasMyPointerObject);
 	}
-	/*引数で渡されたオブジェクトがリストにあれば削除する*/
+
 	template<class T>
+	/// <summary>
+	/// 引数で渡されたオブジェクトがリストにあれば削除する
+	/// </summary>
+	/// <param name="obj">オブジェクトへのポインター</param>
 	void RemoveHasMyPointerObject(T* obj)
 	{
 		for (const auto& mypointer : m_hasMyPointerlist)
@@ -90,37 +136,25 @@ public:
 			}
 		}
 	}
-	/*自分をさすポインタへのポインタの中身にnullptrを代入*/
-	/*DeleteGO時に呼ばれる*/
+
+	/// <summary>
+	/// 自分をさすポインタへのポインタの中身にnullptrを代入
+	/// </summary>
 	void NotifyDeleteGOtoHasMyPointerObject()
 	{
-		/*std::list<hasMyPointerObject*> deletelist;*/
 		for (const auto& mypointer : m_hasMyPointerlist)
 		{
 			*mypointer->m_MyPointer = nullptr;
 			delete mypointer;
-			/*deletelist.push_back(mypointer);*/
 		}
 		m_hasMyPointerlist.clear();
-		/*for (const auto& deleteIT : deletelist)
-		{
-			for (const auto& hasmypointobj : m_hasMyPointerlist)
-			{
-				if (hasmypointobj == deleteIT)
-				{
-					delete hasmypointobj;
-					m_hasMyPointerlist.erase(std::remove(m_hasMyPointerlist.begin(), m_hasMyPointerlist.end(), hasmypointobj), m_hasMyPointerlist.end());
-					break;
-				}
-			}
-		}*/
 	}
 private:
+
 	const char* this_name;				//名前
 	bool m_start = false;				//スタートフラグ
 	bool death_f = false;				//死亡フラグ(この後死ぬ)
 	bool stop_f = false;				//停止フラグ
-	//std::list<std::function<void(GameObject*)>>	m_deleteGoListeners;		//削除イベントのリスナー。
 	/*自分をさすポインタへのポインタとそれを持ったオブジェクトへのポインタを持つ構造体*/
 	struct hasMyPointerObject
 	{

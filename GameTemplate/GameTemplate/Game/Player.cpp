@@ -26,22 +26,21 @@ Player::Player(int No, const char* obj_name) :GameObject(No, obj_name)
 Player::~Player()
 {
 }
-
 bool Player::Start()
 {
-	camera = game_obj->FindGO<m_camera>("camera");				//カメラのインスタンスを検索
+	camera = game_obj->FindGO<m_camera>("camera");							//カメラのインスタンスを検索
 	camera->AddMyPointer<m_camera, Player>(&camera, this);
-	CofNG = game_obj->FindGO<Class_of_NewGO>("newObject");		//エネミーたちのインスタンスを作ったクラスのポインターを検索
+	CofNG = game_obj->FindGO<Class_of_NewGO>("newObject");					//エネミーたちのインスタンスを作ったクラスのポインターを検索
 	CofNG->AddMyPointer<Class_of_NewGO, Player>(&CofNG, this);
-	m_model.Init(L"Assets/modelData/StarSparrow.cmo");			//cmoファイルの読み込み。
-	m_model.SetShadowReciever(true);							//影を受けるようにする。(セルフシャドウのため)
-	m_model.SetNormalMap(L"Resource/sprite/StarSparrow_Normal.dds");//法線マップを適用
-	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);	//シャドウキャスターに登録
-	vector();				//プレイヤーの前右上のベクトルを計算する
-	aimSRV.CreateFromDDSTextureFromFile(L"Resource/sprite/cursor.dds");	//aim用のシェーダーリソースを作成
-	aimsprite.Init(aimSRV.GetBody(), 512.0f, 512.0f);			//aimを初期化
-	LockOnSRV.CreateFromDDSTextureFromFile(L"Resource/sprite/mato.dds");
-	LockOnSprite.Init(LockOnSRV.GetBody(), 512.0f, 512.0f);
+	m_model.Init(L"Assets/modelData/StarSparrow.cmo");						//cmoファイルの読み込み。
+	m_model.SetShadowReciever(true);										//影を受けるようにする。(セルフシャドウのため)
+	m_model.SetNormalMap(L"Resource/sprite/StarSparrow_Normal.dds");		//法線マップを適用
+	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_model);			//シャドウキャスターに登録
+	vector();	//プレイヤーの前右上のベクトルを計算する
+	aimSRV.CreateFromDDSTextureFromFile(L"Resource/sprite/cursor.dds");		//aim用のシェーダーリソースを作成
+	aimsprite.Init(aimSRV.GetBody(), 512.0f, 512.0f);						//aimを初期化
+	LockOnSRV.CreateFromDDSTextureFromFile(L"Resource/sprite/mato.dds");	//ロックオン用のシェーダーリソースを作成
+	LockOnSprite.Init(LockOnSRV.GetBody(), 512.0f, 512.0f);					//ロックオンスプライトを初期化
 	/*キャラコンの初期化*/
 	m_characon.Init(m_position, m_rotation, 200.0f, 50.0f);
 	/*バレットを配置*/
@@ -51,7 +50,7 @@ bool Player::Start()
 	RiteBullet = new bullet(0, "bullet");
 	RiteBullet->WitchBullet(isPlayer);
 	RiteBullet->SetLeft_or_Rite(Rite);
-
+	/*ジェットエンジンのポジションを初期化*/
 	CVector3 pos;
 	playerenginlevel.Init(L"Assets/level/Player_EnginPos.tkl", [&](LevelObjectData Lobjdata)
 	{
@@ -68,7 +67,8 @@ bool Player::Start()
 		}
 		return true;
 	});
-	m_srv.CreateFromDDSTextureFromFile(L"Resource/sprite/fog.dds");
+
+	m_srv.CreateFromDDSTextureFromFile(L"Resource/sprite/fog.dds");		//ジェットエンジンのスプライト用SRVを作成
 
 	for (const auto& effct : spriteeffect)
 	{
@@ -269,6 +269,8 @@ void Player::bossfightInit()
 void Player::bossfightmove()
 {
 	pad_X = g_pad[0].GetLStickXF()*-1.0f;						//パッドの入力量を取得
+
+	/*ボスの周りをまわる計算*/
 	CQuaternion rot = CQuaternion::Identity();
 	if (m_bossenemy != nullptr)m_bosspos = m_bossenemy->GetPos() + (m_up * bosshight);
 	m_BosstoPlayer = m_position - m_bosspos;
@@ -297,6 +299,7 @@ void Player::bossfightmove()
 
 void Player::vector()
 {
+	CMatrix rot_M;
 	rot_M.MakeRotationFromQuaternion(m_rotation);	//クオータニオンから回転行列を作成
 	m_rite.x = rot_M.m[0][0];
 	m_rite.y = rot_M.m[0][1];
@@ -484,6 +487,8 @@ void Player::Update()
 		CofNG->GetEffect()->Play(m_position, CVector3::One()*100.0f);
 		game_obj->DeleteGO(this);
 	}
+	m_playerParam.Time = max(0.0f, m_playerParam.Time - (1.0f*deltaTime));
+
 
 	//ワールド行列の更新。
 	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
@@ -559,8 +564,4 @@ void Player::OnDestroy()
 	{
 		game_obj->DeleteGO(LeftBullet);
 	}
-	/*game_obj->QueryGOs("bullet", [&](GameObject* go) {
-		bullet* bl = (bullet*)go;
-		bl->NotifyPlayerDead();
-	});*/
 }

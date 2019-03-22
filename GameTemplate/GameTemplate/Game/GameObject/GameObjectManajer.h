@@ -3,16 +3,33 @@
 class GameObjectManajer:Noncopyable
 {
 public:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	GameObjectManajer();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~GameObjectManajer();
-
-	void Set_push_list(GameObject* obj, int No)				//オブジェクトのリストにプッシュする関数
+	/// <summary>
+	/// オブジェクトのリストにプッシュする関数
+	/// </summary>
+	/// <param name="obj">オブジェクトのポインター</param>
+	/// <param name="No">優先度</param>
+	void Set_push_list(GameObject* obj, int No)
 	{
 		GameObject_list[No].push_back(obj);
 	}
-	void DeleteGO(char *name);								//オブジェクトを名前で削除するクラス
+	/// <summary>
+	/// オブジェクトを名前で削除する関数
+	/// </summary>
+	void DeleteGO(char *name);
 	template<class T>
-	void DeleteGO(T* obj_t)									//オブジェクトをポインターで削除するクラス
+	/// <summary>
+	/// オブジェクトをポインターで削除する関数
+	/// </summary>
+	/// <param name="obj_t">オブジェクトへのポインター</param>
+	void DeleteGO(T* obj_t)
 	{
 		for (const auto& deleteobj : deletelist)
 		{
@@ -38,8 +55,6 @@ public:
 				{
 					obj->SetDeath_f(true);
 					obj->OnDestroy();
-					//リスナーに削除されたことを通知する。
-					//obj->NotifyDeleteGOListeners();
 					obj->NotifyDeleteGOtoHasMyPointerObject();
 					deletelist.push_back(obj);
 					break;
@@ -48,6 +63,11 @@ public:
 		}
 	}
 	template<class T>
+	/// <summary>
+	/// オブジェクトを名前で見つける関数
+	/// </summary>
+	/// <param name="name">名前</param>
+	/// <returns>オブジェクトへのポインター</returns>
 	T* FindGO(char *name)									//オブジェクトを名前で見つけるクラス
 	{
 		for (const auto& obj_list : GameObject_list)
@@ -64,9 +84,13 @@ public:
 	}
 
 	template<class T>
+	/// <summary>
+	/// いらない。なぜつくったんだろう。
+	/// </summary>
+	/// <param name="obj_t"></param>
+	/// <returns></returns>
 	T* FindGO(T* obj_t)										//オブジェクトをポインターで見つけるクラス
 	{
-
 		for (const auto& obj_list : GameObject_list)
 		{
 			for (const auto& obj : obj_list)
@@ -79,20 +103,12 @@ public:
 		}
 		return nullptr;
 	}
-	/*void QueryGOs(char* name, std::function<void(GameObject* go)> func)
-	{
-		for (auto& obj_list : GameObject_list)
-		{
-			for (auto& obj : obj_list)
-			{
-				if (!(std::strcmp(name, obj->GetName())))
-				{
-					func(obj);
-				}
-			}
-		}
-	}*/
-	void allStop(GameObject* object)						//引数で渡されたオブジェクト以外全ての更新をスキップ
+	/// <summary>
+	/// 引数で渡されたオブジェクト以外全ての更新をスキップ
+	///	デバッグ用
+	/// </summary>
+	/// <param name="object"></param>
+	void allStop(GameObject* object)
 	{
 		for (const auto& objlist : GameObject_list)
 		{
@@ -105,7 +121,10 @@ public:
 			}
 		}
 	}
-	void alltomarunjanee()								//全ての更新を再開
+	/// <summary>
+	/// 全ての更新を再開
+	/// </summary>
+	void alltomarunjanee()
 	{
 		for (const auto& objlist : GameObject_list)
 		{
@@ -115,10 +134,12 @@ public:
 			}
 		}
 	}
-
-	void Execute();							//更新関数
+	/// <summary>
+	/// 更新関数
+	/// </summary>
+	void Execute();
 private:
 	std::vector<std::list<GameObject*>> GameObject_list;	//オブジェクトリスト
-	std::list<GameObject*> deletelist;						//デリートリスト
+	std::list<GameObject*> deletelist;						//削除リスト
 };
 

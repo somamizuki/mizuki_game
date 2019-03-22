@@ -34,6 +34,8 @@ bool BossEnemy::Start()
 	Vector();
 	m_animation.Play(0, 0.3f);
 	m_animation.Update(deltaTime);
+	CMatrix boneWM = m_skinmodel.FindBone(L"mixamorig:RightHandMiddle1")->GetWorldMatrix();
+	olsbonepos = { boneWM.m[3][0],boneWM.m[3][1], boneWM.m[3][2] };
 	return true;
 }
 
@@ -43,17 +45,20 @@ void BossEnemy::Update()
 	if (!m_animation.IsPlaying())
 	{
 		m_animation.Play(0, 0.3f);
-		
+		m_animation.Update(deltaTime);
 	}
-	else
-	{
-		
-		CMatrix boneWM = m_skinmodel.FindBone(L"mixamorig:RightHandMiddle1")->GetWorldMatrix();
-		/*CVector3 bonepos = { boneWM.m[3][0],boneWM.m[3][1], }*/
-	}
+
 	m_animation.Update(deltaTime);
 	m_skinmodel.UpdateWorldMatrix(m_position, m_rotation, m_scale*50.0f);
-	
+
+	CMatrix boneWM = m_skinmodel.FindBone(L"mixamorig:RightHandMiddle1")->GetWorldMatrix();
+	CVector3 bonepos = { boneWM.m[3][0],boneWM.m[3][1], boneWM.m[3][2] };
+	CollisionDetection collisiondetection;
+	if (collisiondetection.IsHIT(olsbonepos, bonepos, 100.0f) && m_player != nullptr)
+	{
+		m_player->SetHP(10);
+	}
+	olsbonepos = bonepos;
 }
 
 void BossEnemy::Draw()
@@ -93,7 +98,7 @@ void BossEnemy::rotmanager()
 	axis.Normalize();
 	if (m_up.Dot(axis) < -0.9f)angle *= -1.0f;
 	CQuaternion rot = CQuaternion::Identity();
-	rot.SetRotation(CVector3::AxisY(), angle*0.01f);
+	rot.SetRotation(CVector3::AxisY(), angle);
 	m_rotation.Multiply(rot);
 
 	Vector();

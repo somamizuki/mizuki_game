@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.h"
+#include "CollisionDetection.h"
 class BossEnemy :public GameObject
 {
 public:
@@ -49,5 +50,7 @@ private:
 	CVector3 m_up = CVector3::Up();
 	CVector3 m_forward = CVector3::Front();
 	CVector3 m_playerpos = CVector3::Zero();
+	CVector3 olsbonepos = CVector3::Zero();
+	
 };
 

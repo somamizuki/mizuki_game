@@ -13,60 +13,132 @@ class Enemy :public GameObject
 public:
 	Enemy(int No, const char* obj_name);
 	~Enemy();
-
+	/// <summary>
+	/// スタート関数
+	/// </summary>
+	/// <returns>bool</returns>
 	bool Start();
+	/// <summary>
+	/// アップデート関数
+	/// </summary>
 	void Update();
+	/// <summary>
+	/// 描画関数
+	/// </summary>
 	void Draw();
+	/// <summary>
+	/// エフェクトの描画
+	/// </summary>
 	void EffectDraw();
+	/// <summary>
+	/// 手前に描画したいものの描画
+	/// </summary>
 	void PostDraw();
+	/// <summary>
+	/// Delete時に呼ばれる関数
+	/// </summary>
 	void OnDestroy();
+	/// <summary>
+	/// ポジションをセット
+	/// </summary>
+	/// <param name="pos">ポジション(CVector3)</param>
 	void Setpos(CVector3 pos)						//エネミーのポジションをセット
 	{
 		m_position = pos;
 	}
+	/// <summary>
+	/// 回転をセット
+	/// </summary>
+	/// <param name="rot">回転(CQuaternion)</param>
 	void Setrot(CQuaternion rot)					//エネミーの回転をセット
 	{
 		m_rotation = rot;
 	}
+	/// <summary>
+	/// 前方向
+	/// </summary>
+	/// <returns>前方向(CVector3)</returns>
 	const CVector3& Getforward() const				//エネミーの前方向
 	{
 		return m_forward;
 	}
+	/// <summary>
+	/// 右方向
+	/// </summary>
+	/// <returns>右方向(CVector3)</returns>
 	const CVector3& Getrite() const					//エネミーの右方向
 	{
 		return m_rite;
 	}
+	/// <summary>
+	/// 上方向
+	/// </summary>
+	/// <returns>上方向(CVector3)</returns>
 	const CVector3& Getup() const					//エネミーの上方向
 	{
 		return m_up;
 	}
-
+	/// <summary>
+	/// エネミーのポジション
+	/// </summary>
+	/// <returns>ポジション(CVector3)</returns>
 	const CVector3& Getpos() const					//エネミーの上方向
 	{
 		return m_position;
 	}
-
+	/// <summary>
+	/// エネミーの移動速度
+	/// </summary>
+	/// <returns>移動速度(CVector3)</returns>
 	const CVector3& Getmovespeed() const			//エネミーの上方向
 	{
 		return movespeed;
 	}
-
+	/// <summary>
+	/// エネミーの回転
+	/// </summary>
+	/// <returns>回転(CQuaternion)</returns>
 	const CQuaternion& GetRotation() const			//エネミーの回転クオータニオンを取得
 	{
 		return m_rotation;
 	}
 
 private:
-	void mathVector();								//前右上のベクトルを計算する関数
-	void enemyMove();								//エネミーの移動をする関数
-	void SpriteManager();							//スプライトの管理をする関数
-	void bulletManager();							//バレットマネージャー
-
-	CVector3 side_vec(CVector3 forward_or_rite);	//プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトルを求める関数
-	float p_angle(CVector3 forward_or_rite);		//任意の軸から見たプレイヤーの角度を求める関数
-	float rot_dir(CVector3 forward_or_rite);		//回転方向を求める関数
-	float Acos(float t)					//acosf()で、1.0fよりも大きい数を
-	{									//渡さないようにするためのラップ関数。
+	/// <summary>
+	/// 前右上のベクトルを計算する関数
+	/// </summary>
+	void mathVector();
+	/// <summary>
+	/// エネミーの移動をする関数
+	/// </summary>
+	void enemyMove();
+	/// <summary>
+	/// スプライトの管理をする関数
+	/// </summary>
+	void SpriteManager();
+	/// <summary>
+	/// バレットマネージャー
+	/// </summary>
+	void bulletManager();
+	/// <summary>
+	/// プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトルを求める関数
+	/// </summary>
+	CVector3 side_vec(CVector3 forward_or_rite);
+	/// <summary>
+	/// 任意の軸から見たプレイヤーの角度を求める関数
+	/// </summary>
+	float p_angle(CVector3 forward_or_rite);
+	/// <summary>
+	/// 回転方向を求める関数
+	/// </summary>
+	float rot_dir(CVector3 forward_or_rite);
+	/// <summary>
+	/// acosf()で、1.0fよりも大きい数を渡さないようにするためのラップ関数。
+	/// </summary>
+	/// <param name="t">内積結果(float)</param>
+	/// <returns>float</returns>
+	float Acos(float t)
+	{
 		t = min(1.0f, max(-1.0f, t));
 		return t;
 	}
@@ -112,7 +184,5 @@ private:
 	};
 	std::vector<Engin*> spriteeffect;	//Enginをlevelに登録された数だけ積むリスト(vector)
 	ShaderResourceView m_srv;			//スプライトエフェクトに使うSRV
-	/*std::function<void()> m_rightBulletDeleteGoListener;
-	std::function<void()> m_leftBulletDeleteGoListener;*/
 };
 
