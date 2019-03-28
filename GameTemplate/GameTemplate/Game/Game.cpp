@@ -57,7 +57,6 @@ void Game::Update()
 			game_obj->DeleteGO(newObject);
 			newObject = nullptr;
 			gamestart = new game_start(0, "game_start");
-
 		}
 	}
 	m_soundEngine.Update();

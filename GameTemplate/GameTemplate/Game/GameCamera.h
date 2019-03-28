@@ -1,10 +1,10 @@
 #pragma once
 
-class m_camera:public GameObject
+class GameCamera :public GameObject
 {
 public:
-	m_camera(int No,char* obj_name);
-	~m_camera();
+	GameCamera(int No,char* obj_name);
+	~GameCamera();
 	bool Start();
 	void Update();
 	const CVector3& Get_camera_forward() const				//カメラの前方向のゲッター

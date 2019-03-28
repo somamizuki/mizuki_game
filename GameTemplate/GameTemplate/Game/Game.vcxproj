@@ -143,7 +143,7 @@
     <ClCompile Include="math\Matrix.cpp" />
     <ClCompile Include="math\Vector.cpp" />
     <ClCompile Include="missileRechargeHUD.cpp" />
-    <ClCompile Include="m_camera.cpp" />
+    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="physics\MeshCollider.cpp" />
     <ClCompile Include="physics\Physics.cpp" />
     <ClCompile Include="physics\RigidBody.cpp" />
@@ -221,7 +221,7 @@
     <ClInclude Include="math\kMath.h" />
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Vector.h" />
-    <ClInclude Include="m_camera.h" />
+    <ClInclude Include="GameCamera.h" />
     <ClInclude Include="policy\Noncopyable.h" />
     <ClInclude Include="physics\ICollider.h" />
     <ClInclude Include="physics\MeshCollider.h" />

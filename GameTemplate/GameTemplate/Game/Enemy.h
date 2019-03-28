@@ -11,7 +11,15 @@ using namespace BulletInfo;
 class Enemy :public GameObject
 {
 public:
+	/// <summary>
+	/// エネミーのコンストラクタ
+	/// </summary>
+	/// <param name="No">優先度</param>
+	/// <param name="obj_name">名前</param>
 	Enemy(int No, const char* obj_name);
+	/// <summary>
+	/// エネミーのデストラクタ
+	/// </summary>
 	~Enemy();
 	/// <summary>
 	/// スタート関数
@@ -42,7 +50,7 @@ public:
 	/// ポジションをセット
 	/// </summary>
 	/// <param name="pos">ポジション(CVector3)</param>
-	void Setpos(CVector3 pos)						//エネミーのポジションをセット
+	void SetPosition(CVector3 pos)
 	{
 		m_position = pos;
 	}
@@ -50,7 +58,7 @@ public:
 	/// 回転をセット
 	/// </summary>
 	/// <param name="rot">回転(CQuaternion)</param>
-	void Setrot(CQuaternion rot)					//エネミーの回転をセット
+	void SetRotation(CQuaternion rot)
 	{
 		m_rotation = rot;
 	}
@@ -58,7 +66,7 @@ public:
 	/// 前方向
 	/// </summary>
 	/// <returns>前方向(CVector3)</returns>
-	const CVector3& Getforward() const				//エネミーの前方向
+	const CVector3& GetForward() const
 	{
 		return m_forward;
 	}
@@ -66,7 +74,7 @@ public:
 	/// 右方向
 	/// </summary>
 	/// <returns>右方向(CVector3)</returns>
-	const CVector3& Getrite() const					//エネミーの右方向
+	const CVector3& GetRite() const
 	{
 		return m_rite;
 	}
@@ -74,7 +82,7 @@ public:
 	/// 上方向
 	/// </summary>
 	/// <returns>上方向(CVector3)</returns>
-	const CVector3& Getup() const					//エネミーの上方向
+	const CVector3& GetUp() const
 	{
 		return m_up;
 	}
@@ -82,7 +90,7 @@ public:
 	/// エネミーのポジション
 	/// </summary>
 	/// <returns>ポジション(CVector3)</returns>
-	const CVector3& Getpos() const					//エネミーの上方向
+	const CVector3& GetPosition() const
 	{
 		return m_position;
 	}
@@ -90,15 +98,15 @@ public:
 	/// エネミーの移動速度
 	/// </summary>
 	/// <returns>移動速度(CVector3)</returns>
-	const CVector3& Getmovespeed() const			//エネミーの上方向
+	const CVector3& GetMoveSpeed() const
 	{
-		return movespeed;
+		return m_movespeed;
 	}
 	/// <summary>
 	/// エネミーの回転
 	/// </summary>
 	/// <returns>回転(CQuaternion)</returns>
-	const CQuaternion& GetRotation() const			//エネミーの回転クオータニオンを取得
+	const CQuaternion& GetRotation() const
 	{
 		return m_rotation;
 	}
@@ -107,11 +115,11 @@ private:
 	/// <summary>
 	/// 前右上のベクトルを計算する関数
 	/// </summary>
-	void mathVector();
+	void Vector();
 	/// <summary>
 	/// エネミーの移動をする関数
 	/// </summary>
-	void enemyMove();
+	void EnemyMove();
 	/// <summary>
 	/// スプライトの管理をする関数
 	/// </summary>
@@ -119,19 +127,19 @@ private:
 	/// <summary>
 	/// バレットマネージャー
 	/// </summary>
-	void bulletManager();
+	void BulletManager();
 	/// <summary>
 	/// プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトルを求める関数
 	/// </summary>
-	CVector3 side_vec(CVector3 forward_or_rite);
+	CVector3 SideVec(CVector3 forward_or_rite);
 	/// <summary>
 	/// 任意の軸から見たプレイヤーの角度を求める関数
 	/// </summary>
-	float p_angle(CVector3 forward_or_rite);
+	float ToPlayerAngle(CVector3 forward_or_rite);
 	/// <summary>
 	/// 回転方向を求める関数
 	/// </summary>
-	float rot_dir(CVector3 forward_or_rite);
+	float RotDirection(CVector3 forward_or_rite);
 	/// <summary>
 	/// acosf()で、1.0fよりも大きい数を渡さないようにするためのラップ関数。
 	/// </summary>
@@ -143,46 +151,43 @@ private:
 		return t;
 	}
 
-	bool posinScreen = false;			//スプライトを描画するかどうかのフラグ
-	bool EnemyMarkerDraw = false;		//エネミーのマーカーを描画するかのフラグ
+	bool						m_posinscreen = false;					//スプライトを描画するかどうかのフラグ
+	bool						m_enemymarkerdraw = false;				//エネミーのマーカーを描画するかのフラグ
 
 
 	/*エネミーのデータ（モデル、ポジション、回転など）。*/
-	SkinModel m_model;										//スキンモデル
-	CVector3 m_position = CVector3::Zero();					//ポジション
-	//CVector3 targetPos = CVector3::Zero();				//ターゲットのポジション
-	CQuaternion m_rotation = CQuaternion::Identity();		//回転
+	SkinModel					m_skinmodel;							//スキンモデル
+	CVector3					m_position = CVector3::Zero();			//ポジション
+	CQuaternion					m_rotation = CQuaternion::Identity();	//回転
 	/*エネミーの前、右、上*/
-	CVector3 m_forward = CVector3::Zero();			//前
-	CVector3 m_rite = CVector3::Zero();				//右
-	CVector3 m_up = CVector3::Zero();				//上
+	CVector3					m_forward = CVector3::Zero();			//前
+	CVector3					m_rite = CVector3::Zero();				//右
+	CVector3					m_up = CVector3::Zero();				//上
 
-	CVector3 movespeed = CVector3::Zero();			//移動速度
-	float speed = 0.0f;
-	Player* m_player = nullptr;						//プレイヤーのポインター
-	bool atack_f = false;							//攻撃フラグ
-	//std::vector<enemybullet*> m_bullet;			//エネミーの弾の配列
-	ShaderResourceView shaderResource;				//エネミーの位置表示スプライトのシェーダーリソース
-	ShaderResourceView EnemyMarkerSRV;				//まとのシェーダーリソース
+	CVector3					m_movespeed = CVector3::Zero();			//移動速度
+	float						m_nowspeed = 0.0f;
+	Player*						m_player = nullptr;						//プレイヤーのポインター
+	ShaderResourceView			m_outscreenenemySRV;					//エネミーの位置表示スプライトのシェーダーリソース
+	ShaderResourceView			m_enemymarkerSRV;						//まとのシェーダーリソース
 
-	sprite sprite_ins;					//エネミーの位置表示スプライト
-	sprite EnemyMarkerSprite;			//マーカー
-	Class_of_NewGO* CoN = nullptr;		//クラスオブニューゴーのポインター
+	sprite						m_outenemysprite;						//エネミーの位置表示スプライト
+	sprite						m_enemymarkersprite;					//マーカー
+	Class_of_NewGO*				m_class_of_newgo = nullptr;				//クラスオブニューゴーのポインター
 
 
-	const float bulletspan = 3.0f;		//バレットを発射する間隔
-	float ritebulletTime = 0.0f;		//右バレットのタイマー
-	float leftbulletTime = 0.0f;		//左バレットのタイマー
+	const float					BULLETSPAN = 3.0f;						//バレットを発射する間隔
+	float						m_ritebullettime = 0.0f;				//右バレットのタイマー
+	float						m_leftbullettime = 0.0f;				//左バレットのタイマー
 
-	bullet* RiteBullet = nullptr;		//右ミサイルのポインター
-	bullet* LeftBullet = nullptr;		//左ミサイルのポインター
-	Level Enemy_EnginPos;				//エネミーのジェットのポジションが入った
-	struct Engin						//スプライトエフェクトとジェットのポジションを持った構造体
+	bullet*						m_ritebullet = nullptr;					//右ミサイルのポインター
+	bullet*						m_leftbullet = nullptr;					//左ミサイルのポインター
+	Level						m_enemyenginlevel;						//エネミーのジェットのポジションが入った
+	struct Engin	//スプライトエフェクトとジェットのポジションを持った構造体
 	{
-		SpriteEffect spriteeffect;
-		CVector3 toEngin;
+		SpriteEffect	m_spriteeffect;
+		CVector3		m_toengin;
 	};
-	std::vector<Engin*> spriteeffect;	//Enginをlevelに登録された数だけ積むリスト(vector)
-	ShaderResourceView m_srv;			//スプライトエフェクトに使うSRV
+	std::vector<Engin*>			m_spriteeffect;							//Enginをlevelに登録された数だけ積むリスト(vector)
+	ShaderResourceView			m_effectsrv;							//スプライトエフェクトに使うSRV
 };
 

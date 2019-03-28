@@ -19,7 +19,7 @@ bool CPointLight::InitLightSB()
 	D3D11_BUFFER_DESC lightDesc;
 	ZeroMemory(&lightDesc, sizeof(lightDesc));
 	lightDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	lightDesc.ByteWidth = sizeof(SPointLight) * PointMaxSum;
+	lightDesc.ByteWidth = sizeof(SPointLight) * POINTLIGHTMAXSUM;
 	lightDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 	lightDesc.StructureByteStride = sizeof(SPointLight);
 
@@ -29,10 +29,9 @@ bool CPointLight::InitLightSB()
 
 void CPointLight::UpdateSubresource()
 {
-
 	ID3D11DeviceContext* d3dDC = g_graphicsEngine->GetD3DDeviceContext();
 
-	d3dDC->UpdateSubresource(m_sb.GetBody(), 0, nullptr, &ligstruct, 0, 0);
+	d3dDC->UpdateSubresource(m_sb.GetBody(), 0, nullptr, &m_pointlight, 0, 0);
 }
 
 void CPointLight::SendStructuredBuffer()
@@ -45,7 +44,7 @@ void CPointLight::SendStructuredBuffer()
 void CPointLight::SendConstantBuffer()
 {
 	ID3D11DeviceContext* d3dDC = g_graphicsEngine->GetD3DDeviceContext();
-	m_cb.Create(&PointSum, sizeof(PointSum));
+	m_cb.Create(&m_pointlightsum, sizeof(m_pointlightsum));
 	d3dDC->VSSetConstantBuffers(2, 1, &m_cb.GetBody());
 	d3dDC->PSSetConstantBuffers(2, 1, &m_cb.GetBody());
 

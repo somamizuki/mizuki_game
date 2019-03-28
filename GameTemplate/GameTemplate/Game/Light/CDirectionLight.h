@@ -2,13 +2,35 @@
 class CDirectionLight:public LightBase
 {
 public:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	CDirectionLight();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~CDirectionLight();
+	/// <summary>
+	/// ストラクチャードバッファーを初期化
+	/// </summary>
+	/// <returns>bool</returns>
 	bool InitLightSB();
+	/// <summary>
+	/// サブリソースの更新
+	/// </summary>
 	void UpdateSubresource();
+	/// <summary>
+	/// ストラクチャードバッファーを送る
+	/// </summary>
 	void SendStructuredBuffer();
+	/// <summary>
+	/// 定数バッファを送る
+	/// </summary>
 	void SendConstantBuffer();
-
+	/// <summary>
+	/// ライトをセット
+	/// </summary>
+	/// <param name="dirlig">ディレクションライトの構造体(SDirectionLight)</param>
 	void SetLight(const SDirectionLight& dirlig)
 	{
 		int ligsum = 0;
@@ -36,12 +58,11 @@ public:
 
 
 private:
-	StructuredBuffer m_sb;
-	ConstantBuffer m_cb;
-	static const int DirectionMaxSum = 8;
-	int DirSum = 0;
-	std::vector<SDirectionLight> s_Light;
-	SDirectionLight ligstruct[DirectionMaxSum];
-	bool creatf = false;
+	StructuredBuffer m_sb;							//ストラクチャードバッファー
+	ConstantBuffer m_cb;							//コンスタントバッファー
+	static const int DirectionMaxSum = 8;			//ライトの最大数
+	int DirSum = 0;									//ライトの数
+	std::vector<SDirectionLight> s_Light;			//登録するライト
+	SDirectionLight ligstruct[DirectionMaxSum];		//ライトの配列
 };
 

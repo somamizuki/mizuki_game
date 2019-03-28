@@ -13,10 +13,6 @@ SpriteEffect::~SpriteEffect()
 	{
 		delete EffectSprite;
 	}
-	/*if (m_SRV != nullptr)
-	{
-		m_SRV->Release();
-	}*/
 }
 
 void SpriteEffect::Init(ID3D11ShaderResourceView* SRV, float time, int span)
@@ -38,7 +34,6 @@ void SpriteEffect::Update(CVector3& position)
 	std::list<SEffectSprite*> dethlist;
 	for (const auto& EffectSprite : EffectSpriteList)
 	{
-
 		if (EffectSprite->time >= eraseTime)
 		{
 			dethlist.push_back(EffectSprite);
@@ -72,6 +67,7 @@ void SpriteEffect::Update(CVector3& position)
 			EffectSprite->m_sprite.SetViewProj(g_camera3D.GetViewMatrix(), g_camera3D.GetProjectionMatrix());
 		}
 	}
+
 	for (const auto& dethSES : dethlist)
 	{
 		for (const auto& EffectSprite : EffectSpriteList)

@@ -15,9 +15,9 @@ bool enemybullet::Start()
 {
 	m_tama.Init(L"Assets/modelData/kyutai.cmo");
 	//m_enemy = game_obj->FindGO<Enemy>("enemy");
-	tamadir = m_enemy->Getforward();
-	speed = m_enemy->Getmovespeed().Length() + bulletspeed;
-	bulletpos = m_enemy->Getpos() + tamadir * 500.0f;
+	tamadir = m_enemy->GetForward();
+	speed = m_enemy->GetMoveSpeed().Length() + bulletspeed;
+	bulletpos = m_enemy->GetPosition() + tamadir * 500.0f;
 	return true;
 }
 

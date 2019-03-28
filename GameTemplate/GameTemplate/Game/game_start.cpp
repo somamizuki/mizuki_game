@@ -17,12 +17,12 @@ bool game_start::Start()
 	SDirectionLight sdir;		//ディレクションライトの構造体
 
 	/*ポイントライトをセット*/
-	spoint.color = { 1.0f*2.0f,0.95f*2.0f,0.9f*2.0f,1.0f };
-	spoint.range = 8000000.0f;
+	m_spointlight.color = { 1.0f*2.0f,0.95f*2.0f,0.9f*2.0f,1.0f };
+	m_spointlight.range = 8000000.0f;
 
-	map = new sky(0, "map");
-	map->Init(L"Assets/modelData/skyCubeMap.dds", L"Assets/modelData/sky.cmo", CVector3{ 500000.0f,500000.0f,500000.0f });
-	level.Init(L"Assets/level/startlevel.tkl", [&](LevelObjectData Lobjdata)
+	m_cubemap = new sky(0, "map");
+	m_cubemap->Init(L"Assets/modelData/skyCubeMap.dds", L"Assets/modelData/sky.cmo", CVector3{ 500000.0f,500000.0f,500000.0f });
+	m_level.Init(L"Assets/level/startlevel.tkl", [&](LevelObjectData Lobjdata)
 	{
 		if (std::wcscmp(Lobjdata.name, L"StarSparrow") == 0)
 		{
@@ -32,8 +32,8 @@ bool game_start::Start()
 		}
 		else if (std::wcscmp(Lobjdata.name, L"Sun") == 0)
 		{
-			spoint.position = Lobjdata.position;
-			m_pointlig.SetLight(spoint, "sun");
+			m_spointlight.position = Lobjdata.position;
+			m_pointlig.SetLight(m_spointlight, "sun");
 		}
 		else
 		{
@@ -45,8 +45,8 @@ bool game_start::Start()
 	m_sikinmodel.SetShadowReciever(true);
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_sikinmodel);
 	m_sikinmodel.SetNormalMap(L"Resource/sprite/StarSparrow_Normal.dds");
-	camerapos = CVector3::Zero() + CVector3::AxisZ()*400.0f;
-	g_camera3D.SetPosition(camerapos);
+	m_cameraposition = CVector3::Zero() + CVector3::AxisZ()*400.0f;
+	g_camera3D.SetPosition(m_cameraposition);
 	g_camera3D.SetTarget(CVector3::Zero());
 	g_camera3D.SetFar(800000.0f);
 	g_camera3D.SetNear(1.0f);
@@ -76,14 +76,14 @@ void game_start::Update()
 				m_selectSE.Stop();
 			}
 			m_selectSE.Play(false);
-			switch (Select)
+			switch (m_select)
 			{
 			case start: {
-				Select = howtocontrol;
+				m_select = howtocontrol;
 				break;
 			}
 			case howtocontrol: {
-				Select = start;
+				m_select = start;
 				break;
 			}
 			}
@@ -91,10 +91,10 @@ void game_start::Update()
 		if (g_pad->IsTrigger(enButtonA))
 		{
 			m_decisionSE.Play(false);
-			switch (Select)
+			switch (m_select)
 			{
 			case start: {
-				startTimer = true;
+				m_startflag = true;
 				break;
 			}
 			case howtocontrol: {
@@ -105,24 +105,24 @@ void game_start::Update()
 		}
 
 	}
-	if (startTimer == true && !m_decisionSE.IsPlaying())
+	if (m_startflag == true && !m_decisionSE.IsPlaying())
 	{
 		Light_obj->DeleteLight(&m_pointlig);
-		game_obj->DeleteGO(map);
-		gamestart = true;
+		game_obj->DeleteGO(m_cubemap);
+		m_gamestart = true;
 	}
 
 
-	SCamDir = CVector3(spoint.position.x, spoint.position.y, spoint.position.z) - m_position;
-	SCamDir.Normalize();
-	map->SetPositon(CVector3::Zero());
+	m_lightcameradir = CVector3(m_spointlight.position.x, m_spointlight.position.y, m_spointlight.position.z) - m_position;
+	m_lightcameradir.Normalize();
+	m_cubemap->SetPositon(CVector3::Zero());
 	g_graphicsEngine->GetShadowMap()->UpdateFromLightTarget(
-		m_position + (SCamDir*1000.0f),
+		m_position + (m_lightcameradir*1000.0f),
 		m_position
 	);
 	m_sikinmodel.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
 	ligParam ligp;
-	ligp.eyepos = camerapos;
+	ligp.eyepos = m_cameraposition;
 	ligp.specPow = 50.0f;
 	Light_obj->SetLightParam(ligp);
 	g_graphicsEngine->GetShadowMap()->RegistShadowCaster(&m_sikinmodel);
@@ -141,20 +141,20 @@ void game_start::Draw()
 
 void game_start::UIDraw()
 {
-	switch (Select)
+	switch (m_select)
 	{
 	case start: {
 		m_font.BeginDraw();
-		m_font.Draw(L"GAME START", { 130.0f,0.0f }, SelectedStringColor, 0.0f, 0.35f);
-		m_font.Draw(L"HOW TO PLAY", { 130.0f,-150.0f }, noSelectStringColor, 0.0f, 0.35f);
+		m_font.Draw(L"GAME START", { 130.0f,0.0f }, m_selectedstringcolor, 0.0f, 0.35f);
+		m_font.Draw(L"HOW TO PLAY", { 130.0f,-150.0f }, m_noselectstringcolor, 0.0f, 0.35f);
 		m_font.EndDraw();
 
 		break;
 	}
 	case howtocontrol: {
 		m_font.BeginDraw();
-		m_font.Draw(L"GAME START", { 130.0f,0.0f }, noSelectStringColor, 0.0f, 0.35f);
-		m_font.Draw(L"HOW TO PLAY", { 130.0f,-150.0f }, SelectedStringColor, 0.0f, 0.35f);
+		m_font.Draw(L"GAME START", { 130.0f,0.0f }, m_noselectstringcolor, 0.0f, 0.35f);
+		m_font.Draw(L"HOW TO PLAY", { 130.0f,-150.0f }, m_selectedstringcolor, 0.0f, 0.35f);
 		m_font.EndDraw();
 		break;
 	}

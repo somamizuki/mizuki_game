@@ -2,10 +2,22 @@
 class LightManager:Noncopyable
 {
 public:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	LightManager();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~LightManager();
-
+	/// <summary>
+	/// ライトの更新
+	/// </summary>
 	void LightExecute();
+	/// <summary>
+	/// ライトパラメーターをセット
+	/// </summary>
+	/// <param name="ligparam">ligParam</param>
 	void SetLightParam(ligParam& ligparam);
 	void DeleteLight(LightBase* light)
 	{
@@ -17,7 +29,10 @@ public:
 			}
 		}
 	}
-
+	/// <summary>
+	/// ディレクションライトまたはポイントライトを登録する関数
+	/// </summary>
+	/// <param name="light"></param>
 	void PushLight(LightBase* light)
 	{
 		if (anyLight.size() == 0)

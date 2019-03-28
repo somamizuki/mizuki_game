@@ -22,12 +22,12 @@ bool BossEnemy::Start()
 	m_animationClip[0].SetLoopFlag(true);
 	m_animation.Init(m_skinmodel, m_animationClip, 1);
 
-	if (m_player->Getup().Dot(CVector3::AxisY()) < 0.9999999999f)
+	if (m_player->GetUp().Dot(CVector3::AxisY()) < 0.9999999999f)
 	{
-		float dotresult = m_player->Getup().Dot(CVector3::AxisY());
+		float dotresult = m_player->GetUp().Dot(CVector3::AxisY());
 		float angle = Acos(dotresult);
 		CVector3 axis = CVector3::Zero();
-		axis.Cross(m_player->Getup(), CVector3::AxisY());
+		axis.Cross(m_player->GetUp(), CVector3::AxisY());
 		axis.Normalize();
 		m_rotation.SetRotation(axis, -angle);
 	}
@@ -35,7 +35,7 @@ bool BossEnemy::Start()
 	m_animation.Play(0, 0.3f);
 	m_animation.Update(deltaTime);
 	CMatrix boneWM = m_skinmodel.FindBone(L"mixamorig:RightHandMiddle1")->GetWorldMatrix();
-	olsbonepos = { boneWM.m[3][0],boneWM.m[3][1], boneWM.m[3][2] };
+	m_oldbonepos = { boneWM.m[3][0],boneWM.m[3][1], boneWM.m[3][2] };
 	return true;
 }
 
@@ -54,11 +54,11 @@ void BossEnemy::Update()
 	CMatrix boneWM = m_skinmodel.FindBone(L"mixamorig:RightHandMiddle1")->GetWorldMatrix();
 	CVector3 bonepos = { boneWM.m[3][0],boneWM.m[3][1], boneWM.m[3][2] };
 	CollisionDetection collisiondetection;
-	if (collisiondetection.IsHIT(olsbonepos, bonepos, 100.0f) && m_player != nullptr)
+	if (collisiondetection.IsHIT(m_oldbonepos, bonepos, 100.0f) && m_player != nullptr)
 	{
 		m_player->SetHP(10);
 	}
-	olsbonepos = bonepos;
+	m_oldbonepos = bonepos;
 }
 
 void BossEnemy::Draw()
@@ -84,7 +84,7 @@ void BossEnemy::Vector()
 
 void BossEnemy::rotmanager()
 {
-	if (m_player != nullptr)m_playerpos = m_player->Getpos();
+	if (m_player != nullptr)m_playerpos = m_player->GetPosition();
 	CVector3 toPlayer = m_playerpos - m_position;
 	float flen = m_forward.Dot(toPlayer);
 	float rlen = m_right.Dot(toPlayer);

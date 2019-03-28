@@ -44,7 +44,4 @@ void LightManager::LightExecute()
 			light_it->SendStructuredBuffer();
 		}
 	}
-
-
-
 }

@@ -124,7 +124,6 @@
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Class_of_NewGO.cpp" />
-    <ClCompile Include="m_camera.cpp" />
     <ClCompile Include="game_stage.cpp" />
     <ClCompile Include="graphics\sprite.cpp">
       <Filter>graphics</Filter>
@@ -191,6 +190,7 @@
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="BossEnemy.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
+    <ClCompile Include="GameCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math\Vector.h">
@@ -286,7 +286,6 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Class_of_NewGO.h" />
-    <ClInclude Include="m_camera.h" />
     <ClInclude Include="game_stage.h" />
     <ClInclude Include="graphics\sprite.h">
       <Filter>graphics</Filter>
@@ -357,6 +356,7 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="BossEnemy.h" />
     <ClInclude Include="CollisionDetection.h" />
+    <ClInclude Include="GameCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\modelData\unityChan.fbx">
@@ -404,8 +404,6 @@
     <ImageContentTask Include="Assets\sprite\missileGauge.png" />
     <ImageContentTask Include="Assets\sprite\missileGauge_waku.png" />
     <ImageContentTask Include="Assets\modelData\assault_mech_DDN.tga" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\modelData\SGNormal.png" />
+    <ImageContentTask Include="Assets\modelData\SGNormal.png" />
   </ItemGroup>
 </Project>

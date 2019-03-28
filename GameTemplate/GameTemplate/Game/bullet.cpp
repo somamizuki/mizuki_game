@@ -17,26 +17,26 @@ bullet::~bullet()
 bool bullet::Start()
 {
 
-	m_tama.Init(L"Assets/modelData/missile.cmo");					//玉のモデルイニット
-	m_tama.SetNormalMap(L"Resource/sprite/7_normal.dds");				//ノーマルマップをセット
+	m_skinmodel.Init(L"Assets/modelData/missile.cmo");					//玉のモデルイニット
+	m_skinmodel.SetNormalMap(L"Resource/sprite/7_normal.dds");				//ノーマルマップをセット
 	m_player = game_obj->FindGO<Player>("player");					//プレイヤーの検索
 	m_player->AddMyPointer<Player, bullet>(&m_player, this);
-	CoN = game_obj->FindGO<Class_of_NewGO>("newObject");			//いろんなクラスをnewするクラスを検索
-	CoN->AddMyPointer<Class_of_NewGO, bullet>(&CoN, this);
-	switch (witchbullet)
+	m_class_of_newgo = game_obj->FindGO<Class_of_NewGO>("newObject");			//いろんなクラスをnewするクラスを検索
+	m_class_of_newgo->AddMyPointer<Class_of_NewGO, bullet>(&m_class_of_newgo, this);
+	switch (m_witchbullet)
 	{
 	case isPlayer: {
-		tamadir = m_player->Getforward();								//玉のディレクションにプレイヤーのフォワードを代入
+		m_movedirection = m_player->GetForward();								//玉のディレクションにプレイヤーのフォワードを代入
 
-		switch (LeftRite)		//左右どちらかにミサイルをつける
+		switch (m_left_or_rite)		//左右どちらかにミサイルをつける
 		{
 		case Left: {
-			bulletpos = m_player->Getpos() + (m_player->Getrite()*-80.0f) + (m_player->Getup() *-20.0f);
+			m_position = m_player->GetPosition() + (m_player->GetRite()*-80.0f) + (m_player->GetUp() *-20.0f);
 			m_rotation = m_player->GetRotation();
 			break;
 		}
 		case Rite: {
-			bulletpos = m_player->Getpos() + (m_player->Getrite()*80.0f) + (m_player->Getup() *-20.0f);
+			m_position = m_player->GetPosition() + (m_player->GetRite()*80.0f) + (m_player->GetUp() *-20.0f);
 			m_rotation = m_player->GetRotation();
 			break;
 		}
@@ -46,15 +46,15 @@ bool bullet::Start()
 		break;
 	}
 	case isEnemy: {
-		switch (LeftRite)		//左右どちらかにミサイルをつける
+		switch (m_left_or_rite)		//左右どちらかにミサイルをつける
 		{
 		case Left: {
-			bulletpos = m_enemy->Getpos() + (m_enemy->Getrite()*-80.0f) + (m_enemy->Getup() *-20.0f);
+			m_position = m_enemy->GetPosition() + (m_enemy->GetRite()*-80.0f) + (m_enemy->GetUp() *-20.0f);
 			m_rotation = m_enemy->GetRotation();
 			break;
 		}
 		case Rite: {
-			bulletpos = m_enemy->Getpos() + (m_enemy->Getrite()*80.0f) + (m_enemy->Getup() *-20.0f);
+			m_position = m_enemy->GetPosition() + (m_enemy->GetRite()*80.0f) + (m_enemy->GetUp() *-20.0f);
 			m_rotation = m_enemy->GetRotation();
 			break;
 		}
@@ -87,99 +87,99 @@ void bullet::UpdateVector()
 void bullet::BulletHoming(CVector3& target)
 {
 	CVector3 BtoT;					//弾からターゲットに向かうベクトル
-	BtoT = target - bulletpos;
+	BtoT = target - m_position;
 	BtoT.Normalize();
-	tamadir = m_forward * 10.0f + BtoT;		//弾の進行方向を設定	30は調整
-	tamadir.Normalize();					//正規化
+	m_movedirection = m_forward * 10.0f + BtoT;		//弾の進行方向を設定	30は調整
+	m_movedirection.Normalize();					//正規化
 
 
-	if (abs(bulletmodellocal.Dot(tamadir)) <= 0.9999999999999f)//同軸の外積をとらないように除外
+	if (abs(bulletmodellocal.Dot(m_movedirection)) <= 0.9999999999999f)//同軸の外積をとらないように除外
 	{
 		CVector3 forwardModelLocal = bulletmodellocal;
-		float dotresult = forwardModelLocal.Dot(tamadir);	//無回転状態のモデルの前方向と、弾の進行方向との内積
+		float dotresult = forwardModelLocal.Dot(m_movedirection);	//無回転状態のモデルの前方向と、弾の進行方向との内積
 		CVector3 Axis;
-		Axis.Cross(tamadir, forwardModelLocal);				//外積で回転の軸を作る
+		Axis.Cross(m_movedirection, forwardModelLocal);				//外積で回転の軸を作る
 		Axis.Normalize();									//正規化
 		m_rotation.SetRotation(Axis, -Acos(dotresult));		//作成した軸周りに回転
 
 		UpdateVector();										//軸の更新
 	}
-	bulletpos += m_forward * speed * deltaTime;
+	m_position += m_forward * m_speed * deltaTime;
 }
 
-void bullet::bulletFire()
+void bullet::BulletFire()
 {
-	switch (witchbullet)
+	switch (m_witchbullet)
 	{
 	case isPlayer: {
-		if (LockOnEnemy != nullptr)
+		if (m_lockonenemy != nullptr)
 		{
-			CVector3 target = LockOnEnemy->Getpos();
-			CVector3 toTarget = target - bulletpos;
+			CVector3 target = m_lockonenemy->GetPosition();
+			CVector3 toTarget = target - m_position;
 			toTarget.Normalize();
-			isHoming = m_forward.Dot(toTarget) > 0.0f &&CVector3(m_player->Getpos() - bulletpos).Length() > 1000.0f;
+			m_ishoming = m_forward.Dot(toTarget) > 0.0f &&CVector3(m_player->GetPosition() - m_position).Length() > 1000.0f;
 
-			if (isHoming)
+			if (m_ishoming)
 			{
 				BulletHoming(target);
 			}
 			else
 			{
-				bulletpos += m_forward * speed * deltaTime;
+				m_position += m_forward * m_speed * deltaTime;
 			}
 
-			toTarget = LockOnEnemy->Getpos() - bulletpos;
+			toTarget = m_lockonenemy->GetPosition() - m_position;
 
 
 			if (toTarget.Length() < 300.0f)
 			{
-				game_obj->DeleteGO(LockOnEnemy);
-				if (CoN != nullptr)
+				game_obj->DeleteGO(m_lockonenemy);
+				if (m_class_of_newgo != nullptr)
 				{
-					if (CoN->GetHitSE()->IsPlaying())
+					if (m_class_of_newgo->GetHitSE()->IsPlaying())
 					{
-						CoN->GetHitSE()->Stop();
+						m_class_of_newgo->GetHitSE()->Stop();
 					}
-					CoN->GetHitSE()->Play(false);
+					m_class_of_newgo->GetHitSE()->Play(false);
 				}
 				game_obj->DeleteGO(this);
 			}
 		}
 		else
 		{
-			bulletpos += m_forward * speed * deltaTime;
+			m_position += m_forward * m_speed * deltaTime;
 		}
 
 		break;
 	}
 	case isEnemy: {
-		CVector3 target = m_player->Getpos();
-		CVector3 toTarget = target - bulletpos;
+		CVector3 target = m_player->GetPosition();
+		CVector3 toTarget = target - m_position;
 		toTarget.Normalize();
-		isHoming = m_forward.Dot(toTarget) > 0.0f &&CVector3(m_enemy->Getpos() - bulletpos).Length() > 1000.0f;
-		if (isHoming)
+		m_ishoming = m_forward.Dot(toTarget) > 0.0f &&CVector3(m_enemy->GetPosition() - m_position).Length() > 1000.0f;
+		if (m_ishoming)
 		{
 			BulletHoming(target);
 		}
 		else
 		{
-			bulletpos += m_forward * speed * deltaTime;
+			m_position += m_forward * m_speed * deltaTime;
 		}
 
 		if (m_player != nullptr && !this->GetDeath_f())
 		{
-			CVector3 toPlayer = m_player->Getpos() - bulletpos;
+			CVector3 toPlayer = m_player->GetPosition() - m_position;
 			bool HitPlayer = toPlayer.Length() < 200.0f;
 			if (HitPlayer)
 			{
 				m_player->SetHP(1);
-				if (CoN != nullptr)
+				if (m_class_of_newgo != nullptr)
 				{
-					if (CoN->GetHitSE()->IsPlaying())
+					if (m_class_of_newgo->GetHitSE()->IsPlaying())
 					{
-						CoN->GetHitSE()->Stop();
+						m_class_of_newgo->GetHitSE()->Stop();
 					}
-					CoN->GetHitSE()->Play(false);
+					m_class_of_newgo->GetHitSE()->Play(false);
 				}
 				game_obj->DeleteGO(this);
 			}
@@ -196,25 +196,25 @@ void bullet::Update()
 {
 	if (m_player != nullptr)
 	{
-		m_playerPos = m_player->Getpos();
+		m_playerposition = m_player->GetPosition();
 	}
 
 	UpdateVector();
-	if (fire)
+	if (m_fireflag)
 	{
 		if (m_player != nullptr)
 		{
-			bulletFire();
+			BulletFire();
 		}
 		else
 		{
-			bulletpos += m_forward * speed * deltaTime;
+			m_position += m_forward * m_speed * deltaTime;
 		}
 
 
-		if (speed < bulletspeed)
+		if (m_speed < bulletspeed)
 		{
-			speed += 100.0f;
+			m_speed += 100.0f;
 		}
 		m_time += 1.0f*deltaTime;
 
@@ -226,7 +226,7 @@ void bullet::Update()
 	}
 	else
 	{
-		switch (witchbullet)
+		switch (m_witchbullet)
 		{
 		case isPlayer: {
 			if (m_player == nullptr)
@@ -235,15 +235,15 @@ void bullet::Update()
 			}
 			else
 			{
-				switch (LeftRite)		//左右どちらかにミサイルをつける
+				switch (m_left_or_rite)		//左右どちらかにミサイルをつける
 				{
 				case Left: {
-					bulletpos = m_player->Getpos() + (m_player->Getrite()*-80.0f) + (m_player->Getup() *-20.0f);
+					m_position = m_player->GetPosition() + (m_player->GetRite()*-80.0f) + (m_player->GetUp() *-20.0f);
 					m_rotation = m_player->GetRotation();
 					break;
 				}
 				case Rite: {
-					bulletpos = m_player->Getpos() + (m_player->Getrite()*80.0f) + (m_player->Getup() *-20.0f);
+					m_position = m_player->GetPosition() + (m_player->GetRite()*80.0f) + (m_player->GetUp() *-20.0f);
 					m_rotation = m_player->GetRotation();
 					break;
 				}
@@ -256,15 +256,15 @@ void bullet::Update()
 		case isEnemy: {
 			if (m_enemy != nullptr)
 			{
-				switch (LeftRite)		//左右どちらかにミサイルをつける
+				switch (m_left_or_rite)		//左右どちらかにミサイルをつける
 				{
 				case Left: {
-					bulletpos = m_enemy->Getpos() + (m_enemy->Getrite()*-80.0f) + (m_enemy->Getup() *-20.0f);
+					m_position = m_enemy->GetPosition() + (m_enemy->GetRite()*-80.0f) + (m_enemy->GetUp() *-20.0f);
 					m_rotation = m_enemy->GetRotation();
 					break;
 				}
 				case Rite: {
-					bulletpos = m_enemy->Getpos() + (m_enemy->Getrite()*80.0f) + (m_enemy->Getup() *-20.0f);
+					m_position = m_enemy->GetPosition() + (m_enemy->GetRite()*80.0f) + (m_enemy->GetUp() *-20.0f);
 					m_rotation = m_enemy->GetRotation();
 					break;
 				}
@@ -280,17 +280,17 @@ void bullet::Update()
 			break;
 		}
 	}
-	if (CoN == nullptr)
+	if (m_class_of_newgo == nullptr)
 	{
 		game_obj->DeleteGO(this);
 	}
 
-	m_tama.UpdateWorldMatrix(bulletpos, m_rotation, CVector3::One()*2.0f);		//ワールドマトリクスの更新
+	m_skinmodel.UpdateWorldMatrix(m_position, m_rotation, CVector3::One()*2.0f);		//ワールドマトリクスの更新
 }
 
 void bullet::Draw()
 {
-	m_tama.Draw(																				//弾の描画
+	m_skinmodel.Draw(																				//弾の描画
 		LightOn,
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
@@ -300,9 +300,9 @@ void bullet::Draw()
 
 void bullet::EffectDraw()
 {
-	if (fire)
+	if (m_fireflag)
 	{
-		m_spriteeffect.Update(bulletpos + m_forward * -170.0f);
+		m_spriteeffect.Update(m_position + m_forward * -170.0f);
 		m_spriteeffect.Draw();
 	}
 

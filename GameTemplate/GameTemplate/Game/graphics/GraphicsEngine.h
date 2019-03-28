@@ -44,29 +44,50 @@ public:
 	{
 		return m_pd3dDeviceContext;
 	}
-
+	/// <summary>
+	/// シャドウマップのインスタンスをセット
+	/// </summary>
+	/// <param name="shadow">ShadowMap*</param>
 	void SetShadowMap(ShadowMap* shadow)
 	{
 		m_shadowMap = shadow;
 	}
-
+	/// <summary>
+	/// シャドウマップのゲッター
+	/// </summary>
+	/// <returns>ShadowMap*</returns>
 	ShadowMap* GetShadowMap()
 	{
 		return m_shadowMap;
 	}
-
+	/// <summary>
+	/// ブルームのゲッター
+	/// </summary>
+	/// <returns>Bloom*</returns>
 	Bloom* GetBloom()
 	{
 		return &m_bloom;
 	}
+	/// <summary>
+	/// SpriteBatchのゲッター
+	/// </summary>
+	/// <returns>DirectX::SpriteBatch*</returns>
 	DirectX::SpriteBatch* GetSpriteBatch()
 	{
 		return m_spritefontBase;
 	}
+	/// <summary>
+	/// SpriteFontのゲッター
+	/// </summary>
+	/// <returns>DirectX::SpriteFont*</returns>
 	DirectX::SpriteFont* GetSpriteFont()
 	{
 		return m_spritefont;
 	}
+	/// <summary>
+	/// ラスタライザーステートのゲッター
+	/// </summary>
+	/// <returns></returns>
 	ID3D11RasterizerState* GetRasterizerState()
 	{
 		return m_rasterizerState;
@@ -89,18 +110,17 @@ private:
 	ID3D11RasterizerState*	m_rasterizerState = NULL;	//ラスタライザステート。
 	ID3D11Texture2D*		m_depthStencil = NULL;		//デプスステンシル。
 	ID3D11DepthStencilView* m_depthStencilView = NULL;	//デプスステンシルビュー。
-	ID3D11DepthStencilView* m_BackUpDSV = NULL;
-	D3D11_VIEWPORT			m_mainViewport;
-	D3D11_VIEWPORT			BackUpViewport;
-	RenderTarget m_mainRenderTarget;
-	sprite m_copyMainRtToFrameBufferSprite;
-	bool RTspriteInitF = false;
-	bool backupF = false;
+	ID3D11DepthStencilView* m_BackUpDSV = NULL;			//バックアップデプスステンシルビュー
+	D3D11_VIEWPORT			m_mainViewport;				//メインビューポート
+	D3D11_VIEWPORT			BackUpViewport;				//バックアップビューポート
+	RenderTarget			m_mainRenderTarget;			//メインレンダーターゲット
+	sprite					m_copyMainRtToFrameBufferSprite;//メインレンダーターゲットを描くスプライト
+	bool					RTspriteInitF = false;
+	bool					backupF = false;
 	ShadowMap*              m_shadowMap = nullptr;		//シャドウマップ
 	Bloom m_bloom;
-	DirectX::SpriteBatch* m_spritefontBase = nullptr;
-	DirectX::SpriteFont* m_spritefont = nullptr;
-
+	DirectX::SpriteBatch*	m_spritefontBase = nullptr;	//スプライトバッチ
+	DirectX::SpriteFont*	m_spritefont = nullptr;		//スプライトフォント
 };
 
-extern GraphicsEngine* g_graphicsEngine;			//グラフィックスエンジン
+extern GraphicsEngine*		g_graphicsEngine;			//グラフィックスエンジン

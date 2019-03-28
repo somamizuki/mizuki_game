@@ -22,32 +22,32 @@ bool Enemy::Start()
 	{
 		m_player = nullptr;
 	});*/
-	m_model.Init(L"Assets/modelData/Enemy.cmo");			//モデルのイニット
-	m_model.SetShadowReciever(true);						//スキンモデルをシャドウレシーバーに登録
-	m_model.SetNormalMap(L"Resource/sprite/StarSparrow_Normal.dds");//スキンモデルに法線マップを適用
-	mathVector();											//前右上を計算
+	m_skinmodel.Init(L"Assets/modelData/Enemy.cmo");			//モデルのイニット
+	m_skinmodel.SetShadowReciever(true);						//スキンモデルをシャドウレシーバーに登録
+	m_skinmodel.SetNormalMap(L"Resource/sprite/StarSparrow_Normal.dds");//スキンモデルに法線マップを適用
+	Vector();											//前右上を計算
 	/*スプライトのシェーダーリソースの作成*/
-	shaderResource.CreateFromDDSTextureFromFile(L"Resource/sprite/EnemyPos.dds");
-	EnemyMarkerSRV.CreateFromDDSTextureFromFile(L"Resource/sprite/Enemy.dds");
+	m_outscreenenemySRV.CreateFromDDSTextureFromFile(L"Resource/sprite/EnemyPos.dds");
+	m_enemymarkerSRV.CreateFromDDSTextureFromFile(L"Resource/sprite/Enemy.dds");
 	/*スプライトの初期化*/
-	sprite_ins.Init(shaderResource.GetBody(), 200.0f*0.35f, 173.0f*0.35f);
-	EnemyMarkerSprite.Init(EnemyMarkerSRV.GetBody(), 512.0f, 512.0f);
+	m_outenemysprite.Init(m_outscreenenemySRV.GetBody(), 200.0f*0.35f, 173.0f*0.35f);
+	m_enemymarkersprite.Init(m_enemymarkerSRV.GetBody(), 512.0f, 512.0f);
 
-	CoN = game_obj->FindGO<Class_of_NewGO>("newObject");
-	CoN->AddMyPointer<Class_of_NewGO, Enemy>(&CoN, this);
-	mathVector();																			//
-	LeftBullet = new bullet(0, "bullet");													//
-	LeftBullet->WitchBullet(isEnemy);														//
-	LeftBullet->SetEnemy(this);
-	LeftBullet->SetLeft_or_Rite(Left);
+	m_class_of_newgo = game_obj->FindGO<Class_of_NewGO>("newObject");
+	m_class_of_newgo->AddMyPointer<Class_of_NewGO, Enemy>(&m_class_of_newgo, this);
+	Vector();																			//
+	m_leftbullet = new bullet(0, "bullet");													//
+	m_leftbullet->WitchBullet(isEnemy);														//
+	m_leftbullet->SetEnemy(this);
+	m_leftbullet->SetLeft_or_Rite(Left);
 
-	RiteBullet = new bullet(0, "bullet");
-	RiteBullet->WitchBullet(isEnemy);
-	RiteBullet->SetEnemy(this);
-	RiteBullet->SetLeft_or_Rite(Rite);
+	m_ritebullet = new bullet(0, "bullet");
+	m_ritebullet->WitchBullet(isEnemy);
+	m_ritebullet->SetEnemy(this);
+	m_ritebullet->SetLeft_or_Rite(Rite);
 	CVector3 pos;
 	/*levelから名前でフックしてEnginを初期化*/
-	Enemy_EnginPos.Init(L"Assets/level/Enemy_EnginPos.tkl", [&](LevelObjectData Lobjdata)
+	m_enemyenginlevel.Init(L"Assets/level/Enemy_EnginPos.tkl", [&](LevelObjectData Lobjdata)
 	{
 		if (std::wcscmp(Lobjdata.name, L"Enemy") == 0)
 		{
@@ -56,25 +56,24 @@ bool Enemy::Start()
 		else if (std::wcscmp(Lobjdata.name, L"Box") == 0)
 		{
 			Engin* engin = new Engin;
-			engin->toEngin = Lobjdata.position - pos;
-			/*のちにm_forward,m_rite*/
-			engin->toEngin = { CVector3::AxisX().Dot(engin->toEngin),CVector3::AxisY().Dot(engin->toEngin),CVector3::AxisZ().Dot(engin->toEngin) };
-			spriteeffect.push_back(engin);
+			engin->m_toengin = Lobjdata.position - pos;
+			engin->m_toengin = { CVector3::AxisX().Dot(engin->m_toengin),CVector3::AxisY().Dot(engin->m_toengin),CVector3::AxisZ().Dot(engin->m_toengin) };
+			m_spriteeffect.push_back(engin);
 		}
 		return true;
 	});
 
-	m_srv.CreateFromDDSTextureFromFile(L"Resource/sprite/fog.dds");
+	m_effectsrv.CreateFromDDSTextureFromFile(L"Resource/sprite/fog.dds");
 
-	for (const auto& effct : spriteeffect)
+	for (const auto& effct : m_spriteeffect)
 	{
-		effct->spriteeffect.Init(m_srv.GetBody(), 0.06f, 0);
+		effct->m_spriteeffect.Init(m_effectsrv.GetBody(), 0.06f, 0);
 	}
 
 	return true;
 }
 
-void Enemy::mathVector()
+void Enemy::Vector()
 {
 	CMatrix m_Matrix = CMatrix::Identity();
 	/*クオータニオンから回転行列を作成*/
@@ -90,60 +89,60 @@ void Enemy::mathVector()
 
 }
 
-void Enemy::bulletManager()
+void Enemy::BulletManager()
 {
 
-	CVector3 toPlayerVec = m_player->Getpos() - m_position; //プレイヤーに向かうベクトルを計算
+	CVector3 toPlayerVec = m_player->GetPosition() - m_position; //プレイヤーに向かうベクトルを計算
 	toPlayerVec.Normalize();								//ノーマライズ
 	bool LockOnflag = m_forward.Dot(toPlayerVec) > cosf(CMath::DegToRad(10.0f));		//角度でロックオンするかどうか決める
 	/*右ミサイルがセットっされていなければタイマーを進める*/
-	if (RiteBullet != nullptr)
+	if (m_ritebullet != nullptr)
 	{
-		ritebulletTime += 1.0f*(1.0f / 60.0f);
+		m_ritebullettime += 1.0f*(1.0f / 60.0f);
 	}
-	if (ritebulletTime >= 3.0f&&RiteBullet == nullptr)
+	if (m_ritebullettime >= BULLETSPAN && m_ritebullet == nullptr)
 	{
-		RiteBullet = new bullet(0, "bullet");
-		RiteBullet->WitchBullet(isEnemy);
-		RiteBullet->SetEnemy(this);
-		RiteBullet->SetLeft_or_Rite(Rite);
-		ritebulletTime = 0.0f;
+		m_ritebullet = new bullet(0, "bullet");
+		m_ritebullet->WitchBullet(isEnemy);
+		m_ritebullet->SetEnemy(this);
+		m_ritebullet->SetLeft_or_Rite(Rite);
+		m_ritebullettime = 0.0f;
 	}
-	if (LeftBullet == nullptr)
+	if (m_leftbullet == nullptr)
 	{
-		leftbulletTime += 1.0f*(1.0f / 60.0f);
+		m_leftbullettime += 1.0f*(1.0f / 60.0f);
 	}
-	if (leftbulletTime >= 3.0f&&LeftBullet == nullptr)
+	if (m_leftbullettime >= BULLETSPAN && m_leftbullet == nullptr)
 	{
-		LeftBullet = new bullet(0, "bullet");
-		LeftBullet->WitchBullet(isEnemy);
-		LeftBullet->SetEnemy(this);
-		LeftBullet->SetLeft_or_Rite(Left);
-		leftbulletTime = 0.0f;
+		m_leftbullet = new bullet(0, "bullet");
+		m_leftbullet->WitchBullet(isEnemy);
+		m_leftbullet->SetEnemy(this);
+		m_leftbullet->SetLeft_or_Rite(Left);
+		m_leftbullettime = 0.0f;
 	}
 	if (LockOnflag)
 	{
-		if (RiteBullet != nullptr)
+		if (m_ritebullet != nullptr)
 		{
-			RiteBullet->SetBulletParam();
-			RiteBullet = nullptr;
+			m_ritebullet->SetBulletParam();
+			m_ritebullet = nullptr;
 		}
-		else if (LeftBullet != nullptr)
+		else if (m_leftbullet != nullptr)
 		{
-			LeftBullet->SetBulletParam();
-			LeftBullet = nullptr;
+			m_leftbullet->SetBulletParam();
+			m_leftbullet = nullptr;
 		}
 	}
 
 }
 
-CVector3 Enemy::side_vec(CVector3 forward_or_rite)
+CVector3 Enemy::SideVec(CVector3 forward_or_rite)
 {
 	CVector3 e_to_p = CVector3::Zero();				//エネミーからプレイヤーに向かうベクトル
 	CVector3 sideVec = CVector3::Zero();			//プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトル
 	float len = 0.0f;								//プレイヤーの位置を引数で受け取った軸に射影した際の長さ
 	/*プレイヤーの位置といっても、正確には弾が到達した際にプレイヤーがいるであろう位置*/
-	e_to_p = m_player->Getpos() - m_position;
+	e_to_p = m_player->GetPosition() - m_position;
 	len = forward_or_rite.Dot(e_to_p);
 	sideVec = e_to_p - (forward_or_rite*len);
 	sideVec.Normalize();
@@ -151,9 +150,9 @@ CVector3 Enemy::side_vec(CVector3 forward_or_rite)
 	return sideVec;
 }
 
-float Enemy::p_angle(CVector3 forward_or_rite)
+float Enemy::ToPlayerAngle(CVector3 forward_or_rite)
 {
-	CVector3 e_to_p = m_player->Getpos() - m_position;				//エネミーからプレイヤーに向かうベクトル
+	CVector3 e_to_p = m_player->GetPosition() - m_position;				//エネミーからプレイヤーに向かうベクトル
 	e_to_p.Normalize();
 	float acos_f = forward_or_rite.Dot(e_to_p);				//引数で受け取った軸とe_to_pのcosθを求める
 	float angle = CMath::RadToDeg(acosf(Acos(acos_f)));		//アークcosして、θを求めてデグリーになおす(分りやすいから)
@@ -161,9 +160,9 @@ float Enemy::p_angle(CVector3 forward_or_rite)
 	return angle;
 }
 
-float Enemy::rot_dir(CVector3 forward_or_rite)
+float Enemy::RotDirection(CVector3 forward_or_rite)
 {
-	CVector3 SV = side_vec(forward_or_rite);			//プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトル
+	CVector3 SV = SideVec(forward_or_rite);			//プレイヤーの方向を任意の軸に垂直な平面上になおしたベクトル
 
 
 	float dir = 1.0f;		//回転方向
@@ -196,10 +195,10 @@ float Enemy::rot_dir(CVector3 forward_or_rite)
 	return dir;
 }
 
-void Enemy::enemyMove()
+void Enemy::EnemyMove()
 {
 	//前横上の方向を更新
-	mathVector();
+	Vector();
 
 	CVector3 e_to_p = CVector3::Zero();					//エネミーからプレイヤーに向かうベクトル
 	CQuaternion rot = CQuaternion::Identity();			//回転
@@ -214,82 +213,82 @@ void Enemy::enemyMove()
 	float acos_f = 0.0f;
 	float angle = 0.0f;
 	CVector3 p_to_e = CVector3::Zero();
-	if (p_angle(m_forward) < 45.0f)
+	if (ToPlayerAngle(m_forward) < 45.0f)
 	{
 		rrotspeed_max *= 2.0f;
 	}
 	/*回転*/
-	forwardrotangle = CMath::RadToDeg(acosf(Acos(m_up.Dot(side_vec(m_forward)))));
+	forwardrotangle = CMath::RadToDeg(acosf(Acos(m_up.Dot(SideVec(m_forward)))));
 	frotspeed = min(frotspeed_max, forwardrotangle);
 
-	rot.SetRotationDeg(CVector3::AxisZ(), frotspeed*rot_dir(m_forward));
+	rot.SetRotationDeg(CVector3::AxisZ(), frotspeed*RotDirection(m_forward));
 	m_rotation.Multiply(rot);
-	mathVector();
+	Vector();
 
-	forwardrotangle = CMath::RadToDeg(acosf(Acos(m_up.Dot(side_vec(m_forward)))));
+	forwardrotangle = CMath::RadToDeg(acosf(Acos(m_up.Dot(SideVec(m_forward)))));
 	if (forwardrotangle < 0.5f)
 	{
-		ritedrotangle = CMath::RadToDeg(acosf(Acos(m_forward.Dot(side_vec(m_rite)))));
+		ritedrotangle = CMath::RadToDeg(acosf(Acos(m_forward.Dot(SideVec(m_rite)))));
 		rrotspeed = min(rrotspeed_max, ritedrotangle);
 
 		rot.SetRotationDeg(CVector3::AxisX(), -rrotspeed);
 		m_rotation.Multiply(rot);
-		mathVector();
+		Vector();
 	}
 
-	bool NearPlayer = CVector3(m_position - m_player->Getpos()).Length() < 2000.0f;
+	bool NearPlayer = CVector3(m_position - m_player->GetPosition()).Length() < 2000.0f;
 	if (NearPlayer)
 	{
-		if (p_angle(m_up) < 90.0f)
+		if (ToPlayerAngle(m_up) < 90.0f)
 		{
 			rot.SetRotationDeg(CVector3::AxisX(), 2.0f);
 			m_rotation.Multiply(rot);
-			mathVector();
+			Vector();
 		}
-		if (p_angle(m_up) >= 90.0f)
+		if (ToPlayerAngle(m_up) >= 90.0f)
 		{
 			rot.SetRotationDeg(CVector3::AxisX(), -2.0f);
 			m_rotation.Multiply(rot);
-			mathVector();
+			Vector();
 		}
 
 	}
 
 
 	/*プレイヤーの前方向とプレイヤーから自分に向かうベクトルとの角度を求める*/
-	p_to_e = m_position - m_player->Getpos();
+	p_to_e = m_position - m_player->GetPosition();
 	p_to_e.Normalize();
-	acos_f = m_player->Getforward().Dot(p_to_e);
+	acos_f = m_player->GetForward().Dot(p_to_e);
 	angle = CMath::RadToDeg(acosf(Acos(acos_f)));
 
 
-	if (p_angle(m_forward) > 160.0f || angle < 20.0f)
+	if (ToPlayerAngle(m_forward) > 160.0f || angle < 20.0f)
 	{
-		if (speed < BoostSpeed)
+		if (m_nowspeed < BoostSpeed)
 		{
-			speed += 200.0f;
+			m_nowspeed += 200.0f;
 		}
 	}
 	else
 	{
-		if (speed > DefaultSpeed)
+		if (m_nowspeed > DefaultSpeed)
 		{
-			speed -= 100.0f;
+			m_nowspeed -= 100.0f;
 		}
 		else
 		{
-			speed += 100.0f;
+			m_nowspeed += 100.0f;
 		}
 	}
-	movespeed = m_forward * speed;
-	m_position += movespeed * deltaTime;
-	for (const auto& enemy : CoN->GetEnemy())
+	m_movespeed = m_forward * m_nowspeed;
+	m_position += m_movespeed * deltaTime;
+	for (const auto& enemy : m_class_of_newgo->GetEnemy())
 	{
 		if (this == enemy || enemy == NULL)
 		{
 			continue;
 		}
-		CVector3 E_to_E = enemy->Getpos() - m_position;
+		CVector3 E_to_E = enemy->GetPosition() - m_position;
 		float length = E_to_E.Length();
 
 		if (length < 500.0f)
@@ -313,16 +312,16 @@ void Enemy::SpriteManager()
 		WVP.Mul(WVP, g_camera3D.GetViewMatrix());
 		WVP.Mul(WVP, g_camera3D.GetProjectionMatrix());
 		CVector3 SCpos = CVector3(WVP.m[3][0], WVP.m[3][1], WVP.m[3][2]);
-		EnemyMarkerDraw = false;
+		m_enemymarkerdraw = false;
 		if (SCpos.z >= 0.0f)
 		{
-			EnemyMarkerDraw = true;
+			m_enemymarkerdraw = true;
 		}
 		SCpos /= WVP.m[3][3];
 		SCpos.x *= FRAME_BUFFER_W / 2.0f;
 		SCpos.y *= FRAME_BUFFER_H / 2.0f;
 		SCpos.z = 0.0f;
-		EnemyMarkerSprite.Update(
+		m_enemymarkersprite.Update(
 			SCpos,
 			CQuaternion::Identity(),
 			CVector3::One()*0.09f
@@ -332,19 +331,19 @@ void Enemy::SpriteManager()
 
 	/*エネミーの方向用スプライトのポジションを計算*/
 	{
-		posinScreen = true;
+		m_posinscreen = true;
 		CVector3 camtoMypos = m_position - g_camera3D.GetPosition();
 		CVector3 spritepos = { g_camera3D.GetRite().Dot(camtoMypos),g_camera3D.GetUp().Dot(camtoMypos),0.0f };
 
 		camtoMypos.Normalize();
 		if (g_camera3D.GetForward().Dot(camtoMypos) > cosf(g_camera3D.GetViewAngle()*2.0f))
 		{
-			posinScreen = false;
+			m_posinscreen = false;
 		}
 		spritepos.Normalize();
 
 		spritepos *= 500.0f;
-		sprite_ins.Update(
+		m_outenemysprite.Update(
 			spritepos,
 			CQuaternion::Identity(),
 			CVector3::One()
@@ -357,23 +356,23 @@ void Enemy::Update()
 	if (m_player != nullptr)
 	{
 
-		enemyMove();
-		bulletManager();
+		EnemyMove();
+		BulletManager();
 		SpriteManager();
 	}
 	else
 	{
-		posinScreen = false;
-		EnemyMarkerDraw = false;
-		movespeed = m_forward * speed;
-		m_position += movespeed * deltaTime;
-		for (const auto& enemy : CoN->GetEnemy())
+		m_posinscreen = false;
+		m_enemymarkerdraw = false;
+		m_movespeed = m_forward * m_nowspeed;
+		m_position += m_movespeed * deltaTime;
+		for (const auto& enemy : m_class_of_newgo->GetEnemy())
 		{
 			if (this == enemy || enemy == nullptr)
 			{
 				continue;
 			}
-			CVector3 E_to_E = enemy->Getpos() - m_position;
+			CVector3 E_to_E = enemy->GetPosition() - m_position;
 			float length = E_to_E.Length();
 
 			if (length < 500.0f)
@@ -388,12 +387,12 @@ void Enemy::Update()
 
 
 
-	m_model.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
+	m_skinmodel.UpdateWorldMatrix(m_position, m_rotation, CVector3::One());
 }
 
 void Enemy::Draw()
 {
-	m_model.Draw(
+	m_skinmodel.Draw(
 		LightOn,
 		g_camera3D.GetViewMatrix(),
 		g_camera3D.GetProjectionMatrix()
@@ -405,11 +404,11 @@ void Enemy::Draw()
 
 void Enemy::EffectDraw()
 {
-	for (const auto& effct : spriteeffect)
+	for (const auto& effct : m_spriteeffect)
 	{
-		CVector3 pos = m_rite * effct->toEngin.x + m_up * effct->toEngin.y + m_forward * effct->toEngin.z;
-		effct->spriteeffect.Update(m_position + pos);
-		effct->spriteeffect.Draw();
+		CVector3 pos = m_rite * effct->m_toengin.x + m_up * effct->m_toengin.y + m_forward * effct->m_toengin.z;
+		effct->m_spriteeffect.Update(m_position + pos);
+		effct->m_spriteeffect.Draw();
 	}
 
 
@@ -423,15 +422,15 @@ void Enemy::EffectDraw()
 
 void Enemy::PostDraw()
 {
-	if (posinScreen)
+	if (m_posinscreen)
 	{
-		sprite_ins.Draw(
+		m_outenemysprite.Draw(
 			*g_graphicsEngine->GetD3DDeviceContext()
 		);
 	}
-	if (EnemyMarkerDraw)
+	if (m_enemymarkerdraw)
 	{
-		EnemyMarkerSprite.Draw(
+		m_enemymarkersprite.Draw(
 			*g_graphicsEngine->GetD3DDeviceContext()
 		);
 	}
@@ -441,20 +440,20 @@ void Enemy::PostDraw()
 
 void Enemy::OnDestroy()
 {
-	CoN->GetResult()->SetKnockDownEnemySUM();
-	CoN->GetEffect()->Play(m_position, CVector3::One()*100.0f);
+	m_class_of_newgo->GetResult()->SetKnockDownEnemySUM();
+	m_class_of_newgo->GetEffect()->Play(m_position, CVector3::One()*100.0f);
 	/*エネミーが削除されたとき一緒に消す*/
-	for (const auto& effct : spriteeffect)
+	for (const auto& effct : m_spriteeffect)
 	{
 		delete effct;
 	}
-	spriteeffect.clear();
-	if (RiteBullet != nullptr)
+	m_spriteeffect.clear();
+	if (m_ritebullet != nullptr)
 	{
-		game_obj->DeleteGO(RiteBullet);
+		game_obj->DeleteGO(m_ritebullet);
 	}
-	if (LeftBullet != nullptr)
+	if (m_leftbullet != nullptr)
 	{
-		game_obj->DeleteGO(LeftBullet);
+		game_obj->DeleteGO(m_leftbullet);
 	}
 }

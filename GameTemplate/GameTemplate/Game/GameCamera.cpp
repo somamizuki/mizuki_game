@@ -1,36 +1,36 @@
 #include "stdafx.h"
 #include "Player.h"
 #include"Class_of_NewGO.h"
-#include "m_camera.h"
+#include "GameCamera.h"
 #include"math/kMath.h"
 
-m_camera::m_camera(int No, char* obj_name) :GameObject(No, obj_name)
+GameCamera::GameCamera(int No, char* obj_name) :GameObject(No, obj_name)
 {
 }
 
 
-m_camera::~m_camera()
+GameCamera::~GameCamera()
 {
 }
 
-bool m_camera::Start()
+bool GameCamera::Start()
 {
 	player = game_obj->FindGO<Player>("player");
-	player->AddMyPointer<Player, m_camera>(&player, this);
+	player->AddMyPointer<Player, GameCamera>(&player, this);
 	CoN = game_obj->FindGO<Class_of_NewGO>("newObject");
-	CoN->AddMyPointer<Class_of_NewGO, m_camera>(&CoN, this);
+	CoN->AddMyPointer<Class_of_NewGO, GameCamera>(&CoN, this);
 
-	camera_rite = player->Getrite();
+	camera_rite = player->GetRite();
 	g_camera3D.SetFar(2000000.0f);
 	g_camera3D.SetNear(1.0f);
-	player_pos = player->Getpos();
-	camera_Target = player_pos + player->Getup()*100.0f;
-	camera_Pos = camera_Target - player->Getforward()*500.0f;
+	player_pos = player->GetPosition();
+	camera_Target = player_pos + player->GetUp()*100.0f;
+	camera_Pos = camera_Target - player->GetForward()*500.0f;
 
 	target_to_pos = camera_Pos - camera_Target;
 	camera_forward = target_to_pos * -1.0f;
 	camera_forward.Normalize();
-	camera_Up = player->Getup();
+	camera_Up = player->GetUp();
 
 	g_camera3D.SetPosition(camera_Pos);
 	g_camera3D.SetTarget(camera_Target);
@@ -39,7 +39,7 @@ bool m_camera::Start()
 	return true;
 }
 
-void m_camera::CameraMove()
+void GameCamera::CameraMove()
 {
 	pad_Y = g_pad[0].GetLStickYF();
 	pad_X = g_pad[0].GetLStickXF();
@@ -78,9 +78,9 @@ void m_camera::CameraMove()
 
 
 
-	camera_rite = player->Getrite();
-	player_pos = player->Getpos();
-	camera_Target = player_pos + player->Getup()*100.0f;
+	camera_rite = player->GetRite();
+	player_pos = player->GetPosition();
+	camera_Target = player_pos + player->GetUp()*100.0f;
 	if (g_pad[0].IsPress(enButtonRB2))
 	{
 		CamLen = min(600.0f, CamLen + 50.0f*(1.0f / 60.0f));
@@ -90,13 +90,13 @@ void m_camera::CameraMove()
 		CamLen = max(500.0f, CamLen - 50.0f*(1.0f / 60.0f));
 	}
 
-	CVector3 vec = player->Getforward()*CamLen;
+	CVector3 vec = player->GetForward()*CamLen;
 	CQuaternion rotY = CQuaternion::Identity();
-	rotY.SetRotationDeg(player->Getrite(), -m_angleY);
+	rotY.SetRotationDeg(player->GetRite(), -m_angleY);
 	rotY.Multiply(vec);
 
 	CQuaternion rotX = CQuaternion::Identity();
-	rotX.SetRotationDeg(player->Getforward(), m_angleX);
+	rotX.SetRotationDeg(player->GetForward(), m_angleX);
 	rotX.Multiply(camera_Up);
 
 	if (g_pad[0].IsTrigger(enButtonLB2))
@@ -106,7 +106,7 @@ void m_camera::CameraMove()
 	camera_Pos = camera_Target - vec;
 }
 
-void m_camera::bossfightCameraMove()
+void GameCamera::bossfightCameraMove()
 {
 	/*pad_X = g_pad[0].GetLStickXF();
 	rotXmax = pad_X * 10.0f;
@@ -115,19 +115,19 @@ void m_camera::bossfightCameraMove()
 	rotX.SetRotationDeg(player->Getforward(), m_angleX);
 	rotX.Multiply(camera_Up);*/
 
-	camera_rite = player->Getrite();
-	player_pos = player->Getpos();
-	camera_Target = player_pos + player->Getup()*100.0f;
+	camera_rite = player->GetRite();
+	player_pos = player->GetPosition();
+	camera_Target = player_pos + player->GetUp()*100.0f;
 	CamLen = max(500.0f, CamLen - 50.0f*(1.0f / 60.0f));
-	CVector3 vec = player->Getforward()*CamLen;
+	CVector3 vec = player->GetForward()*CamLen;
 	camera_Pos = camera_Target - vec;
 }
 
-void m_camera::Update()
+void GameCamera::Update()
 {
 	if (player != nullptr)
 	{
-		camera_Up = player->Getup();
+		camera_Up = player->GetUp();
 		if (CoN != nullptr)
 		{
 			if (CoN->GetWaveCounter() < 5)

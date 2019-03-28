@@ -19,11 +19,11 @@ void sky::Init(const wchar_t* mapfilepath, const wchar_t* modelfilePath, CVector
 {
 	m_scale = scale;
 	m_skinmodel.Init(modelfilePath);
-	m_skyCube.CreateFromDDSTextureFromFile(mapfilepath);
+	m_skycube.CreateFromDDSTextureFromFile(mapfilepath);
 	m_skinmodel.FindMesh([&](auto& mat) 
 	{
 		ModelEffect* effect = reinterpret_cast<ModelEffect*>(mat->effect.get());
-		effect->SetAlbedoTexture(m_skyCube.GetBody());
+		effect->SetAlbedoTexture(m_skycube.GetBody());
 	});
 	
 }

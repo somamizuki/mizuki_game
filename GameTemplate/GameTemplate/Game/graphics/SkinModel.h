@@ -77,12 +77,18 @@ public:
 			}
 		}
 	}
-
+	/// <summary>
+	/// 影を受けるかをセット
+	/// </summary>
+	/// <param name="flag">bool</param>
 	void SetShadowReciever(bool flag)
 	{
 		m_isShadowReciever = flag;
 	}
-
+	/// <summary>
+	/// 法線マップを適用
+	/// </summary>
+	/// <param name="filePath">ファイルパス(L"filePath")</param>
 	void SetNormalMap(const wchar_t* filePath)
 	{
 		HRESULT hr = DirectX::CreateDDSTextureFromFileEx(
@@ -123,7 +129,7 @@ private:
 		CMatrix mProj;
 		int isHasNormalMap;		//法線マップを保持している？
 	};
-
+	//影の定数バッファ
 	struct SShadowConstantBuffer
 	{
 		
@@ -135,15 +141,14 @@ private:
 
 	
 
-	EnFbxUpAxis			m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
-	ConstantBuffer m_cb;
-	ConstantBuffer m_shadowCb;
-	//ID3D11Buffer*		m_cb = nullptr;					//!<定数バッファ。
-	Skeleton			m_skeleton;						//!<スケルトン。
-	CMatrix				m_worldMatrix;					//!<ワールド行列。
-	DirectX::Model*		m_modelDx;						//!<DirectXTKが提供するモデルクラス。
-	ID3D11SamplerState* m_samplerState = nullptr;		//!<サンプラステート。
-	bool m_isShadowReciever = false;						//シャドウレシーバーのフラグ。
-	ID3D11ShaderResourceView* m_normalMapSRV = nullptr;		//方線マップのSRV
+	EnFbxUpAxis					m_enFbxUpAxis = enFbxUpAxisZ;	//!<FBXの上方向。
+	ConstantBuffer				m_cb;							//定数バッファ
+	ConstantBuffer				m_shadowCb;						//影の定数バッファ
+	Skeleton					m_skeleton;						//!<スケルトン。
+	CMatrix						m_worldMatrix;					//!<ワールド行列。
+	DirectX::Model*				m_modelDx;						//!<DirectXTKが提供するモデルクラス。
+	ID3D11SamplerState*			m_samplerState = nullptr;		//!<サンプラステート。
+	bool						m_isShadowReciever = false;		//シャドウレシーバーのフラグ。
+	ID3D11ShaderResourceView*	m_normalMapSRV = nullptr;		//方線マップのSRV
 };
 

@@ -139,7 +139,7 @@ void sprite::FullScreenInit()
 void sprite::Update(const CVector3& trans, const CQuaternion& rot, const CVector3& scale, const CVector2& pivot)
 {
 	//ピボットを考慮に入れた平行移動行列を作成。
-		//ピボットは真ん中が0.0, 0.0、左上が-1.0f, -1.0、右下が1.0、1.0になるようにする。
+	//ピボットは真ん中が0.0, 0.0、左上が-1.0f, -1.0、右下が1.0、1.0になるようにする。
 	CVector2 localPivot = pivot;
 	localPivot.x -= 0.5f;
 	localPivot.y -= 0.5f;

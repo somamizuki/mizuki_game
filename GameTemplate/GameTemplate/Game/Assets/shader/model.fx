@@ -439,7 +439,7 @@ float4 PS3Main(PSInput In) :SV_Target0
 float4 PSCubeMain(PSInput In) : SV_Target0
 {
 	float4 color = skyCubeMap.Sample(Sampler, In.Normal*-1.0f);
-	color.xyz *= 0.3f;
+	color.xyz *= 0.5f;
 	return color;
 }
 
